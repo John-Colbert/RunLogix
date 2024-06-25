@@ -1,0 +1,8 @@
+include "English";
+
+ConfigurationClass Main.Configurations.English = new(#adb46816-7da5-4942-8749-e24a810cc115#, "English",
+  Languages.English,
+  PaperSystems.US,
+  UnitSystems.Imperial
+);
+

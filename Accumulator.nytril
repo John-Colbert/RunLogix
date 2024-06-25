@@ -1,0 +1,42 @@
+using IO;
+
+class Reading {
+  var datetime Time;
+  var double Meters;
+}
+
+class AccumulatorClass {
+  var ListClass<Reading> Readings;
+  private var Reading RowReading;
+
+  Constructor {
+    Readings = new(100);
+    RowReading = new();
+  }
+
+  void ReadFile(string path, string filename, bool useSourceRoot) {
+    var dir = useSourceRoot ? Folders.Source : path;
+
+    var file = XMLElementClass.Read(dir FileName(filename));
+    if (file is valid)
+      GetNode(each file.Elements);
+  }
+
+  private void GetNode(XMLElementClass element) {
+    if (element.Name == "time" || element.Name == "speed") {
+      if (element.Value is valid) {
+
+        if (element.Name == "time")
+          RowReading.Time = datetime.Parse8601(element.Value);
+        else {
+          RowReading.Meters = element.Value as double;
+          Readings.Add(RowReading);
+          RowReading = new();
+        }
+      }
+    }
+
+    foreach (var e in element.Elements)
+      GetNode(e);
+  }
+}

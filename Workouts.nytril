@@ -1,0 +1,202 @@
+
+readonly WorkoutClass[] RunningWorkouts = [
+//      Workout                Date        Notes
+  new Interval1HR_5x       (#2024-03-29#),
+  new Tempo1hr1x1x         (#2024-04-19#),
+  new LongRun1hr50m5x10x   (#2024-04-22#, "Felt good throughout."                                                  ),
+  new Interval1HR_3x4x5x2  (#2024-04-24#, "Legs sore from Monday's run. Struggled to keep good pace."              ),
+  new Tempo1hr1x3x         (#2024-04-26#, "Legs sore and tired from Monday and Wednesday runs.  Hard to keep pace."),
+  new LongEasy1hr40Min     (#2024-04-29#, "Took 3 miles to work out soreness. Slow pace, felt good."               ),
+  new Interval1hr1x4x      (#2024-05-01#, "Felt good."                                                             ),
+];
+
+//===========================================================================
+
+namespace SegmentNames {
+  WarmUp1     = "Warm Up 1";
+  WarmUp2     = "Warm Up 2";
+  Comfortable = "Comfortable";
+  Accelerated = "Accelerated";
+  Slow        = "Slow";
+  Cooldown    = "Cooldown";
+}
+
+//===========================================================================
+
+class Interval1HR_5x: WorkoutClass {
+  Constructor(datetime date, string notes = null) {
+    super.Constructor(date);
+
+    WorkoutName = "Interval 1 HR 5x";
+    Notes       = notes;
+
+    //                  Name               Time in Minutes       Target Pace
+    AddSegment(SegmentNames.WarmUp1         ,      7         ,      12.00);
+    AddSegment(SegmentNames.WarmUp2         ,      3         ,      11.25);
+
+    AddSegment(SegmentNames.Comfortable     ,      20        ,      10.75);
+    AddSegment(SegmentNames.Slow            ,      3         ,      11.75);
+
+    var iv1 = AddInterval(5);
+    iv1.AddSegment(SegmentNames.Accelerated ,      3         ,      9.75);
+    iv1.AddSegment(SegmentNames.Slow        ,      1         ,      11.75);
+
+    AddSegment(SegmentNames.Cooldown        ,      7         ,      12.00);
+  }
+}
+
+//--------------------------------------------------------------------------
+
+class Tempo1hr1x1x: WorkoutClass {
+  Constructor(datetime date, string notes = null) {
+    super.Constructor(date);
+
+    WorkoutName = "Tempo1hr 1x 1x";
+    Notes       = notes;
+
+    //                  Name               Time in Minutes       Target Pace
+    AddSegment(SegmentNames.WarmUp1         ,      7         ,      12.00);
+    AddSegment(SegmentNames.WarmUp2         ,      5         ,      11.50);
+
+    AddSegment(SegmentNames.Comfortable     ,      20        ,      10.75);
+    AddSegment(SegmentNames.Slow            ,      3         ,      12.00);
+
+    AddSegment(SegmentNames.Comfortable     ,      10        ,      10.75);
+    AddSegment(SegmentNames.Slow            ,      5         ,      12.00);
+
+    AddSegment(SegmentNames.Cooldown        ,      10        ,      12.00);
+  }
+}
+
+//--------------------------------------------------------------------------
+
+class LongRun1hr50m5x10x: WorkoutClass {
+  Constructor(datetime date, string notes = null) {
+    super.Constructor(date);
+
+    WorkoutName = "Long Run 1hr 50m 5x 10x";
+    Notes       = notes;
+
+    //                  Name               Time in Minutes       Target Pace
+    AddSegment(SegmentNames.Slow            ,      40        ,      12.25);
+    AddSegment(SegmentNames.Slow            ,      10        ,      11.50);
+
+    var iv1 = AddInterval(5);
+    iv1.AddSegment(SegmentNames.Comfortable ,      2         ,      10.75);
+    iv1.AddSegment(SegmentNames.Slow        ,      1         ,      12.25);
+
+
+    var iv2 = AddInterval(10);
+    iv2.AddSegment(SegmentNames.Accelerated ,      1         ,      9.75);
+    iv2.AddSegment(SegmentNames.Slow        ,      2         ,      12.25);
+
+    AddSegment(SegmentNames.Slow            ,      5         ,      11.75);
+    AddSegment(SegmentNames.Cooldown        ,      10        ,      12.25);
+  }
+}
+//--------------------------------------------------------------------------
+
+class Interval1HR_3x4x5x2: WorkoutClass {
+  Constructor(datetime date, string notes = null) {
+    super.Constructor(date);
+
+    WorkoutName = "Interval 1 HR 3x 4x 5x";
+    Notes       = notes;
+
+    //                  Name               Time in Minutes       Target Pace
+    AddSegment(SegmentNames.WarmUp1         ,      7         ,      12.00);
+    AddSegment(SegmentNames.WarmUp2         ,      5         ,      11.50);
+
+    var iv1 = AddInterval(3);
+    iv1.AddSegment(SegmentNames.Comfortable ,      2         ,      10.75);
+    iv1.AddSegment(SegmentNames.Slow        ,      2         ,      12.00);
+
+    AddSegment(SegmentNames.Slow            ,      2         ,      12.00);
+
+    var iv2 = AddInterval(4);
+    iv2.AddSegment(SegmentNames.Accelerated ,      1.5       ,      9.75);
+    iv2.AddSegment(SegmentNames.Slow        ,      1.5       ,      12.00);
+
+    AddSegment(SegmentNames.Slow            ,      2         ,      12.00);
+
+    var iv3 = AddInterval(5);
+    iv3.AddSegment(SegmentNames.Accelerated ,      1         ,      9.50);
+    iv3.AddSegment(SegmentNames.Slow        ,      1         ,      12.00);
+
+    AddSegment(SegmentNames.Slow            ,      5         ,      11.50);
+    AddSegment(SegmentNames.Cooldown        ,      5         ,      12.00);
+  }
+}
+
+//--------------------------------------------------------------------------
+
+class Tempo1hr1x3x: WorkoutClass {
+  Constructor(datetime date, string notes = null) {
+    super.Constructor(date);
+
+    WorkoutName = "Tempo1hr 1x 3x";
+    Notes       = notes;
+
+    //                  Name               Time in Minutes       Target Pace
+    AddSegment(SegmentNames.WarmUp1         ,      7         ,      12.25);
+    AddSegment(SegmentNames.WarmUp2         ,      3         ,      11.75);
+
+    AddSegment(SegmentNames.Comfortable     ,      20        ,      10.75);
+    AddSegment(SegmentNames.Slow            ,      3         ,      12.00);
+
+    var iv1 = AddInterval(3);
+    iv1.AddSegment(SegmentNames.Accelerated ,      5         ,      09.75);
+    iv1.AddSegment(SegmentNames.Slow        ,      2         ,      12.00);
+
+    AddSegment(SegmentNames.Cooldown        ,      6         ,      12.00);
+  }
+}
+
+//--------------------------------------------------------------------------
+
+class LongEasy1hr40Min: WorkoutClass {
+  Constructor(datetime date, string notes = null) {
+    super.Constructor(date);
+
+    WorkoutName = "LongEasy 1hr 40Min";
+    Filename    = null;
+    Notes       = notes;
+
+    //                  Name               Time in Minutes       Target Pace
+    AddSegment(SegmentNames.WarmUp1         ,      30        ,      12.00);
+
+    AddSegment(SegmentNames.Slow            ,      60        ,      11.40);
+
+    AddSegment(SegmentNames.Cooldown        ,      10         ,     12.00);
+  }
+}
+
+//--------------------------------------------------------------------------
+
+class Interval1hr1x4x: WorkoutClass {
+  Constructor(datetime date, string notes = null) {
+    super.Constructor(date);
+
+    WorkoutName = "Interval 1hr 1x 4x Fast";
+    Filename    = null;
+    Notes       = notes;
+
+    //                  Name               Time in Minutes       Target Pace
+    AddSegment(SegmentNames.WarmUp1         ,      10        ,      12.00);
+    AddSegment(SegmentNames.Slow            ,      3         ,      11.40);
+
+    AddSegment(SegmentNames.Comfortable     ,      3         ,      10.50);
+    AddSegment(SegmentNames.Slow            ,      2         ,      12.00);
+
+
+    var iv2 = AddInterval(4);
+    iv2.AddSegment(SegmentNames.Accelerated ,      4         ,      9.65);
+    iv2.AddSegment(SegmentNames.Slow        ,      4         ,      12.00);
+
+    AddSegment(SegmentNames.Cooldown        ,      10        ,      12.00);
+  }
+}
+
+//===========================================================================
+
+

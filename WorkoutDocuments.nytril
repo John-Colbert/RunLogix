@@ -1,0 +1,269 @@
+using Format, Units;
+
+class TimeDistanceClass : DataPointClass {
+  var int Month;
+
+  Constructor(int month, double distance) {
+    super.Constructor(month, distance);
+    Month    = month;
+  }
+
+  DataPointClass BasePoint() {
+    return new DataPointClass(Variable, Value);
+  }
+}
+
+class SummaryClass: DocumentClass {
+  var ListClass<WorkoutClass> AllWorkouts;
+  var ListClass<TimeDistanceClass> MonthlyActualDistance;
+
+  Constructor {
+    super.Constructor(#ad080fa6-1765-48f7-862e-dc043ac95a16#, "Summary");
+    Workouts.Build;
+    MonthlyActualDistance = new(12);
+    AllWorkouts = Workouts.Workouts;
+    GetMonthyActuals(AllWorkouts, AllWorkouts[AllWorkouts.Length - 1].WorkoutDate.Year);
+  }
+
+  override GetDocument = Document {
+    ShowDistanceChart;
+    ShowDiary;
+  };
+
+  ShowDistanceChart = VBox(100%) {
+    var months = MonthClass.MonthsOfTheYear;
+
+    HAlign: HAligns.Center;
+    "{0} workouts"(Workouts.Workouts.Length);
+    Chart(90%, 3 inches) {
+      Marker: Markers.Circle(Colors.White, 0.5);
+      Type: ChartTypes.Column;
+      XAxis: ChartAxis {
+        Margin: PadT(4);
+        (each months).ShortName;
+      };
+      ValueAxis: ChartAxis;
+      ChartSeries {
+        MonthlyActualDistance.ToArray();
+      };
+    };
+  };
+
+  ShowDiary = Block {
+    SpaceBefore: 5 pts;
+
+    Paragraph {
+      TextHeight: 16 pts;
+      "Diary"
+    };
+
+    foreach (var workout in AllWorkouts) {
+      if (workout.Notes is valid && workout.Notes.Length > 0) {
+        Paragraph {
+          FirstIndent: -0.5 inches;
+          LeftIndent: 0.5 inches;
+          ShowDiaryDate(workout);
+          Space; Chars.EmDash; Space;
+          Span {
+            TextHeight: 11 pts;
+            TextFamily: TextFamilies.TrebuchetMS;
+            workout.Notes;
+          }
+        };
+
+        Paragraph {
+          LeftIndent: 0.5 inches;
+          ShowDetails(workout);
+        };
+      }
+      else {
+        Paragraph {
+          ShowDiaryDate(workout);
+          Space; Chars.EmDash; Space;
+          Span {
+            ShowDetails(workout);
+          };
+        };
+      }
+    }
+  };
+
+  ShowDiaryDate(workout) = Span {
+    TextHeight: 12 pts;
+    TextFormat: "MMM d, yyyy";
+    TextColor: Colors.DimGray;
+    workout.WorkoutDate;
+  };
+
+  ShowDistance(double distance) = Span {
+    TextDigits: 3;
+    distance miles;
+  };
+
+  ShowTime(double time) = Span {
+    TextDigits: 2;
+    time minutes;
+  };
+
+  ShowDetails(workout) = {
+    TextHeight: 9 pts;
+    TextColor: Colors.Gray;
+    Separator: Space Chars.EmDash Space;
+    workout.WorkoutName;
+    ShowDistance(workout.TotalActualDistance);
+    ShowTime(workout.TotalActualTime);
+  };
+
+  void GetMonthyActuals(ListClass<WorkoutClass> workouts, year) {
+    for (int i = 0; i < 12; i++)
+      MonthlyActualDistance.Add(new TimeDistanceClass(i, 0));
+
+    foreach (var workout in workouts) {
+      var dt = workout.WorkoutDate;
+      if (dt.Year == year) {
+        var md = MonthlyActualDistance.FindFirst(d => d.Month == dt.Month - 1);
+        md.Value += workout.TotalActualDistance;
+        md.Label = Span {
+          TextDigits: 1;
+          TextBackground: Colors.White;
+          md.Value;
+        };
+      }
+    }
+  }
+}
+//======================================================================================
+
+class PerformanceToTargetClass: DocumentClass {
+  var ListClass<WorkoutClass> RunWorkouts;
+
+  Constructor {
+    super.Constructor(#029a3f5d-ebfd-4011-8d57-7f87c7b6b324#, "Performance to Target");
+    RunWorkouts = Workouts.Workouts;
+  }
+
+  override GetDocument = Document {
+    foreach(var workout in RunWorkouts) {
+      Canvas(100%) {
+        HBox {
+          HAlignment: HAligns.Left;
+          TextFormat: "MMM d, yyyy";
+          workout.WorkoutDate;
+          Space "-" Space;
+          workout.WorkoutName;
+        };
+
+        HBox {
+          HAlignment: HAligns.Right;
+          TextFormat: "hh:mmtt";
+          workout.StartTime;
+
+          Space "-" Space;
+
+          TextFormat: "hh:mmtt";
+          workout.EndTime;
+        };
+      };
+
+      if (workout.Notes != null && workout.Notes.Length > 0) {
+        Paragraph {
+          TextHeight: 7 pts;
+          workout.Notes;
+        };
+      }
+
+      Table(null, null) {
+        TextHeight: 7 pts;
+        Row(PadAll(2 pts)) {
+          "Segment";
+          "Time(actual)";
+          "Target";
+          "Pace";
+          "Performance";
+          "Target Miles";
+          "Actual Miles";
+        };
+
+        foreach (var segment in workout.SegmentList) {
+          if (segment.Name == "Open" && segment.ActualTime == 0)
+            continue;
+
+          Row(PadAll(2 pts)) {
+            segment.Name;
+
+            Span {
+              if (segment.Name == "Open")
+                TextDigits: 2;
+
+              ShowTime(segment.TargetTime, segment.ActualTime);
+            };
+
+            ShowPace(segment.TargetPace);
+            ShowPace(segment.ActualPace);
+            ShowPerformance(segment.Performance);
+            ShowDistance(segment.TargetDistance);
+            ShowDistance(segment.ActualDistance);
+          };
+        }
+
+        Row(BorderTB(1)) {
+        };
+
+        Row(PadAll(2 pts)) {
+          "Summary";
+          Span {
+            ShowTime(workout.TotalTargetTime, workout.TotalActualTime);
+          };
+
+          ShowPace(workout.TotalTargetPace);
+          ShowPace(workout.TotalActualPace);
+          ShowPerformance(workout.TotalPerformance);
+          ShowDistance(workout.TotalTargetDistance);
+          ShowDistance(workout.TotalActualDistance);
+        };
+      };
+
+      Paragraph {};
+    }
+  };
+
+  ShowTime(double targetTime, double actualTime) = {
+    targetTime;
+    if (actualTime > 0 && actualTime != targetTime) {
+      "(" + { TextDigits: 2; TextColor: new ColorClass(204, 0, 0); } actualTime + ")";
+    }
+  };
+
+  ShowPace(double pace) = Span {
+    var t = new TimeSpanClass(0, 0, 0, pace * 60);
+    TextFormat: "00";
+    "{0}:{1}"(t.Minute, t.Second);
+  };
+
+  ShowDistance(double distance) = Span {
+    TextDigits: 3;
+    distance;
+  };
+
+  ShowPerformance(double performance) = Span {
+    var negative = performance < 0;
+    var inRange  = performance >= -0.083 && performance <= 0.083;
+    var seconds  = performance * 60;
+
+    if (seconds > 59 || seconds < -59) {
+      {TextDigits: 2} (seconds / 60);
+      "min";
+    }
+    else {
+      {TextDigits: 1} seconds;
+      "s";
+    }
+
+    if (inRange)
+      TextColor: new ColorClass(153, 153, 0);
+    else if (negative)
+      TextColor: new ColorClass(0, 153, 51);
+    else
+      TextColor: new ColorClass(204, 0, 0);
+  };
+}

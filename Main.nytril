@@ -1,0 +1,16 @@
+using Format, Units, IO;
+
+include "Accumulator";
+include "WorkoutClasses";
+include "Workouts";
+include "WorkoutDocuments";
+
+readonly WorkoutsClass Workouts = new();
+
+DataPath = Folders.Source Folder("apple_health_export") Folder("workout-routes");
+
+readonly DocumentClass[] Main.Documents = [
+  new SummaryClass,
+  new PerformanceToTargetClass
+];
+

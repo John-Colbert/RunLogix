@@ -1,0 +1,2 @@
+readonly namespace Lang if (Language == Languages.English);
+
