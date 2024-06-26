@@ -27,17 +27,17 @@ Nytril provides immediate output which makes it suitable for this app and very e
 1. Download and Install Nytril Desktop IDE. Go to [Nytril.com](https://www.nytril.com) and select the platfrom (Windows or Mac), then download and install.
 2. Clone or download this code from GitHub and place in the folder of your choice.
 3. Open Nytril and select the menu option "Repo", then "New Repository."
-    a. Under "Local Folder", click the browse button and navigate to the "Run Logix" folder where you placed it in the previous step.
-    b. The "Repository Name" will be changed to the folder name.  Adjust it if you would like. 
-    c. Leave "Language Files" as is. 
-    d. Click "OK".
+    - Under "Local Folder", click the browse button and navigate to the "Run Logix" folder where you placed it in the previous step.
+    - The "Repository Name" will be changed to the folder name.  Adjust it if you would like. 
+    - Leave "Language Files" as is. 
+    - Click "OK".
 4. The "Starting Project" dialog will appear.
-    a. Under "Main File" the path and filename should already be correct. If not, browse to the "Run Logix" folder and select "Main.nytril."
-    b. Under "Name" change the name to something useful, such as "Run Logix." This is the friendly name of the project within the local repository. 
-    c. Click "OK".
+    - Under "Main File" the path and filename should already be correct. If not, browse to the "Run Logix" folder and select "Main.nytril."
+    - Under "Name" change the name to something useful, such as "Run Logix." This is the friendly name of the project within the local repository. 
+    - Click "OK".
 5. The project will load, build and run. The code will be on the left and the output on the right.
 6. Select the "Documents" menu option
-    a. Click on a document to view the output. At this time, there are two choices "Summary" and "Performance to Target."
+    - Click on a document to view the output. At this time, there are two choices "Summary" and "Performance to Target."
 
 # How to add or modify a run workout
 
@@ -45,26 +45,26 @@ The "Main" document will be loaded by default. Place the cursor on the word "Wor
 
 With the "Workouts" file open:
 1. Take note of the samples
-    a. The first section establishes an array of workoutClasses.  These are the workouts discussed in step b. 
-        i. The constructor takes a date and notes. When creating a new future run, add the date and leave the notes out -- you can add notes after you performed the run.
-    b. Note the repeating classes that start with Interval1HR_5x, all inhereting WorkoutClass.
-        i. In the constructor, the date is sent the WorkoutClass, and then the metrics for the run are established. 
-        ii. A segement is a running interval that has a friendly name, a time to run, and a target pace.
-        iii. Repeating intervals are also shown in the examples, where an interval is instatiated with the number of times to repeat, for which segments are added.  Those segments will be repeated in order for the number of times established.
+    1. The first section establishes an array of workoutClasses.  These are the workouts discussed in step b. 
+        - The constructor takes a date and notes. When creating a new future run, add the date and leave the notes out -- you can add notes after you performed the run.
+    2. Note the repeating classes that start with Interval1HR_5x, all inhereting WorkoutClass.
+        - In the constructor, the date is sent the WorkoutClass, and then the metrics for the run are established. 
+        - A segement is a running interval that has a friendly name, a time to run, and a target pace.
+        - Repeating intervals are also shown in the examples, where an interval is instatiated with the number of times to repeat, for which segments are added.  Those segments will be repeated in order for the number of times established.
 2. Create a workout
-    a. Copy one of the sample classes, such as the "Interval1HR_5x" class and paste it at the bottom or onto a new line.
-    b. Change the class name to whatever you want, and change the run metrics to whatever configuration you want.
+    - Copy one of the sample classes, such as the "Interval1HR_5x" class and paste it at the bottom or onto a new line.
+    - Change the class name to whatever you want, and change the run metrics to whatever configuration you want.
 3. Add workout to list
-    a. Add the workout to the workouts array in the top section of code "readonly WorkoutClass[] RunningWorkouts..." following the way the examples were created. Add the date that you will do the workout in the constructor.
+    - Add the workout to the workouts array in the top section of code "readonly WorkoutClass[] RunningWorkouts..." following the way the examples were created. Add the date that you will do the workout in the constructor.
 4. Clear the examples.
-    a. Now that you have your own workout, either clear out the examples, or comment them out if you want to keep them for reference.
+    - Now that you have your own workout, either clear out the examples, or comment them out if you want to keep them for reference.
 5. Note the output.
-    a. Take note that the output will now show the run in the list with the target data.  It is now waiting for the performance data to come in.
+    - Take note that the output will now show the run in the list with the target data.  It is now waiting for the performance data to come in.
 
 # How to add the performance data
 
 1. Use your iWatch or iPhone to record your run. This process may also work if a different device is synced with an iPhone, but that has not been tested.
-    a. Notably, it does not matter whether you use a programmed "Workout" run on the iWatch or iPhone, as the app reads the ".gpx" file data that contains the same basic information regardless of whether a programmed run was used (such as pacer workout).
+    - Notably, it does not matter whether you use a programmed "Workout" run on the iWatch or iPhone, as the app reads the ".gpx" file data that contains the same basic information regardless of whether a programmed run was used (such as pacer workout).
 2. After the run, use your iPhone to export your health data. Transfer the output to your computer.
 3. Either copy the entire "apple_health_export" to the "Run Logix" folder -- replacing the existing one -- or find your ".gpx" file under "apple_health_export/workout_routes/" and copy it. The filename will include the date with the ending time of the workout. Paste the file into the "Run Logix/apple_health_export/workout_routes" folder.
 4. Press "F5." The app will find the file by the date in the name and use it to compute the performance values.
