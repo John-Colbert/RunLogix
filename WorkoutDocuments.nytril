@@ -1,5 +1,7 @@
 using Format, Units;
 
+MarginLayout = new ExtentClass(new ThicknessClass(1 inch, 0.5 inches, 1 inch, 1 inch));
+
 class TimeDistanceClass : DataPointClass {
   var int Month;
 
@@ -13,7 +15,20 @@ class TimeDistanceClass : DataPointClass {
   }
 }
 
-class SummaryClass: DocumentClass {
+class RunningDocumentsClass: DocumentClass {
+  Constructor(guid factid, string name) {
+    super.Constructor(factid, name);
+  }
+
+  ShowTitle = Paragraph {
+    TextHeight: 30 pts;
+    ParAlignment: ParAlignments.Right;
+    SpaceAfter: 20 pts;
+    "Run Logix";
+  };
+}
+
+class SummaryClass: RunningDocumentsClass {
   var ListClass<WorkoutClass> AllWorkouts;
   var ListClass<TimeDistanceClass> MonthlyActualDistance;
 
@@ -25,17 +40,10 @@ class SummaryClass: DocumentClass {
     GetMonthyActuals(AllWorkouts, AllWorkouts[AllWorkouts.Length - 1].WorkoutDate.Year);
   }
 
-  override GetDocument = Document(new ExtentClass(new ThicknessClass(1 inch, 0.5 inches, 1 inch, 1 inch))) {
+  override GetDocument = Document(MarginLayout) {
     ShowTitle;
     ShowDistanceChart;
     ShowDiary;
-  };
-
-  ShowTitle = Paragraph {
-    TextHeight: 30 pts;
-    ParAlignment: ParAlignments.Right;
-    SpaceAfter: 20 pts;
-    "Run Logix";
   };
 
   ShowDistanceChart = VBox(100%) {
@@ -152,7 +160,7 @@ class SummaryClass: DocumentClass {
 }
 //======================================================================================
 
-class PerformanceToTargetClass: DocumentClass {
+class PerformanceToTargetClass: RunningDocumentsClass {
   var ListClass<WorkoutClass> RunWorkouts;
 
   Constructor {
@@ -160,7 +168,9 @@ class PerformanceToTargetClass: DocumentClass {
     RunWorkouts = Workouts.Workouts;
   }
 
-  override GetDocument = Document {
+  override GetDocument = Document(MarginLayout) {
+    ShowTitle;
+
     foreach(var workout in RunWorkouts) {
       Canvas(100%) {
         HBox {
