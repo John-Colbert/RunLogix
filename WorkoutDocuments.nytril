@@ -25,15 +25,24 @@ class SummaryClass: DocumentClass {
     GetMonthyActuals(AllWorkouts, AllWorkouts[AllWorkouts.Length - 1].WorkoutDate.Year);
   }
 
-  override GetDocument = Document {
+  override GetDocument = Document(new ExtentClass(new ThicknessClass(1 inch, 0.5 inches, 1 inch, 1 inch))) {
+    ShowTitle;
     ShowDistanceChart;
     ShowDiary;
+  };
+
+  ShowTitle = Paragraph {
+    TextHeight: 30 pts;
+    ParAlignment: ParAlignments.Right;
+    SpaceAfter: 20 pts;
+    "Run Logix";
   };
 
   ShowDistanceChart = VBox(100%) {
     var months = MonthClass.MonthsOfTheYear;
 
     HAlign: HAligns.Center;
+    Background: Colors.WhiteSmoke;
     "{0} workouts"(Workouts.Workouts.Length);
     Chart(90%, 3 inches) {
       Marker: Markers.Circle(Colors.White, 0.5);
@@ -57,35 +66,44 @@ class SummaryClass: DocumentClass {
       "Diary"
     };
 
-    foreach (var workout in AllWorkouts) {
-      if (workout.Notes is valid && workout.Notes.Length > 0) {
-        Paragraph {
-          FirstIndent: -0.5 inches;
-          LeftIndent: 0.5 inches;
-          ShowDiaryDate(workout);
-          Space; Chars.EmDash; Space;
-          Span {
-            TextHeight: 11 pts;
-            TextFamily: TextFamilies.TrebuchetMS;
-            workout.Notes;
-          }
-        };
+    Table (null, null, [1 inches, 0.25 inches, ColumnClass.Expand]) {
+      foreach (var workout in AllWorkouts) {
 
-        Paragraph {
-          LeftIndent: 0.5 inches;
-          ShowDetails(workout);
-        };
-      }
-      else {
-        Paragraph {
-          ShowDiaryDate(workout);
-          Space; Chars.EmDash; Space;
-          Span {
-            ShowDetails(workout);
+        if (workout.Notes is valid && workout.Notes.Length > 0) {
+          Row (PadT(5 pts)) {
+            Cell { ShowDiaryDate(workout); };
+            Cell { Chars.EmDash;           };
+            Cell {
+              Span {
+                TextHeight: 11 pts;
+                TextFamily: TextFamilies.TrebuchetMS;
+                workout.Notes;
+              };
+            };
           };
-        };
+          Row {
+            Cell;
+            Cell;
+            Cell {
+              Span {
+                ShowDetails(workout);
+              };
+            };
+          };
+        }
+        else {
+          Row (PadT(5 pts)) {
+            Cell { ShowDiaryDate(workout); };
+            Cell { Chars.EmDash;           };
+            Cell {
+              Span {
+                ShowDetails(workout);
+              };
+            };
+          };
+        }
       }
-    }
+    };
   };
 
   ShowDiaryDate(workout) = Span {
