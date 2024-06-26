@@ -45,8 +45,8 @@ The "Main" document will be loaded by default. Place the cursor on the word "Wor
 
 With the "Workouts" file open:
 1. Take note of the samples
-    1. The first section establishes an array of workoutClasses.  These are the workouts discussed in step b. 
-        - The constructor takes a date and notes. When creating a new future run, add the date and leave the notes out -- you can add notes after you performed the run.
+    1. The first section establishes an array of workoutClasses.  These are the workouts discussed in step ii. 
+        - The constructor takes a date and notes (string). When creating a new future run workout, add the date and leave the notes out -- you can add notes after you performed the run.
     2. Note the repeating classes that start with Interval1HR_5x, all inhereting WorkoutClass.
         - In the constructor, the date is sent the WorkoutClass, and then the metrics for the run are established. 
         - A segement is a running interval that has a friendly name, a time to run, and a target pace.
