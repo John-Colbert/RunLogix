@@ -1,16 +1,56 @@
 using Format, Units, IO;
 
-class WorkoutClass {
-  var AccumulatorClass         Accumulator;
+class WorkoutBase {
+  var AccumulatorClass Accumulator;
+  var string           Filename;
+  var datetime         StartTime,
+                       EndTime;
+  var bool             UseSourceRoot;
+
+  Constructor {
+    Accumulator   = new;
+    Filename      = null;
+    UseSourceRoot = false;
+  }
+
+  void GetFilePath(datetime workoutDate) {
+    UseSourceRoot = Filename is not null;
+
+    if (!UseSourceRoot) {
+      string namePrefix = "route_{0}_"(GetWorkoutDateName(workoutDate));
+
+      foreach(var file in Files) {
+        if (file.FileName.StartsWith(namePrefix)) {
+          Filename = file.FileName;
+          break;
+        }
+      }
+    }
+  }
+
+  private string GetWorkoutDateName(datetime workoutDate) {
+    string year  = workoutDate.Year;
+    string month = workoutDate.Month;
+    string day   = workoutDate.Day;
+
+    if (month.Length == 1)
+      month = "0{0}"(month);
+
+    if (day.Length == 1)
+      day = "0{0}"(day);
+
+    return "{0}-{1}-{2}"(year, month, day);
+  }
+}
+//==============================================================================
+
+class WorkoutClass: WorkoutBase {
   var ListClass<SegmentClass>  Segments,
                                SegmentList;
   var ListClass<IntervalClass> Intervals;
   var string                   WorkoutName,
-                               Filename,
                                Notes;
-  var datetime                 WorkoutDate,
-                               StartTime,
-                               EndTime;
+  var datetime                 WorkoutDate;
   var double                   TotalTargetTime,
                                TotalActualTime,
                                TotalTargetDistance,
@@ -19,16 +59,14 @@ class WorkoutClass {
                                TotalActualPace,
                                TotalPerformance;
   var int                      AddOrder;
-  var bool                     UseSourceRoot;
 
   Constructor(datetime date) {
-    Accumulator          = new();
+    super.Constructor;
     Segments             = new(8);
     SegmentList          = new(10);
     Intervals            = new(2);
     WorkoutName          = null;
     WorkoutDate          = date;
-    Filename             = null;
     Notes                = null;
     TotalTargetTime      = 0;
     TotalActualTime      = 0;
@@ -38,7 +76,6 @@ class WorkoutClass {
     TotalActualPace      = 0;
     TotalPerformance     = 0;
     AddOrder             = 1;
-    UseSourceRoot        = false;
   }
 
   void AddSegment(string name, double minutes, double targetPace) {
@@ -54,41 +91,11 @@ class WorkoutClass {
   }
 
   void Build {
-    GetFilePath();
+    GetFilePath(WorkoutDate);
     if (Filename is not null)
       Accumulator.ReadFile(DataPath, Filename, UseSourceRoot);
     BuildSegmentList();
     BuildSegments();
-  }
-
-  void GetFilePath {
-    UseSourceRoot = Filename is not null;
-
-    if (!UseSourceRoot) {
-      var files = EnumerateFiles(DataPath);
-      string namePrefix = "route_{0}_"(GetWorkoutDateName);
-
-      foreach(var file in files) {
-        if (file.FileName.StartsWith(namePrefix)) {
-          Filename = file.FileName;
-          break;
-        }
-      }
-    }
-  }
-
-  private string GetWorkoutDateName {
-    string year  = WorkoutDate.Year;
-    string month = WorkoutDate.Month;
-    string day   = WorkoutDate.Day;
-
-    if (month.Length == 1)
-      month = "0{0}"(month);
-
-    if (day.Length == 1)
-      day = "0{0}"(day);
-
-    return "{0}-{1}-{2}"(year, month, day);
   }
 
   private void BuildSegmentList {

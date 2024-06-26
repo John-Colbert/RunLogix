@@ -1,0 +1,133 @@
+using Units;
+
+enum DistanceTypes {
+  Kilometer,
+  Mile
+}
+
+//class DistancePerformance {
+//  var DistanceTypes Type;
+//  var double Time;
+//  Constructor(DistanceTypes type, double time) {
+//    Type = type;
+//    Time = time;
+//  }
+//}
+
+class DistancePerformance {
+  var DistanceTypes Type;
+  var double        Time,
+                    Distance;
+  var int           Readings;
+  Constructor(DistanceTypes type, double time, double distance, int readings) {
+    Type     = type;
+    Time     = time;
+    Distance = distance;
+    Readings = readings;
+  }
+}
+
+class RawWorkoutsClass: WorkoutBase {
+  var ListClass<AccumulatorClass> AccumulatedWorkouts;
+  var ListClass<DistancePerformance> DistancePerformanceKilometers;
+  var ListClass<DistancePerformance> DistancePerformanceMiles;
+
+  var double kilometerDistance;
+  var double mileDistance;
+
+  Constructor {
+    super.Constructor;
+    AccumulatedWorkouts = new(Files.Length);
+    kilometerDistance = 1 kilometer intu meters;
+    mileDistance      = 1 mile intu meters;
+  }
+
+  void Build {
+    foreach (var file in Files) {
+      Accumulator.ReadFile(DataPath, file.FileName, false);
+      AccumulatedWorkouts.Add(Accumulator);
+      Accumulator = new;
+    }
+  }
+
+  private void BuildWorkouts {
+    foreach (var accumulatedWorkout in AccumulatedWorkouts) {
+      var readings = accumulatedWorkout.Readings;
+      if (readings.Length > 0) {
+        StartTime = readings.FirstElement.Time;
+        EndTime   = readings.LastElement.Time;
+      }
+
+      var distanceMeters = 0.0;
+      int i = 0;
+      int kiloReadings = 0;
+      int mileReadings = 0;
+      while (i < readings.Length) {
+        distanceMeters += readings[i++].Meters;
+        kiloReadings++;
+
+        if (kiloReadings > 10 && distanceMeters >= kilometerDistance && distanceMeters <= (kilometerDistance + 5 meters)) {
+          var time = kiloReadings / 60;
+          DistancePerformanceKilometers.Add(new DistancePerformance(DistanceTypes.Kilometer, time, 1, kiloReadings));
+          kiloReadings = 0;
+        }
+
+        if (mileReadings > 10 && distanceMeters >= mileDistance && distanceMeters <= (mileDistance + 5 meters)) {
+          var time = mileReadings / 60;
+          DistancePerformanceMiles.Add(new DistancePerformance(DistanceTypes.Kilometer, time, 1, kiloReadings));
+          kiloReadings = 0;
+        }
+
+      }
+    }
+
+
+    //int i = 0;
+
+    //var readings = Accumulator.Readings;
+
+    //if (readings.Length > 0) {
+    //  StartTime = readings.FirstElement.Time;
+    //  EndTime   = readings.LastElement.Time;
+    //
+    //  //var distanceMeters = 0.0;
+    //  var targetReadings = segment.TargetTime * 60;
+    //  var numReadings    = 0;
+    //  while (i < readings.Length && numReadings < targetReadings) {
+    //    distanceMeters += readings[i++].Meters;
+    //    numReadings++;
+    //  }
+    //
+    //  if (segment.Name == "Open") {
+    //    segment.TargetTime = numReadings / 60;
+    //    segment.ActualTime = segment.TargetTime;
+    //  }
+    //
+    //  if (segment.TargetTime > 0) {
+    //    segment.ActualDistance = distanceMeters meters intu miles;
+    //    segment.ActualTime     = numReadings / 60;
+    //    segment.ActualPace     = segment.ActualTime / segment.ActualDistance;
+    //    segment.Performance    = segment.ActualPace - segment.TargetPace;
+    //    if (segment.Name == "Open") {
+    //      segment.TargetPace   = segment.ActualPace;
+    //      segment.Performance  = 0;
+    //    }
+    //  }
+    //
+    //  TotalActualDistance += segment.ActualDistance;
+    //}
+    //
+    //if (segment.Name != "Open") {
+    //  segment.TargetDistance = (segment.TargetTime / segment.TargetPace);
+    //  TotalTargetTime        += segment.TargetTime;
+    //  TotalTargetDistance    += segment.TargetDistance;
+    //}
+    //
+    //if ((segment.Name == "Open" && segment.ActualTime > 0) || segment.Name != "Open")
+    //  TotalActualTime        += segment.ActualTime;
+    //
+    //TotalTargetPace  = TotalTargetTime / TotalTargetDistance;
+    //TotalActualPace  = TotalActualDistance > 0 ? TotalActualTime / TotalActualDistance : 0;
+    //TotalPerformance = TotalActualPace > 0 ? TotalActualPace - TotalTargetPace : 0;
+  }
+}
