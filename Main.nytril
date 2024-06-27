@@ -13,6 +13,3 @@ readonly DocumentClass[] Main.Documents = [
   new SummaryClass,
   new PerformanceToTargetClass
 ];
-
-// Add comment
-//Add Comment 2
