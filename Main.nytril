@@ -14,5 +14,3 @@ readonly DocumentClass[] Main.Documents = [
   new SummaryClass,
   new PerformanceToTargetClass
 ];
-
-// Dev branch comment
