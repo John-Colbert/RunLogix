@@ -1,6 +1,7 @@
 using Units;
 
 enum DistanceTypes {
+  Meters,
   Kilometer,
   Mile
 }
@@ -26,108 +27,104 @@ class DistancePerformance {
     Readings = readings;
   }
 }
-
-class RawWorkoutsClass: WorkoutBase {
-  var ListClass<AccumulatorClass> AccumulatedWorkouts;
-  var ListClass<DistancePerformance> DistancePerformanceKilometers;
-  var ListClass<DistancePerformance> DistancePerformanceMiles;
-
-  var double kilometerDistance;
-  var double mileDistance;
+//=================================================================================
+class RawWorkoutClass: WorkoutBase {
+  var ListClass<DistancePerformance> KilometerSplits,
+                                     MileSplits;
+  var DistancePerformance            RemainingDistance;
+  var double                         TotalDistance,
+                                     TotalTime;
 
   Constructor {
     super.Constructor;
+    KilometerSplits   = new;
+    MileSplits        = new;
+    RemainingDistance = new;
+    TotalDistance     = 0;
+    TotalTime         = 0;
+  }
+
+  double GetTotalMiles {
+    return TotalDistance meters intu miles;
+  }
+
+  double GetTotalKilometers {
+    return TotalDistance meters intu kilometers;
+  }
+
+  double GetRemainingMiles {
+    return RemainingDistance meters intu miles;
+  }
+
+  double GetRemainingKilometers {
+    return RemainingDistance meters intu kilometers;
+  }
+}
+//=================================================================================
+
+class RawWorkoutsClass {
+  var ListClass<AccumulatorClass>    AccumulatedWorkouts;
+  var ListClass<RawWorkoutClass>     RawWorkouts;
+  var double                         KilometerDistance,
+                                     MileDistance;
+
+  Constructor {
     AccumulatedWorkouts = new(Files.Length);
-    kilometerDistance = 1 kilometer intu meters;
-    mileDistance      = 1 mile intu meters;
+    RawWorkouts         = new(Files.Length);
+    KilometerDistance   = 1 kilometer intu meters;
+    MileDistance        = 1 mile intu meters;
   }
 
   void Build {
     foreach (var file in Files) {
-      Accumulator.ReadFile(DataPath, file.FileName, false);
-      AccumulatedWorkouts.Add(Accumulator);
-      Accumulator = new;
+      AccumulatorClass accumulator = new;
+      accumulator.ReadFile(DataPath, file.FileName, false);
+      AccumulatedWorkouts.Add(accumulator);
     }
   }
 
   private void BuildWorkouts {
     foreach (var accumulatedWorkout in AccumulatedWorkouts) {
+      RawWorkoutClass workout = new;
       var readings = accumulatedWorkout.Readings;
       if (readings.Length > 0) {
-        StartTime = readings.FirstElement.Time;
-        EndTime   = readings.LastElement.Time;
+        workout.StartTime = readings.FirstElement.Time;
+        workout.EndTime   = readings.LastElement.Time;
       }
 
-      var distanceMeters = 0.0;
       int i = 0;
       int kiloReadings = 0;
       int mileReadings = 0;
       while (i < readings.Length) {
-        distanceMeters += readings[i++].Meters;
+        workout.TotalDistance += readings[i++].Meters;
         kiloReadings++;
+        mileReadings++;
 
-        if (kiloReadings > 10 && distanceMeters >= kilometerDistance && distanceMeters <= (kilometerDistance + 5 meters)) {
+        int kSplitCount = workout.KilometerSplits.Length + 1;
+        double kiloDist = KilometerDistance * kSplitCount;
+        if (kiloReadings > 20 && workout.TotalDistance >= kiloDist && workout.TotalDistance < kiloDist + 15 meters) {
           var time = kiloReadings / 60;
-          DistancePerformanceKilometers.Add(new DistancePerformance(DistanceTypes.Kilometer, time, 1, kiloReadings));
+          workout.KilometerSplits.Add(new DistancePerformance(DistanceTypes.Kilometer, time, 1, kiloReadings));
           kiloReadings = 0;
         }
 
-        if (mileReadings > 10 && distanceMeters >= mileDistance && distanceMeters <= (mileDistance + 5 meters)) {
+        int mSplitCount = workout.MileSplits.Length + 1;
+        int mileDist = MileDistance * mSplitCount;
+        if (mileReadings > 20 && workout.TotalDistance >= mileDist && workout.TotalDistance < mileDist + 15 meters) {
           var time = mileReadings / 60;
-          DistancePerformanceMiles.Add(new DistancePerformance(DistanceTypes.Kilometer, time, 1, kiloReadings));
-          kiloReadings = 0;
+          workout.MileSplits.Add(new DistancePerformance(DistanceTypes.Kilometer, time, 1, kiloReadings));
+          mileReadings = 0;
         }
-
       }
+
+      if (kiloReadings > 0) {
+        var time = kiloReadings / 60;
+        var distance = workout.TotalDistance - KilometerDistance * workout.KilometerSplits.Length;
+        workout.RemainingDistance = new(DistanceTypes.Meters, time, distance, kiloReadings);
+      }
+
+      workout.TotalTime = readings.Length / 60;
+      RawWorkouts.Add(workout);
     }
-
-
-    //int i = 0;
-
-    //var readings = Accumulator.Readings;
-
-    //if (readings.Length > 0) {
-    //  StartTime = readings.FirstElement.Time;
-    //  EndTime   = readings.LastElement.Time;
-    //
-    //  //var distanceMeters = 0.0;
-    //  var targetReadings = segment.TargetTime * 60;
-    //  var numReadings    = 0;
-    //  while (i < readings.Length && numReadings < targetReadings) {
-    //    distanceMeters += readings[i++].Meters;
-    //    numReadings++;
-    //  }
-    //
-    //  if (segment.Name == "Open") {
-    //    segment.TargetTime = numReadings / 60;
-    //    segment.ActualTime = segment.TargetTime;
-    //  }
-    //
-    //  if (segment.TargetTime > 0) {
-    //    segment.ActualDistance = distanceMeters meters intu miles;
-    //    segment.ActualTime     = numReadings / 60;
-    //    segment.ActualPace     = segment.ActualTime / segment.ActualDistance;
-    //    segment.Performance    = segment.ActualPace - segment.TargetPace;
-    //    if (segment.Name == "Open") {
-    //      segment.TargetPace   = segment.ActualPace;
-    //      segment.Performance  = 0;
-    //    }
-    //  }
-    //
-    //  TotalActualDistance += segment.ActualDistance;
-    //}
-    //
-    //if (segment.Name != "Open") {
-    //  segment.TargetDistance = (segment.TargetTime / segment.TargetPace);
-    //  TotalTargetTime        += segment.TargetTime;
-    //  TotalTargetDistance    += segment.TargetDistance;
-    //}
-    //
-    //if ((segment.Name == "Open" && segment.ActualTime > 0) || segment.Name != "Open")
-    //  TotalActualTime        += segment.ActualTime;
-    //
-    //TotalTargetPace  = TotalTargetTime / TotalTargetDistance;
-    //TotalActualPace  = TotalActualDistance > 0 ? TotalActualTime / TotalActualDistance : 0;
-    //TotalPerformance = TotalActualPace > 0 ? TotalActualPace - TotalTargetPace : 0;
   }
 }

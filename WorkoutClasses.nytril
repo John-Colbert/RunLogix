@@ -1,14 +1,12 @@
 using Format, Units, IO;
 
 class WorkoutBase {
-  var AccumulatorClass Accumulator;
   var string           Filename;
   var datetime         StartTime,
                        EndTime;
   var bool             UseSourceRoot;
 
   Constructor {
-    Accumulator   = new;
     Filename      = null;
     UseSourceRoot = false;
   }
@@ -45,6 +43,7 @@ class WorkoutBase {
 //==============================================================================
 
 class WorkoutClass: WorkoutBase {
+  var AccumulatorClass         Accumulator;
   var ListClass<SegmentClass>  Segments,
                                SegmentList;
   var ListClass<IntervalClass> Intervals;
@@ -62,6 +61,7 @@ class WorkoutClass: WorkoutBase {
 
   Constructor(datetime date) {
     super.Constructor;
+    Accumulator          = new;
     Segments             = new(8);
     SegmentList          = new(10);
     Intervals            = new(2);
