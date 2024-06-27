@@ -34,6 +34,7 @@ class RawWorkoutClass: WorkoutBase {
   var DistancePerformance            RemainingDistance;
   var double                         TotalDistance,
                                      TotalTime;
+  var string s = "";
 
   Constructor {
     super.Constructor;
