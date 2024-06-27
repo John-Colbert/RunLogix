@@ -8,6 +8,7 @@ include "WorkoutDocuments";
 readonly WorkoutsClass Workouts = new();
 
 DataPath = Folders.Source Folder("apple_health_export") Folder("workout-routes");
+FileEntryClass[] Files = EnumerateFiles(DataPath);
 
 readonly DocumentClass[] Main.Documents = [
   new SummaryClass,
