@@ -295,3 +295,27 @@ class PerformanceToTargetClass: RunningDocumentsClass {
       TextColor: new ColorClass(204, 0, 0);
   };
 }
+//====================================================================
+
+class RawRunningDocumentClass: RunningDocumentsClass {
+  var RawWorkoutsClass RawWorkouts;
+
+  Constructor {
+    super.Constructor(#82bd5cf5-0150-4e79-95c6-3cb36f7824e9#, "All Basic Running Records");
+    RawWorkouts = new;
+    RawWorkouts.Build;
+  }
+
+  override GetDocument = Document(MarginLayout) {
+    ShowTitle;
+
+    foreach (var workout in RawWorkouts.RawWorkouts) {
+      Paragraph {
+        "Start: " workout.StartTime;
+        "End: " workout.EndTime;
+        "Distance: " workout.TotalDistance meters into miles;
+      };
+    }
+  };
+
+}

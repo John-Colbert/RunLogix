@@ -6,15 +6,6 @@ enum DistanceTypes {
   Mile
 }
 
-//class DistancePerformance {
-//  var DistanceTypes Type;
-//  var double Time;
-//  Constructor(DistanceTypes type, double time) {
-//    Type = type;
-//    Time = time;
-//  }
-//}
-
 class DistancePerformance {
   var DistanceTypes Type;
   var double        Time,
@@ -34,13 +25,12 @@ class RawWorkoutClass: WorkoutBase {
   var DistancePerformance            RemainingDistance;
   var double                         TotalDistance,
                                      TotalTime;
-  var string s = "";
 
   Constructor {
     super.Constructor;
-    KilometerSplits   = new;
-    MileSplits        = new;
-    RemainingDistance = new;
+    KilometerSplits   = new(2);
+    MileSplits        = new(2);
+    RemainingDistance = new(DistanceTypes.Meters, 0, 0, 0);
     TotalDistance     = 0;
     TotalTime         = 0;
   }
@@ -54,11 +44,11 @@ class RawWorkoutClass: WorkoutBase {
   }
 
   double GetRemainingMiles {
-    return RemainingDistance meters intu miles;
+    return RemainingDistance.Distance meters intu miles;
   }
 
   double GetRemainingKilometers {
-    return RemainingDistance meters intu kilometers;
+    return RemainingDistance.Distance meters intu kilometers;
   }
 }
 //=================================================================================
@@ -82,6 +72,7 @@ class RawWorkoutsClass {
       accumulator.ReadFile(DataPath, file.FileName, false);
       AccumulatedWorkouts.Add(accumulator);
     }
+    BuildWorkouts;
   }
 
   private void BuildWorkouts {
@@ -110,7 +101,7 @@ class RawWorkoutsClass {
         }
 
         int mSplitCount = workout.MileSplits.Length + 1;
-        int mileDist = MileDistance * mSplitCount;
+        double mileDist = MileDistance * mSplitCount;
         if (mileReadings > 20 && workout.TotalDistance >= mileDist && workout.TotalDistance < mileDist + 15 meters) {
           var time = mileReadings / 60;
           workout.MileSplits.Add(new DistancePerformance(DistanceTypes.Kilometer, time, 1, kiloReadings));
