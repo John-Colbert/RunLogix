@@ -1,4 +1,4 @@
-using IO, Units;
+using IO, Units, System;
 
 enum DistanceTypes {
   Meters,
@@ -41,19 +41,19 @@ class RawWorkoutClass: WorkoutBase {
   }
 
   double GetTotalMiles {
-    return TotalDistance / MileDistance;
+    return TotalDistance * Measures.MetersPerMile;
   }
 
   double GetTotalKilometers {
-    return TotalDistance / KilometerDistance;
+    return TotalDistance * Measures.KilometersPerMeter;
   }
 
   double GetRemainingMiles {
-    return RemainingDistance.Distance / MileDistance;
+    return RemainingDistance.Distance * Measures.MetersPerMile;
   }
 
   double GetRemainingKilometers {
-    return RemainingDistance.Distance / KilometerDistance;
+    return RemainingDistance.Distance * Measures.KilometersPerMeter;
   }
 
   void ReadFile(FileEntryClass file) {
@@ -77,7 +77,7 @@ class RawWorkoutClass: WorkoutBase {
       mileReadings++;
 
       int kSplitCount = KilometerSplits.Length + 1;
-      double kiloDist = KilometerDistance * kSplitCount;
+      double kiloDist = Measures.MetersPerKilometer * kSplitCount;
       if (kiloReadings > 20 && TotalDistance >= kiloDist && TotalDistance < kiloDist + 15) {
         var time = kiloReadings / 60;
         KilometerSplits.Add(new DistancePerformance(DistanceTypes.Kilometer, time, 1, kiloReadings));
@@ -85,7 +85,7 @@ class RawWorkoutClass: WorkoutBase {
       }
 
       int mSplitCount = MileSplits.Length + 1;
-      double mileDist = MileDistance * mSplitCount;
+      double mileDist = Measures.MetersPerMile * mSplitCount;
       if (mileReadings > 20 && TotalDistance >= mileDist && TotalDistance < mileDist + 15) {
         var time = mileReadings / 60;
         MileSplits.Add(new DistancePerformance(DistanceTypes.Kilometer, time, 1, kiloReadings));
@@ -95,7 +95,7 @@ class RawWorkoutClass: WorkoutBase {
 
     if (kiloReadings > 0) {
       var time = kiloReadings / 60;
-      var distance = TotalDistance - KilometerDistance * KilometerSplits.Length;
+      var distance = TotalDistance - Measures.MetersPerKilometer * KilometerSplits.Length;
       RemainingDistance = new(DistanceTypes.Meters, time, distance, kiloReadings);
     }
 
@@ -108,16 +108,14 @@ class RawWorkoutsClass {
   readonly var ListClass<RawWorkoutClass>  Workouts;
 
   Constructor {
-    Workouts = new(Files.Length);
-    //var start = datetime.Now;
+    var fileCount = Files.Length;
+    Workouts = new(fileCount);
+    ProgressComment("Processing " fileCount " GPX Files.");
     foreach (var file in Files) {
       RawWorkoutClass workout = new;
       workout.Build(file);
       Workouts.Add(workout);
+      ProgressPercent(each1, fileCount);
     }
-    //var stop = datetime.Now;
-    //var diff = stop - start;
-    //if (diff is valid)
-    //  return;
   }
 }

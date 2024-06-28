@@ -309,7 +309,7 @@ class RawRunningDocumentClass: RunningDocumentsClass {
     ShowTitle;
 
     foreach (var workout in RawWorkouts.Workouts) {
-      var distance = (workout.TotalDistance / MileDistance);
+      var distance = (workout.TotalDistance / Measures.MetersPerMile);
       Paragraph {
         "Start: "    workout.StartTime;
         "End: "      workout.EndTime;

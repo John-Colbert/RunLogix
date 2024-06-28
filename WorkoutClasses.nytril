@@ -149,7 +149,7 @@ class WorkoutClass: WorkoutBase {
         }
 
         if (segment.TargetTime > 0) {
-          segment.ActualDistance = distanceMeters / MileDistance;
+          segment.ActualDistance = distanceMeters / Measures.MetersPerMile;
 
           if (segment.ActualDistance > 0) {
             segment.ActualTime     = numReadings / 60;

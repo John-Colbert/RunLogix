@@ -1,0 +1,19 @@
+using Format, Units, IO;
+
+//======================================================================================
+
+readonly WorkoutsClass Workouts       = new;
+readonly RawWorkoutsClass RawWorkouts = new;
+
+
+readonly FileEntryClass[] Files = EnumerateFiles(DataPath);
+
+//======================================================================================
+
+namespace Measures {
+  const double MetersPerKilometer = (1 kilometer) intu meters;
+  const double KilometersPerMeter = (1 meter) intu kilometers;
+  const double MetersPerMile      = (1 mile) intu meters;
+  const double MilesPerMeter      = (1 meter) intu miles;
+}
+//======================================================================================
