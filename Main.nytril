@@ -8,10 +8,12 @@ include "RawWorkouts";
 
 readonly WorkoutsClass Workouts = new();
 
-DataPath = Folders.Source Folder("apple_health_export") Folder("workout-routes");
-FileEntryClass[] Files = EnumerateFiles(DataPath);
+readonly DataPath = Folders.Source Folder("apple_health_export") Folder("workout-routes");
+readonly FileEntryClass[] Files = EnumerateFiles(DataPath);
+readonly RawWorkoutsClass RawWorkouts = new;
 
 readonly DocumentClass[] Main.Documents = [
   new SummaryClass,
-  new PerformanceToTargetClass
+  new PerformanceToTargetClass,
+  new RawRunningDocumentClass
 ];

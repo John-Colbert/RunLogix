@@ -1,12 +1,14 @@
 using Format, Units, IO;
 
 class WorkoutBase {
+  var AccumulatorClass Accumulator;
   var string           Filename;
   var datetime         StartTime,
                        EndTime;
   var bool             UseSourceRoot;
 
   Constructor {
+    Accumulator   = new;
     Filename      = null;
     UseSourceRoot = false;
   }
@@ -43,7 +45,6 @@ class WorkoutBase {
 //==============================================================================
 
 class WorkoutClass: WorkoutBase {
-  var AccumulatorClass         Accumulator;
   var ListClass<SegmentClass>  Segments,
                                SegmentList;
   var ListClass<IntervalClass> Intervals;
@@ -61,7 +62,6 @@ class WorkoutClass: WorkoutBase {
 
   Constructor(datetime date) {
     super.Constructor;
-    Accumulator          = new;
     Segments             = new(8);
     SegmentList          = new(10);
     Intervals            = new(2);
@@ -92,8 +92,11 @@ class WorkoutClass: WorkoutBase {
 
   void Build {
     GetFilePath(WorkoutDate);
-    if (Filename is not null)
-      Accumulator.ReadFile(DataPath, Filename, UseSourceRoot);
+    if (Filename is not null) {
+      var wo = RawWorkouts.Workouts;
+      Accumulator = wo?.FindFirst(d => d.Filename == Filename).Accumulator;
+      //Accumulator.ReadFile(DataPath, Filename, UseSourceRoot);
+    }
     BuildSegmentList();
     BuildSegments();
   }
@@ -146,13 +149,16 @@ class WorkoutClass: WorkoutBase {
         }
 
         if (segment.TargetTime > 0) {
-          segment.ActualDistance = distanceMeters meters intu miles;
-          segment.ActualTime     = numReadings / 60;
-          segment.ActualPace     = segment.ActualTime / segment.ActualDistance;
-          segment.Performance    = segment.ActualPace - segment.TargetPace;
-          if (segment.Name == "Open") {
-            segment.TargetPace   = segment.ActualPace;
-            segment.Performance  = 0;
+          segment.ActualDistance = distanceMeters / MileDistance;
+
+          if (segment.ActualDistance > 0) {
+            segment.ActualTime     = numReadings / 60;
+            segment.ActualPace     = segment.ActualTime / segment.ActualDistance;
+            segment.Performance    = segment.ActualPace - segment.TargetPace;
+            if (segment.Name == "Open") {
+              segment.TargetPace   = segment.ActualPace;
+              segment.Performance  = 0;
+            }
           }
         }
 

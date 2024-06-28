@@ -6,37 +6,76 @@ class Reading {
 }
 
 class AccumulatorClass {
+  var string Filename;
   var ListClass<Reading> Readings;
   private var Reading RowReading;
 
   Constructor {
+    Filename = "";
     Readings = new(100);
     RowReading = new();
   }
 
   void ReadFile(string path, string filename, bool useSourceRoot) {
+    Filename = filename;
     var dir = useSourceRoot ? Folders.Source : path;
 
     var file = XMLElementClass.Read(dir FileName(filename));
-    if (file is valid)
-      GetNode(each file.Elements);
-  }
+    if (file is valid) {
+      var gpxEl    = file.FindFirstElement("gpx");
+      var trkEl    = gpxEl.FindFirstElement("trk");
+      var trkSegEl = trkEl.FindFirstElement("trkseg");
+      var trkpts   = trkSegEl.Elements;
 
-  private void GetNode(XMLElementClass element) {
-    if (element.Name == "time" || element.Name == "speed") {
-      if (element.Value is valid) {
+      //foreach (var e in file.Elements) {
+        //if (e.Name == "trk") {
+          //foreach (var e1 in e.Elements) {
+            //if (e1.Name == "trkseg") {
+              foreach (var e in trkpts) {
+                var timeEl = e.FindFirstElement("time");
+                //if (e2.Name == "time")
+                  RowReading.Time = datetime.Parse8601(timeEl.Value);
 
-        if (element.Name == "time")
-          RowReading.Time = datetime.Parse8601(element.Value);
-        else {
-          RowReading.Meters = element.Value as double;
-          Readings.Add(RowReading);
-          RowReading = new();
-        }
-      }
+                var extensionsEl = e.FindFirstElement("extensions");
+                var speed        = extensionsEl.FindFirstElement("speed");
+                //foreach (var e3 in e2.Elements) {
+                  //if (e3.Name == "extensions") {
+                    //foreach (var e4 in e3.Elements) {
+                      //if (e4.Name == "speed") {
+                        var v = speed.Value;
+                        if (v is valid) {
+                          RowReading.Meters = v as double;
+                          Readings.Add(RowReading);
+                          RowReading = new();
+                        }
+                      //}
+                    //}
+                  //}
+                //}
+              }
+            //}
+          //}
+        //}
+      //}
     }
-
-    foreach (var e in element.Elements)
-      GetNode(e);
   }
+
+  //private void GetNode(XMLElementClass element) {
+  //  var n = element.Name;
+  //
+  //  if (n == "time")
+  //    RowReading.Time = datetime.Parse8601(element.Value);
+  //  else if (n == "speed") {
+  //    var v = element.Value;
+  //    if (v is valid) {
+  //      RowReading.Meters = v as double;
+  //      Readings.Add(RowReading);
+  //      RowReading = new();
+  //    }
+  //  }
+  //  else {
+  //    foreach (var e in element.Elements)
+  //      GetNode(e);
+  //  }
+  //}
 }
