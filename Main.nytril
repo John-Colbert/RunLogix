@@ -8,6 +8,10 @@ include "RawWorkouts";
 
 readonly WorkoutsClass Workouts = new();
 
+//conversion namespace.  Go both ways.
+const double KilometerDistance = (1 kilometer) intu meters;
+const double MileDistance      = (1 mile) intu meters;
+
 readonly DataPath = Folders.Source Folder("apple_health_export") Folder("workout-routes");
 readonly FileEntryClass[] Files = EnumerateFiles(DataPath);
 readonly RawWorkoutsClass RawWorkouts = new;
