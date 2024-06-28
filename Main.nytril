@@ -4,6 +4,7 @@ include "Accumulator";
 include "WorkoutClasses";
 include "Workouts";
 include "WorkoutDocuments";
+include "RawWorkouts";
 
 readonly WorkoutsClass Workouts = new();
 
