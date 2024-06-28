@@ -22,41 +22,43 @@ class AccumulatorClass {
 
     var file = XMLElementClass.Read(dir FileName(filename));
     if (file is valid) {
-      var gpxEl    = file.FindFirstElement("gpx");
-      var trkEl    = gpxEl.FindFirstElement("trk");
-      var trkSegEl = trkEl.FindFirstElement("trkseg");
-      var trkpts   = trkSegEl.Elements;
+      //var gpxEl    = file.FindFirstElement("gpx");
+      //var trkEl    = gpxEl.FindFirstElement("trk");
+      //var trkSegEl = trkEl.FindFirstElement("trkseg");
+      //var trkpts   = trkSegEl.Elements;
+      foreach (var e in file.Elements) {
+        if (e.Name == "gpx") {
+          foreach (var e1 in file.Elements) {
+            if (e1.Name == "trk") {
+              foreach (var e2 in e1.Elements) {
+                if (e2.Name == "trkseg") {
+                  foreach (var e3 in e2.Elements) {
+                    //var timeEl = e3.FindFirstElement("time");
+                    if (e3.Name == "time")
+                      RowReading.Time = datetime.Parse8601(e3.Value);
 
-      //foreach (var e in file.Elements) {
-        //if (e.Name == "trk") {
-          //foreach (var e1 in e.Elements) {
-            //if (e1.Name == "trkseg") {
-              foreach (var e in trkpts) {
-                var timeEl = e.FindFirstElement("time");
-                //if (e2.Name == "time")
-                  RowReading.Time = datetime.Parse8601(timeEl.Value);
+                    //var extensionsEl = e.FindFirstElement("extensions");
+                    //var speed        = extensionsEl.FindFirstElement("speed");
 
-                var extensionsEl = e.FindFirstElement("extensions");
-                var speed        = extensionsEl.FindFirstElement("speed");
-                //foreach (var e3 in e2.Elements) {
-                  //if (e3.Name == "extensions") {
-                    //foreach (var e4 in e3.Elements) {
-                      //if (e4.Name == "speed") {
-                        var v = speed.Value;
-                        if (v is valid) {
-                          RowReading.Meters = v as double;
-                          Readings.Add(RowReading);
-                          RowReading = new();
+                    else if (e3.Name == "extensions") {
+                      foreach (var e4 in e3.Elements) {
+                        if (e4.Name == "speed") {
+                          var v = e4.Value;
+                          if (v is valid) {
+                            RowReading.Meters = v as double;
+                            Readings.Add(RowReading);
+                            RowReading = new();
+                          }
                         }
-                      //}
-                    //}
-                  //}
-                //}
+                      }
+                    }
+                  }
+                }
               }
-            //}
-          //}
-        //}
-      //}
+            }
+          }
+        }
+      }
     }
   }
 
