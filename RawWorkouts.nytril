@@ -105,14 +105,23 @@ class RawWorkoutClass: WorkoutBase {
 //=================================================================================
 
 class RawWorkoutsClass {
-  var ListClass<RawWorkoutClass>  Workouts;
+  readonly var ListClass<RawWorkoutClass>  Workouts;
+  //readonly var AccumulatorClass Accumulator;
 
   Constructor {
+    //Accumulator = new;
     Workouts = new(Files.Length);
+    var start = datetime.Now;
     foreach (var file in Files) {
+      //Accumulator.ReadFile(DataPath, file.FileName, false);
+
       RawWorkoutClass workout = new;
       workout.Build(file);
       Workouts.Add(workout);
     }
+    var stop = datetime.Now;
+    var diff = stop - start;
+    if (diff is valid)
+      return;
   }
 }
