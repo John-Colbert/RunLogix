@@ -49,7 +49,6 @@ class TimeBasedWorkoutClass: WorkoutBase {
     if (Filename is not null) {
       var wo = RawWorkouts.Workouts;
       Accumulator = wo?.FindFirst(d => d.Filename == Filename).Accumulator;
-      //Accumulator.ReadFile(DataPath, Filename, UseSourceRoot);
     }
     BuildSegmentList();
     BuildSegments();
