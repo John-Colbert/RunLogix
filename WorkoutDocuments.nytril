@@ -31,15 +31,17 @@ class RunningDocumentsClass: DocumentClass {
 //=======================================================================
 
 class SummaryClass: RunningDocumentsClass {
-  var ListClass<TimeBasedWorkoutClass> AllWorkouts;
-  var ListClass<TimeDistanceClass> MonthlyActualDistance;
+  var ListClass<RawWorkoutClass>       AllRawWorkouts;
+  var ListClass<TimeBasedWorkoutClass> AllTimeBasedWorkouts;
+  var ListClass<TimeDistanceClass>     MonthlyActualDistance;
 
   Constructor {
     super.Constructor(#ad080fa6-1765-48f7-862e-dc043ac95a16#, "Summary");
     Workouts.Build;
     MonthlyActualDistance = new(12);
-    AllWorkouts = Workouts.Workouts;
-    GetMonthyActuals(AllWorkouts, AllWorkouts[AllWorkouts.Length - 1].WorkoutDate.Year);
+    AllRawWorkouts       = RawWorkouts.Workouts;
+    AllTimeBasedWorkouts = Workouts.Workouts;
+    GetMonthyActuals();
   }
 
   override GetDocument = Document(MarginLayout) {
@@ -77,7 +79,7 @@ class SummaryClass: RunningDocumentsClass {
     };
 
     Table (null, null, [1 inches, 0.25 inches, ColumnClass.Expand]) {
-      foreach (var workout in AllWorkouts) {
+      foreach (var workout in AllTimeBasedWorkouts) {
 
         if (workout.Notes is valid && workout.Notes.Length > 0) {
           Row (PadT(5 pts)) {
@@ -142,15 +144,31 @@ class SummaryClass: RunningDocumentsClass {
     ShowTime(workout.TotalActualTime);
   };
 
-  void GetMonthyActuals(ListClass<TimeBasedWorkoutClass> workouts, year) {
+  void GetMonthyActuals() {
     for (int i = 0; i < 12; i++)
       MonthlyActualDistance.Add(new TimeDistanceClass(i, 0));
 
-    foreach (var workout in workouts) {
-      var dt = workout.WorkoutDate;
-      if (dt.Year == year) {
+    var chartYear = datetime.Now.Year;
+    foreach (var rawWorkout in AllRawWorkouts) {
+      var timeBasedWorkout = AllTimeBasedWorkouts?.FindFirst(d => d.Filename == rawWorkout.Filename);
+
+      datetime dt;
+      double mDist = 0;
+
+      if (timeBasedWorkout is not null)  {
+        dt = timeBasedWorkout.WorkoutDate;
+        if (dt.Year == chartYear)
+          mDist = timeBasedWorkout.TotalActualDistance;
+      }
+      else {
+        dt = rawWorkout.StartTime;
+        if (dt.Year == chartYear)
+          mDist = rawWorkout.TotalDistance * Measures.MilesPerMeter;
+      }
+
+      if (mDist > 0) {
         var md = MonthlyActualDistance.FindFirst(d => d.Month == dt.Month - 1);
-        md.Value += workout.TotalActualDistance;
+        md.Value += mDist;
         md.Label = Span {
           TextDigits: 1;
           TextBackground: Colors.White;
