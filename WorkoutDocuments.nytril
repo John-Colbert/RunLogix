@@ -300,16 +300,20 @@ class PerformanceToTargetClass: RunningDocumentsClass {
 //====================================================================
 
 class RawRunningDocumentClass: RunningDocumentsClass {
+  var double PerMeterFactor;
+
 
   Constructor {
     super.Constructor(#82bd5cf5-0150-4e79-95c6-3cb36f7824e9#, "All Basic Running Records");
+
+    PerMeterFactor = UnitSystem == UnitSystems.Metric ? Measures.KilometersPerMeter : Measures.MilesPerMeter;
   }
 
   override GetDocument = Document(MarginLayout) {
     ShowTitle;
 
     foreach (var workout in RawWorkouts.Workouts) {
-      var distance = (workout.TotalDistance * (UnitSystem == UnitSystems.Metric ? Measures.KilometersPerMeter : Measures.MilesPerMeter));
+      var distance = workout.TotalDistance * PerMeterFactor;
 
       Canvas(100%) {
         Table (null, null, [1.25 inches, 0.35 inches, 1.5 inch, ColumnClass.Expand, 1.75 inches]) {
@@ -324,8 +328,8 @@ class RawRunningDocumentClass: RunningDocumentsClass {
               ShowDistance(distance);
             };
             Cell {
-              var pace = workout.TotalTime / (workout.TotalDistance * (UnitSystem == UnitSystems.Metric ? Measures.KilometersPerMeter : Measures.MilesPerMeter));
-              ShowPace(pace);
+              var pace = workout.TotalTime / (workout.TotalDistance * PerMeterFactor);
+              ShowPace(pace, UnitSystem == UnitSystems.Metric ? " min/km" : " min/mi");
             };
             Cell {
               Span {
@@ -356,8 +360,7 @@ class RawRunningDocumentClass: RunningDocumentsClass {
               };
               Cell;
               Cell {
-                TextDigits:  2;
-                split.Time " minutes";
+                ShowPace(split.Time, " min");
               };
               Cell;
             };
@@ -370,12 +373,11 @@ class RawRunningDocumentClass: RunningDocumentsClass {
                 "End";
               };
               Cell {
-                var dist = workout.RemainingDistance.Distance * (UnitSystem == UnitSystems.Metric ? Measures.KilometersPerMeter : Measures.MilesPerMeter);
+                var dist = workout.RemainingDistance.Distance * PerMeterFactor;
                 ShowDistance(dist);
               };
               Cell {
-                TextDigits:  2;
-                workout.RemainingDistance.Time " minutes";
+                ShowPace(workout.RemainingDistance.Time, " min");
               };
               Cell;
             };
@@ -386,14 +388,14 @@ class RawRunningDocumentClass: RunningDocumentsClass {
     }
   };
 
-  ShowPace(double pace) = Span {
+  ShowPace(double pace, string symbol) = Span {
     var t = new TimeSpanClass(0, 0, 0, pace * 60);
     Span {
       TextFormat: "00";
       "{0}:{1}"(t.Minute, t.Second);
       Span {
         TextHeight: 10 pts;
-        UnitSystem == UnitSystems.Metric ? " min/km" : " min/mi";
+        symbol;
       }
     };
   };
