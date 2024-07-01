@@ -23,7 +23,8 @@ class RawWorkoutClass: WorkoutBase {
   var ListClass<DistancePerformance> Splits;
   var DistancePerformance            RemainingDistance;
   var double                         TotalDistance,
-                                     TotalTime;
+                                     TotalTime,
+                                     DistanceFactor;
 
   Constructor {
     super.Constructor;
@@ -31,28 +32,12 @@ class RawWorkoutClass: WorkoutBase {
     RemainingDistance = new(DistanceTypes.Meters, 0, 0, 0);
     TotalDistance     = 0;
     TotalTime         = 0;
+    DistanceFactor    = UnitSystem == UnitSystem.Metric ? Measures.MetersPerKilometer : Measures.MetersPerMile;
   }
 
   void Build(FileEntryClass file) {
     ReadFile(file);
     BuildWorkout;
-    //Splits = UnitSystem == UnitSystems.Metric ? KilometerSplits : MileSplits;
-  }
-
-  double GetTotalMiles {
-    return TotalDistance * Measures.MetersPerMile;
-  }
-
-  double GetTotalKilometers {
-    return TotalDistance * Measures.KilometersPerMeter;
-  }
-
-  double GetRemainingMiles {
-    return RemainingDistance.Distance * Measures.MetersPerMile;
-  }
-
-  double GetRemainingKilometers {
-    return RemainingDistance.Distance * Measures.KilometersPerMeter;
   }
 
   void ReadFile(FileEntryClass file) {
@@ -78,8 +63,7 @@ class RawWorkoutClass: WorkoutBase {
 
     if (splitReadings > 0) {
       var time = splitReadings / 60;
-      var distanceFactor = UnitSystem == UnitSystem.Metric ? Measures.MetersPerKilometer : Measures.MetersPerMile;
-      var distance = TotalDistance - distanceFactor * Splits.Length;
+      var distance = TotalDistance - DistanceFactor * Splits.Length;
       RemainingDistance = new(DistanceTypes.Meters, time, distance, splitReadings);
     }
 
@@ -87,10 +71,8 @@ class RawWorkoutClass: WorkoutBase {
   }
 
   int AddSplit(int splitReadings) {
-    var distanceFactor = UnitSystem == UnitSystem.Metric ? Measures.MetersPerKilometer : Measures.MetersPerMile;
     var distanceType   = UnitSystem == UnitSystem.Metric ? DistanceTypes.Kilometer :DistanceTypes.Mile;
-    int splitCount = Splits.Length + 1;
-    double dist = distanceFactor * splitCount;
+    double dist = DistanceFactor * (Splits.Length + 1);
     if (splitReadings > 20 && TotalDistance >= dist && TotalDistance < dist + 15) {
       var time = splitReadings / 60;
       Splits.Add(new DistancePerformance(distanceType, time, 1, splitReadings));
