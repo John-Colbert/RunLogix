@@ -2,24 +2,30 @@ using Format, Units, IO;
 
 //======================================================================================
 
-readonly TimeBasedWorkoutsClass Workouts       = new;
-readonly RawWorkoutsClass RawWorkouts = new;
-readonly UnitSystems UnitSystem       = UnitSystems.Imperial;
-
-
-readonly FileEntryClass[] Files = EnumerateFiles(DataPath);
+readonly TimeBasedWorkoutsClass Workouts    = new;
+readonly RawWorkoutsClass       RawWorkouts = new;
+readonly UnitSystems            UnitSystem  = UnitSystems.Imperial;
+readonly FileEntryClass[]       Files       = EnumerateFiles(DataPath);
 
 //======================================================================================
 
 namespace Measures {
-  const double MetersPerKilometer = (1 kilometer) intu meters;
-  const double KilometersPerMeter = (1 meter) intu kilometers;
-  const double MetersPerMile      = (1 mile) intu meters;
-  const double MilesPerMeter      = (1 meter) intu miles;
+  const double MetersPerKilometer     = (1 kilometer) intu meters;
+  const double KilometersPerMeter     = (1 meter) intu kilometers;
+  const double MetersPerMile          = (1 mile) intu meters;
+  const double MilesPerMeter          = (1 meter) intu miles;
 
-  string GetDistanceName {
-    return UnitSystem == UnitSystems.Metric ? " km" : " mi";
-  }
+  readonly string DistanceAbbr        = UnitSystem == UnitSystems.Metric ? " km" : " mi";
+  readonly string MinutesPerAbbr      = UnitSystem == UnitSystems.Metric ? " min/km" : " min/mi";
+  readonly double PerMeterFactor      = UnitSystem == UnitSystems.Metric ? Measures.KilometersPerMeter : Measures.MilesPerMeter;
+  readonly double MetersPerFactor     = UnitSystem == UnitSystem.Metric  ? Measures.MetersPerKilometer : Measures.MetersPerMile;
+  readonly DistanceTypes DistanceType = UnitSystem == UnitSystem.Metric ? DistanceTypes.Kilometer : DistanceTypes.Mile;
+}
+
+enum DistanceTypes {
+  Meters,
+  Kilometer,
+  Mile
 }
 
 enum UnitSystems {

@@ -1,11 +1,5 @@
 using IO, Units, System;
 
-enum DistanceTypes {
-  Meters,
-  Kilometer,
-  Mile
-}
-
 class DistancePerformance {
   var DistanceTypes Type;
   var double        Time,
@@ -23,8 +17,7 @@ class RawWorkoutClass: WorkoutBase {
   var ListClass<DistancePerformance> Splits;
   var DistancePerformance            RemainingDistance;
   var double                         TotalDistance,
-                                     TotalTime,
-                                     DistanceFactor;
+                                     TotalTime;
 
   Constructor {
     super.Constructor;
@@ -32,7 +25,6 @@ class RawWorkoutClass: WorkoutBase {
     RemainingDistance = new(DistanceTypes.Meters, 0, 0, 0);
     TotalDistance     = 0;
     TotalTime         = 0;
-    DistanceFactor    = UnitSystem == UnitSystem.Metric ? Measures.MetersPerKilometer : Measures.MetersPerMile;
   }
 
   void Build(FileEntryClass file) {
@@ -63,7 +55,7 @@ class RawWorkoutClass: WorkoutBase {
 
     if (splitReadings > 0) {
       var time = splitReadings / 60;
-      var distance = TotalDistance - DistanceFactor * Splits.Length;
+      var distance = TotalDistance - Measures.MetersPerFactor * Splits.Length;
       RemainingDistance = new(DistanceTypes.Meters, time, distance, splitReadings);
     }
 
@@ -71,11 +63,10 @@ class RawWorkoutClass: WorkoutBase {
   }
 
   int AddSplit(int splitReadings) {
-    var distanceType   = UnitSystem == UnitSystem.Metric ? DistanceTypes.Kilometer :DistanceTypes.Mile;
-    double dist = DistanceFactor * (Splits.Length + 1);
+    double dist = Measures.MetersPerFactor * (Splits.Length + 1);
     if (splitReadings > 20 && TotalDistance >= dist && TotalDistance < dist + 15) {
       var time = splitReadings / 60;
-      Splits.Add(new DistancePerformance(distanceType, time, 1, splitReadings));
+      Splits.Add(new DistancePerformance(Measures.DistanceType, time, 1, splitReadings));
       splitReadings = 0;
     }
     return splitReadings;
