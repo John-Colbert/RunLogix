@@ -20,17 +20,14 @@ class DistancePerformance {
 }
 //=================================================================================
 class RawWorkoutClass: WorkoutBase {
-  var ListClass<DistancePerformance> KilometerSplits,
-                                     MileSplits,
-                                     Splits;
+  var ListClass<DistancePerformance> Splits;
   var DistancePerformance            RemainingDistance;
   var double                         TotalDistance,
                                      TotalTime;
 
   Constructor {
     super.Constructor;
-    KilometerSplits   = new(2);
-    MileSplits        = new(2);
+    Splits            = new(2);
     RemainingDistance = new(DistanceTypes.Meters, 0, 0, 0);
     TotalDistance     = 0;
     TotalTime         = 0;
@@ -39,7 +36,7 @@ class RawWorkoutClass: WorkoutBase {
   void Build(FileEntryClass file) {
     ReadFile(file);
     BuildWorkout;
-    Splits = UnitSystem == UnitSystems.Metric ? KilometerSplits : MileSplits;
+    //Splits = UnitSystem == UnitSystems.Metric ? KilometerSplits : MileSplits;
   }
 
   double GetTotalMiles {
@@ -71,37 +68,35 @@ class RawWorkoutClass: WorkoutBase {
     }
 
     int i = 0;
-    int kiloReadings = 0;
-    int mileReadings = 0;
+    int splitReadings = 0;
     while (i < readings.Length) {
       TotalDistance += readings[i++].Meters;
-      kiloReadings++;
-      mileReadings++;
+      splitReadings++;
 
-      int kSplitCount = KilometerSplits.Length + 1;
-      double kiloDist = Measures.MetersPerKilometer * kSplitCount;
-      if (kiloReadings > 20 && TotalDistance >= kiloDist && TotalDistance < kiloDist + 15) {
-        var time = kiloReadings / 60;
-        KilometerSplits.Add(new DistancePerformance(DistanceTypes.Kilometer, time, 1, kiloReadings));
-        kiloReadings = 0;
-      }
-
-      int mSplitCount = MileSplits.Length + 1;
-      double mileDist = Measures.MetersPerMile * mSplitCount;
-      if (mileReadings > 20 && TotalDistance >= mileDist && TotalDistance < mileDist + 15) {
-        var time = mileReadings / 60;
-        MileSplits.Add(new DistancePerformance(DistanceTypes.Kilometer, time, 1, kiloReadings));
-        mileReadings = 0;
-      }
+      splitReadings = AddSplit(splitReadings);
     }
 
-    if (kiloReadings > 0) {
-      var time = kiloReadings / 60;
-      var distance = TotalDistance - Measures.MetersPerKilometer * KilometerSplits.Length;
-      RemainingDistance = new(DistanceTypes.Meters, time, distance, kiloReadings);
+    if (splitReadings > 0) {
+      var time = splitReadings / 60;
+      var distanceFactor = UnitSystem == UnitSystem.Metric ? Measures.MetersPerKilometer : Measures.MetersPerMile;
+      var distance = TotalDistance - distanceFactor * Splits.Length;
+      RemainingDistance = new(DistanceTypes.Meters, time, distance, splitReadings);
     }
 
     TotalTime = readings.Length / 60;
+  }
+
+  int AddSplit(int splitReadings) {
+    var distanceFactor = UnitSystem == UnitSystem.Metric ? Measures.MetersPerKilometer : Measures.MetersPerMile;
+    var distanceType   = UnitSystem == UnitSystem.Metric ? DistanceTypes.Kilometer :DistanceTypes.Mile;
+    int splitCount = Splits.Length + 1;
+    double dist = distanceFactor * splitCount;
+    if (splitReadings > 20 && TotalDistance >= dist && TotalDistance < dist + 15) {
+      var time = splitReadings / 60;
+      Splits.Add(new DistancePerformance(distanceType, time, 1, splitReadings));
+      splitReadings = 0;
+    }
+    return splitReadings;
   }
 }
 //=================================================================================

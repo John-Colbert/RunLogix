@@ -4,7 +4,7 @@ using Format, Units, IO;
 
 readonly WorkoutsClass Workouts       = new;
 readonly RawWorkoutsClass RawWorkouts = new;
-readonly UnitSystems UnitSystem       = UnitSystems.Metric;
+readonly UnitSystems UnitSystem       = UnitSystems.Imperial;
 
 
 readonly FileEntryClass[] Files = EnumerateFiles(DataPath);
