@@ -21,7 +21,8 @@ class DistancePerformance {
 //=================================================================================
 class RawWorkoutClass: WorkoutBase {
   var ListClass<DistancePerformance> KilometerSplits,
-                                     MileSplits;
+                                     MileSplits,
+                                     Splits;
   var DistancePerformance            RemainingDistance;
   var double                         TotalDistance,
                                      TotalTime;
@@ -38,6 +39,7 @@ class RawWorkoutClass: WorkoutBase {
   void Build(FileEntryClass file) {
     ReadFile(file);
     BuildWorkout;
+    Splits = UnitSystem == UnitSystems.Metric ? KilometerSplits : MileSplits;
   }
 
   double GetTotalMiles {

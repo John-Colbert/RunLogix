@@ -309,13 +309,102 @@ class RawRunningDocumentClass: RunningDocumentsClass {
     ShowTitle;
 
     foreach (var workout in RawWorkouts.Workouts) {
-      var distance = (workout.TotalDistance / Measures.MetersPerMile);
-      Paragraph {
-        "Start: "    workout.StartTime;
-        "End: "      workout.EndTime;
-        "Distance: " distance " miles";
+      var distance = (workout.TotalDistance * (UnitSystem == UnitSystems.Metric ? Measures.KilometersPerMeter : Measures.MilesPerMeter));
+
+      Canvas(100%) {
+        Table (null, null, [1.25 inches, 0.35 inches, 1.5 inch, ColumnClass.Expand, 1.75 inches]) {
+          Row {
+            TextHeight: 14 pts;
+            SpaceBefore: 10 pts;
+            Cell {
+              TextFormat: "MMM d, yyyy";
+              workout.StartTime;
+            };
+            Cell(null, 2) {
+              ShowDistance(distance);
+            };
+            Cell {
+              var pace = workout.TotalTime / (workout.TotalDistance * (UnitSystem == UnitSystems.Metric ? Measures.KilometersPerMeter : Measures.MilesPerMeter));
+              ShowPace(pace);
+            };
+            Cell {
+              Span {
+                TextFormat: "hh:mmtt";
+                workout.StartTime;
+                Space "-" Space;
+                TextFormat: "hh:mmtt";
+                workout.EndTime;
+              };
+            };
+          };
+
+          if (workout.Splits?.Length > 0) {
+            Row {
+              Cell;
+              Cell { "Splits" };
+              Cell;
+              Cell;
+              Cell;
+            };
+          }
+
+          foreach (var split in workout.Splits) {
+            Row {
+              Cell;
+              Cell {
+                each1;
+              };
+              Cell;
+              Cell {
+                TextDigits:  2;
+                split.Time " minutes";
+              };
+              Cell;
+            };
+          }
+
+          if (workout.RemainingDistance?.Distance > 0) {
+            Row {
+              Cell;
+              Cell {
+                "End";
+              };
+              Cell {
+                var dist = workout.RemainingDistance.Distance * (UnitSystem == UnitSystems.Metric ? Measures.KilometersPerMeter : Measures.MilesPerMeter);
+                ShowDistance(dist);
+              };
+              Cell {
+                TextDigits:  2;
+                workout.RemainingDistance.Time " minutes";
+              };
+              Cell;
+            };
+          }
+
+        };
       };
     }
+  };
+
+  ShowPace(double pace) = Span {
+    var t = new TimeSpanClass(0, 0, 0, pace * 60);
+    Span {
+      TextFormat: "00";
+      "{0}:{1}"(t.Minute, t.Second);
+      Span {
+        TextHeight: 10 pts;
+        UnitSystem == UnitSystems.Metric ? " min/km" : " min/mi";
+      }
+    };
+  };
+
+  ShowDistance(double distance) = Span {
+    TextDigits: 3;
+    distance;
+    Span {
+      TextHeight: 10 pts;
+      Measures.GetDistanceName;
+    };
   };
 
 }
