@@ -4,6 +4,7 @@ include "Global";
 include "Accumulator";
 include "WorkoutClasses";
 include "Workouts";
+include "TimeBasedWorkouts";
 include "WorkoutDocuments";
 include "RawWorkouts";
 

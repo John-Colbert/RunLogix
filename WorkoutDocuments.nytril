@@ -31,7 +31,7 @@ class RunningDocumentsClass: DocumentClass {
 //=======================================================================
 
 class SummaryClass: RunningDocumentsClass {
-  var ListClass<WorkoutClass> AllWorkouts;
+  var ListClass<TimeBasedWorkoutClass> AllWorkouts;
   var ListClass<TimeDistanceClass> MonthlyActualDistance;
 
   Constructor {
@@ -142,7 +142,7 @@ class SummaryClass: RunningDocumentsClass {
     ShowTime(workout.TotalActualTime);
   };
 
-  void GetMonthyActuals(ListClass<WorkoutClass> workouts, year) {
+  void GetMonthyActuals(ListClass<TimeBasedWorkoutClass> workouts, year) {
     for (int i = 0; i < 12; i++)
       MonthlyActualDistance.Add(new TimeDistanceClass(i, 0));
 
@@ -163,7 +163,7 @@ class SummaryClass: RunningDocumentsClass {
 //======================================================================================
 
 class PerformanceToTargetClass: RunningDocumentsClass {
-  var ListClass<WorkoutClass> RunWorkouts;
+  var ListClass<TimeBasedWorkoutClass> RunWorkouts;
 
   Constructor {
     super.Constructor(#029a3f5d-ebfd-4011-8d57-7f87c7b6b324#, "Performance to Target");

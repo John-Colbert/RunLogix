@@ -1,0 +1,152 @@
+class TimeBasedWorkoutClass: WorkoutBase {
+  var ListClass<SegmentClass>  Segments,
+                               SegmentList;
+  var ListClass<IntervalClass> Intervals;
+  var string                   WorkoutName,
+                               Notes;
+  var datetime                 WorkoutDate;
+  var double                   TotalTargetTime,
+                               TotalActualTime,
+                               TotalTargetDistance,
+                               TotalActualDistance,
+                               TotalTargetPace,
+                               TotalActualPace,
+                               TotalPerformance;
+  var int                      AddOrder;
+
+  Constructor(datetime date) {
+    super.Constructor;
+    Segments             = new(8);
+    SegmentList          = new(10);
+    Intervals            = new(2);
+    WorkoutName          = null;
+    WorkoutDate          = date;
+    Notes                = null;
+    TotalTargetTime      = 0;
+    TotalActualTime      = 0;
+    TotalTargetDistance  = 0;
+    TotalActualDistance  = 0;
+    TotalTargetPace      = 0;
+    TotalActualPace      = 0;
+    TotalPerformance     = 0;
+    AddOrder             = 1;
+  }
+
+  void AddSegment(string name, double minutes, double targetPace) {
+    SegmentClass segment = new(name, minutes, targetPace);
+    segment.AddOrder = AddOrder++;
+    Segments.Add(segment);
+  }
+
+  IntervalClass AddInterval(int repeats) {
+    var iv = new IntervalClass(repeats, AddOrder++);
+    Intervals.Add(iv);
+    return iv;
+  }
+
+  void Build {
+    GetFilePath(WorkoutDate);
+    if (Filename is not null) {
+      var wo = RawWorkouts.Workouts;
+      Accumulator = wo?.FindFirst(d => d.Filename == Filename).Accumulator;
+      //Accumulator.ReadFile(DataPath, Filename, UseSourceRoot);
+    }
+    BuildSegmentList();
+    BuildSegments();
+  }
+
+  private void BuildSegmentList {
+    if (Intervals.Length() <= 0) {
+      SegmentList = Segments;
+      return;
+    }
+
+    SegmentClass s;
+    for (int i = 1; i < AddOrder; i++) {
+      s = Segments.FindFirst(d => d.AddOrder == i);
+      if (s is not null)
+        SegmentList.Add(s);
+      else {
+        IntervalClass iv = Intervals.FindFirst(d => d.AddOrder == i);
+        if (iv is not null) {
+          SegmentClass[] segments = iv.Segments.ToArray * iv.Repeats;
+          foreach (var segment in segments) {
+            SegmentList.Add(new SegmentClass(segment.Name, segment.TargetTime, segment.TargetPace));
+          }
+        }
+      }
+    }
+    SegmentList.Add(new SegmentClass("Open", 100, 12.00));
+  }
+
+  private void BuildSegments {
+    int i = 0;
+
+    var readings = Accumulator.Readings;
+
+    foreach (var segment in SegmentList) {
+      if (readings.Length > 0) {
+        StartTime = readings.FirstElement.Time;
+        EndTime   = readings.LastElement.Time;
+
+        var distanceMeters = 0.0;
+        var targetReadings = segment.TargetTime * 60;
+        var numReadings    = 0;
+        while (i < readings.Length && numReadings < targetReadings) {
+          distanceMeters += readings[i++].Meters;
+          numReadings++;
+        }
+
+        if (segment.Name == "Open") {
+          segment.TargetTime = numReadings / 60;
+          segment.ActualTime = segment.TargetTime;
+        }
+
+        if (segment.TargetTime > 0) {
+          segment.ActualDistance = distanceMeters / Measures.MetersPerMile;
+
+          if (segment.ActualDistance > 0) {
+            segment.ActualTime     = numReadings / 60;
+            segment.ActualPace     = segment.ActualTime / segment.ActualDistance;
+            segment.Performance    = segment.ActualPace - segment.TargetPace;
+            if (segment.Name == "Open") {
+              segment.TargetPace   = segment.ActualPace;
+              segment.Performance  = 0;
+            }
+          }
+        }
+
+        TotalActualDistance += segment.ActualDistance;
+      }
+
+      if (segment.Name != "Open") {
+        segment.TargetDistance = (segment.TargetTime / segment.TargetPace);
+        TotalTargetTime        += segment.TargetTime;
+        TotalTargetDistance    += segment.TargetDistance;
+      }
+
+      if ((segment.Name == "Open" && segment.ActualTime > 0) || segment.Name != "Open")
+        TotalActualTime        += segment.ActualTime;
+    }
+
+    TotalTargetPace  = TotalTargetTime / TotalTargetDistance;
+    TotalActualPace  = TotalActualDistance > 0 ? TotalActualTime / TotalActualDistance : 0;
+    TotalPerformance = TotalActualPace > 0 ? TotalActualPace - TotalTargetPace : 0;
+  }
+}
+//===========================================================================
+
+class TimeBasedWorkoutsClass {
+  var ListClass<TimeBasedWorkoutClass> Workouts;
+
+  Constructor {
+    Workouts = new(8);
+  }
+
+  Build = {
+    foreach(var workout in RunningWorkouts){
+      workout.Build();
+      Workouts.Add(workout);
+    }
+  };
+}

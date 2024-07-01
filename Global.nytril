@@ -2,7 +2,7 @@ using Format, Units, IO;
 
 //======================================================================================
 
-readonly WorkoutsClass Workouts       = new;
+readonly TimeBasedWorkoutsClass Workouts       = new;
 readonly RawWorkoutsClass RawWorkouts = new;
 readonly UnitSystems UnitSystem       = UnitSystems.Imperial;
 
