@@ -24,20 +24,20 @@ Nytril provides immediate output which makes it suitable for this app and very e
 
 # How to Use
 
-1. Download and Install Nytril Desktop IDE. Go to [Nytril.com](https://www.nytril.com) and select the platfrom (Windows or Mac), then download and install.
-2. Clone or download this code from GitHub and place in the folder of your choice.
+1. Download and Install Nytril Desktop IDE. To do so, go to [Nytril.com](https://www.nytril.com) and on the home page select the platfrom (Windows or Mac), then download the setup file and install.
+2. Clone this repository or download the code and place in a folder of your choice.
 3. Open Nytril and select the menu option "Repo", then "New Repository."
-    - Under "Local Folder", click the browse button and navigate to the "Run Logix" folder where you placed it in the previous step.
-    - The "Repository Name" will be changed to the folder name.  Adjust it if you would like. 
+    - Under "Local Folder", click the browse button and navigate to the "Run Logix" folder where you placed the code in the previous step.
+    - The "Repository Name" will be changed to the folder name, but you can change it. 
     - Leave "Language Files" as is. 
     - Click "OK".
 4. The "Starting Project" dialog will appear.
     - Under "Main File" the path and filename should already be correct. If not, browse to the "Run Logix" folder and select "Main.nytril."
-    - Under "Name" change the name to something useful, such as "Run Logix." This is the friendly name of the project within the local repository. 
+    - Under "Name" change the name to something useful, such as "Run Logix." This is the friendly name of the project. 
     - Click "OK".
 5. The project will load, build and run. The code will be on the left and the output on the right.
-6. Select the "Documents" menu option
-    - Click on a document to view the output. At this time, there are two choices "Summary" and "Performance to Target."
+6. On the Nytril menu, select the "Documents" option
+    - Click on a document to view the output.
 
 # How to add or modify a run workout
 
@@ -64,9 +64,15 @@ With the "Workouts" file open:
 # How to add the performance data
 
 1. Use your iWatch or iPhone to record your run. This process may also work if a different device is synced with an iPhone, but that has not been tested.
-    - Notably, it does not matter whether you use a programmed "Workout" run on the iWatch or iPhone, as the app reads the ".gpx" file data that contains the same basic information regardless of whether a programmed run was used (such as pacer workout).
+    - Notably, it does not matter whether you use a programmed "Workout" on the iWatch or iPhone, as the app reads the ".gpx" file data that contains the same basic information regardless of whether a programmed run was used (such as pacer workout).
 2. After the run, use your iPhone to export your health data. Transfer the output to your computer.
 3. Either copy the entire "apple_health_export" to the "Run Logix" folder -- replacing the existing one -- or find your ".gpx" file under "apple_health_export/workout_routes/" and copy it. The filename will include the date with the ending time of the workout. Paste the file into the "Run Logix/apple_health_export/workout_routes" folder.
-4. Press "F5." The app will find the file by the date in the name and use it to compute the performance values.
+4. Go to Nytril and press "F5." The app will find the file by the date in the name and use it to compute the performance values.
+
+# How to view all basic running workouts
+1. Just as with adding performance data, copy the apple_health_export data from your phone to your computer.
+2. Copy the entire folder "apple_health_export/workout_routes/."  Paste it into the RunLogix folder.
+3. Press "F5" in Nytril. After the progress bar finishes, select the document to view all basic running data.
+4. The summary will also include this imported running data.  
 
 
