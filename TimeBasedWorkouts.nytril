@@ -32,8 +32,9 @@ class TimeBasedWorkoutClass: WorkoutBase {
     AddOrder             = 1;
   }
 
-  void AddSegment(string name, double minutes, double targetPace) {
-    SegmentClass segment = new(name, minutes, targetPace);
+  void AddSegment(string name, double minutes, string pace, PaceTypes paceType) {
+    double targetPace = Convert.MinutesToDouble(pace);
+    SegmentClass segment = new(name, minutes, targetPace, paceType);
     segment.AddOrder = AddOrder++;
     Segments.Add(segment);
   }
@@ -70,12 +71,12 @@ class TimeBasedWorkoutClass: WorkoutBase {
         if (iv is not null) {
           SegmentClass[] segments = iv.Segments.ToArray * iv.Repeats;
           foreach (var segment in segments) {
-            SegmentList.Add(new SegmentClass(segment.Name, segment.TargetTime, segment.TargetPace));
+            SegmentList.Add(new SegmentClass(segment.Name, segment.TargetTime, segment.TargetPace, segment.TargetPaceType));
           }
         }
       }
     }
-    SegmentList.Add(new SegmentClass("Open", 100, 12.00));
+    SegmentList.Add(new SegmentClass("Open", 100, 12.00, PaceTypes.MinPerMi));
   }
 
   private void BuildSegments {
@@ -102,15 +103,15 @@ class TimeBasedWorkoutClass: WorkoutBase {
         }
 
         if (segment.TargetTime > 0) {
-          segment.ActualDistance = distanceMeters / Measures.MetersPerMile;
+          segment.ActualDistance = distanceMeters * Measures.PerMeterFactor;
 
           if (segment.ActualDistance > 0) {
             segment.ActualTime     = numReadings / 60;
             segment.ActualPace     = segment.ActualTime / segment.ActualDistance;
-            segment.Performance    = segment.ActualPace - segment.TargetPace;
+            segment.Performance    = segment.ActualPace - segment.ConvertedTargetPace;
             if (segment.Name == "Open") {
-              segment.TargetPace   = segment.ActualPace;
-              segment.Performance  = 0;
+              segment.ConvertedTargetPace = segment.ActualPace;
+              segment.Performance = 0;
             }
           }
         }
@@ -119,13 +120,13 @@ class TimeBasedWorkoutClass: WorkoutBase {
       }
 
       if (segment.Name != "Open") {
-        segment.TargetDistance = (segment.TargetTime / segment.TargetPace);
+        segment.TargetDistance = (segment.TargetTime / segment.ConvertedTargetPace);
         TotalTargetTime        += segment.TargetTime;
         TotalTargetDistance    += segment.TargetDistance;
       }
 
       if ((segment.Name == "Open" && segment.ActualTime > 0) || segment.Name != "Open")
-        TotalActualTime        += segment.ActualTime;
+        TotalActualTime += segment.ActualTime;
     }
 
     TotalTargetPace  = TotalTargetTime / TotalTargetDistance;

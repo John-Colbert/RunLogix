@@ -55,7 +55,7 @@ class SummaryClass: RunningDocumentsClass {
 
     HAlign: HAligns.Center;
     Background: Colors.WhiteSmoke;
-    "{0} workouts"(Workouts.Workouts.Length);
+    "{0} Workouts"(Workouts.Workouts.Length);
     Chart(90%, 3 inches) {
       Marker: Markers.Circle(Colors.White, 0.5);
       Type: ChartTypes.Column;
@@ -64,6 +64,11 @@ class SummaryClass: RunningDocumentsClass {
         (each months).ShortName;
       };
       ValueAxis: ChartAxis;
+      ValueLabel: HBox {
+        Transform: TransformClass.Rotate(270 degrees);
+        TransformFit: true;
+        Measures.DistanceUnitPlural;
+      };
       ChartSeries {
         MonthlyActualDistance.ToArray();
       };
@@ -148,12 +153,12 @@ class SummaryClass: RunningDocumentsClass {
 
   ShowDistance(double distance) = Span {
     TextDigits: 3;
-    distance miles;
+    distance Space Measures.DistanceUnitPlural;
   };
 
   ShowTime(double time) = Span {
     TextDigits: 2;
-    time minutes;
+    time Space minutes;
   };
 
   ShowDetails(string name, double actualDistance, double actualTime) = {
@@ -184,7 +189,7 @@ class SummaryClass: RunningDocumentsClass {
       else {
         dt = rawWorkout.StartTime;
         if (dt.Year == chartYear)
-          mDist = rawWorkout.TotalDistance * Measures.MilesPerMeter;
+          mDist = rawWorkout.TotalDistance * Measures.PerMeterFactor;
       }
 
       if (mDist > 0) {
@@ -249,8 +254,8 @@ class PerformanceToTargetClass: RunningDocumentsClass {
           "Target";
           "Pace";
           "Performance";
-          "Target Miles";
-          "Actual Miles";
+          "Target "  Measures.DistanceUnitPlural;
+          "Actual " + Measures.DistanceUnitPlural;
         };
 
         foreach (var segment in workout.SegmentList) {
@@ -267,7 +272,7 @@ class PerformanceToTargetClass: RunningDocumentsClass {
               ShowTime(segment.TargetTime, segment.ActualTime);
             };
 
-            ShowPace(segment.TargetPace);
+            ShowPace(segment.ConvertedTargetPace);
             ShowPace(segment.ActualPace);
             ShowPerformance(segment.Performance);
             ShowDistance(segment.TargetDistance);

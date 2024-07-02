@@ -22,7 +22,14 @@ namespace SegmentNames {
 }
 
 //===========================================================================
+/*                     ENTER WORKOUT CLASSES BELOW
 
+       The Target Pace type will be converted for calculations based on the
+       global UnitSystem, which is specified in the Global file. Enter either
+       min/km or min/mi for the target pace, both will work regardless of the
+       selected UnitSystem.
+*/
+//===========================================================================
 class Interval1HR_5x: TimeBasedWorkoutClass {
   Constructor(datetime date, string notes = null) {
     super.Constructor(date);
@@ -30,18 +37,19 @@ class Interval1HR_5x: TimeBasedWorkoutClass {
     WorkoutName = "Interval 1 HR 5x";
     Notes       = notes;
 
-    //                  Name               Time in Minutes       Target Pace
-    AddSegment(SegmentNames.WarmUp1         ,      7         ,      12.00);
-    AddSegment(SegmentNames.WarmUp2         ,      3         ,      11.25);
+    //                                                             Target Pace
+    //                  Name               Time in Minutes       Minutes:Seconds     Pace Type
+    AddSegment(SegmentNames.WarmUp1         ,      7         ,      "12:00",     PaceTypes.MinPerMi);
+    AddSegment(SegmentNames.WarmUp2         ,      3         ,      "11:15",     PaceTypes.MinPerMi);
 
-    AddSegment(SegmentNames.Comfortable     ,      20        ,      10.75);
-    AddSegment(SegmentNames.Slow            ,      3         ,      11.75);
+    AddSegment(SegmentNames.Comfortable     ,      20        ,      "10:45",     PaceTypes.MinPerMi);
+    AddSegment(SegmentNames.Slow            ,      3         ,      "11:45",     PaceTypes.MinPerMi);
 
     var iv1 = AddInterval(5);
-    iv1.AddSegment(SegmentNames.Accelerated ,      3         ,      9.75);
-    iv1.AddSegment(SegmentNames.Slow        ,      1         ,      11.75);
+    iv1.AddSegment(SegmentNames.Accelerated ,      3         ,      "09:45",     PaceTypes.MinPerMi);
+    iv1.AddSegment(SegmentNames.Slow        ,      1         ,      "11:45",     PaceTypes.MinPerMi);
 
-    AddSegment(SegmentNames.Cooldown        ,      7         ,      12.00);
+    AddSegment(SegmentNames.Cooldown        ,      7         ,      "12:00",     PaceTypes.MinPerMi);
   }
 }
 
@@ -54,17 +62,18 @@ class Tempo1hr1x1x: TimeBasedWorkoutClass {
     WorkoutName = "Tempo1hr 1x 1x";
     Notes       = notes;
 
-    //                  Name               Time in Minutes       Target Pace
-    AddSegment(SegmentNames.WarmUp1         ,      7         ,      12.00);
-    AddSegment(SegmentNames.WarmUp2         ,      5         ,      11.50);
+    //                                                             Target Pace
+    //                  Name               Time in Minutes       Minutes:Seconds     Pace Type
+    AddSegment(SegmentNames.WarmUp1         ,      7         ,      "12:00",     PaceTypes.MinPerMi);
+    AddSegment(SegmentNames.WarmUp2         ,      5         ,      "11:30",     PaceTypes.MinPerMi);
 
-    AddSegment(SegmentNames.Comfortable     ,      20        ,      10.75);
-    AddSegment(SegmentNames.Slow            ,      3         ,      12.00);
+    AddSegment(SegmentNames.Comfortable     ,      20        ,      "10:45",     PaceTypes.MinPerMi);
+    AddSegment(SegmentNames.Slow            ,      3         ,      "12:00",     PaceTypes.MinPerMi);
 
-    AddSegment(SegmentNames.Comfortable     ,      10        ,      10.75);
-    AddSegment(SegmentNames.Slow            ,      5         ,      12.00);
+    AddSegment(SegmentNames.Comfortable     ,      10        ,      "10:45",     PaceTypes.MinPerMi);
+    AddSegment(SegmentNames.Slow            ,      5         ,      "12:00",     PaceTypes.MinPerMi);
 
-    AddSegment(SegmentNames.Cooldown        ,      10        ,      12.00);
+    AddSegment(SegmentNames.Cooldown        ,      10        ,      "12:00",     PaceTypes.MinPerMi);
   }
 }
 
@@ -77,21 +86,22 @@ class LongRun1hr50m5x10x: TimeBasedWorkoutClass {
     WorkoutName = "Long Run 1hr 50m 5x 10x";
     Notes       = notes;
 
-    //                  Name               Time in Minutes       Target Pace
-    AddSegment(SegmentNames.Slow            ,      40        ,      12.25);
-    AddSegment(SegmentNames.Slow            ,      10        ,      11.50);
+    //                                                             Target Pace
+    //                  Name               Time in Minutes       Minutes:Seconds     Pace Type
+    AddSegment(SegmentNames.Slow            ,      40        ,      "12:15",     PaceTypes.MinPerMi);
+    AddSegment(SegmentNames.Slow            ,      10        ,      "11:30",     PaceTypes.MinPerMi);
 
     var iv1 = AddInterval(5);
-    iv1.AddSegment(SegmentNames.Comfortable ,      2         ,      10.75);
-    iv1.AddSegment(SegmentNames.Slow        ,      1         ,      12.25);
+    iv1.AddSegment(SegmentNames.Comfortable ,      2         ,      "10:45",     PaceTypes.MinPerMi);
+    iv1.AddSegment(SegmentNames.Slow        ,      1         ,      "12:15",     PaceTypes.MinPerMi);
 
 
     var iv2 = AddInterval(10);
-    iv2.AddSegment(SegmentNames.Accelerated ,      1         ,      9.75);
-    iv2.AddSegment(SegmentNames.Slow        ,      2         ,      12.25);
+    iv2.AddSegment(SegmentNames.Accelerated ,      1         ,      "09:45",     PaceTypes.MinPerMi);
+    iv2.AddSegment(SegmentNames.Slow        ,      2         ,      "12:15",     PaceTypes.MinPerMi);
 
-    AddSegment(SegmentNames.Slow            ,      5         ,      11.75);
-    AddSegment(SegmentNames.Cooldown        ,      10        ,      12.25);
+    AddSegment(SegmentNames.Slow            ,      5         ,      "11:45",     PaceTypes.MinPerMi);
+    AddSegment(SegmentNames.Cooldown        ,      10        ,      "12:15",     PaceTypes.MinPerMi);
   }
 }
 //--------------------------------------------------------------------------
@@ -103,28 +113,29 @@ class Interval1HR_3x4x5x2: TimeBasedWorkoutClass {
     WorkoutName = "Interval 1 HR 3x 4x 5x";
     Notes       = notes;
 
-    //                  Name               Time in Minutes       Target Pace
-    AddSegment(SegmentNames.WarmUp1         ,      7         ,      12.00);
-    AddSegment(SegmentNames.WarmUp2         ,      5         ,      11.50);
+    //                                                             Target Pace
+    //                  Name               Time in Minutes       Minutes:Seconds     Pace Type
+    AddSegment(SegmentNames.WarmUp1         ,      7         ,      "12:00",     PaceTypes.MinPerMi);
+    AddSegment(SegmentNames.WarmUp2         ,      5         ,      "11:30",     PaceTypes.MinPerMi);
 
     var iv1 = AddInterval(3);
-    iv1.AddSegment(SegmentNames.Comfortable ,      2         ,      10.75);
-    iv1.AddSegment(SegmentNames.Slow        ,      2         ,      12.00);
+    iv1.AddSegment(SegmentNames.Comfortable ,      2         ,      "10:45",     PaceTypes.MinPerMi);
+    iv1.AddSegment(SegmentNames.Slow        ,      2         ,      "12:00",     PaceTypes.MinPerMi);
 
-    AddSegment(SegmentNames.Slow            ,      2         ,      12.00);
+    AddSegment(SegmentNames.Slow            ,      2         ,      "12:00",     PaceTypes.MinPerMi);
 
     var iv2 = AddInterval(4);
-    iv2.AddSegment(SegmentNames.Accelerated ,      1.5       ,      9.75);
-    iv2.AddSegment(SegmentNames.Slow        ,      1.5       ,      12.00);
+    iv2.AddSegment(SegmentNames.Accelerated ,      1.5       ,      "09:45",     PaceTypes.MinPerMi);
+    iv2.AddSegment(SegmentNames.Slow        ,      1.5       ,      "12:00",     PaceTypes.MinPerMi);
 
-    AddSegment(SegmentNames.Slow            ,      2         ,      12.00);
+    AddSegment(SegmentNames.Slow            ,      2         ,      "12:00",     PaceTypes.MinPerMi);
 
     var iv3 = AddInterval(5);
-    iv3.AddSegment(SegmentNames.Accelerated ,      1         ,      9.50);
-    iv3.AddSegment(SegmentNames.Slow        ,      1         ,      12.00);
+    iv3.AddSegment(SegmentNames.Accelerated ,      1         ,      "09:30",     PaceTypes.MinPerMi);
+    iv3.AddSegment(SegmentNames.Slow        ,      1         ,      "12:00",     PaceTypes.MinPerMi);
 
-    AddSegment(SegmentNames.Slow            ,      5         ,      11.50);
-    AddSegment(SegmentNames.Cooldown        ,      5         ,      12.00);
+    AddSegment(SegmentNames.Slow            ,      5         ,      "11:30",     PaceTypes.MinPerMi);
+    AddSegment(SegmentNames.Cooldown        ,      5         ,      "12:00",     PaceTypes.MinPerMi);
   }
 }
 
@@ -137,18 +148,19 @@ class Tempo1hr1x3x: TimeBasedWorkoutClass {
     WorkoutName = "Tempo1hr 1x 3x";
     Notes       = notes;
 
-    //                  Name               Time in Minutes       Target Pace
-    AddSegment(SegmentNames.WarmUp1         ,      7         ,      12.25);
-    AddSegment(SegmentNames.WarmUp2         ,      3         ,      11.75);
+    //                                                             Target Pace
+    //                  Name               Time in Minutes       Minutes:Seconds     Pace Type
+    AddSegment(SegmentNames.WarmUp1         ,      7         ,      "12:15",     PaceTypes.MinPerMi);
+    AddSegment(SegmentNames.WarmUp2         ,      3         ,      "11:45",     PaceTypes.MinPerMi);
 
-    AddSegment(SegmentNames.Comfortable     ,      20        ,      10.75);
-    AddSegment(SegmentNames.Slow            ,      3         ,      12.00);
+    AddSegment(SegmentNames.Comfortable     ,      20        ,      "10:45",     PaceTypes.MinPerMi);
+    AddSegment(SegmentNames.Slow            ,      3         ,      "12:00",     PaceTypes.MinPerMi);
 
     var iv1 = AddInterval(3);
-    iv1.AddSegment(SegmentNames.Accelerated ,      5         ,      09.75);
-    iv1.AddSegment(SegmentNames.Slow        ,      2         ,      12.00);
+    iv1.AddSegment(SegmentNames.Accelerated ,      5         ,      "09:45",     PaceTypes.MinPerMi);
+    iv1.AddSegment(SegmentNames.Slow        ,      2         ,      "12:00",     PaceTypes.MinPerMi);
 
-    AddSegment(SegmentNames.Cooldown        ,      6         ,      12.00);
+    AddSegment(SegmentNames.Cooldown        ,      6         ,      "12:00",     PaceTypes.MinPerMi);
   }
 }
 
@@ -162,12 +174,13 @@ class LongEasy1hr40Min: TimeBasedWorkoutClass {
     Filename    = null;
     Notes       = notes;
 
-    //                  Name               Time in Minutes       Target Pace
-    AddSegment(SegmentNames.WarmUp1         ,      30        ,      12.00);
+    //                                                             Target Pace
+    //                  Name               Time in Minutes       Minutes:Seconds     Pace Type
+    AddSegment(SegmentNames.WarmUp1         ,      30        ,      "12:00",     PaceTypes.MinPerMi);
 
-    AddSegment(SegmentNames.Slow            ,      60        ,      11.40);
+    AddSegment(SegmentNames.Slow            ,      60        ,      "11:24",     PaceTypes.MinPerMi);
 
-    AddSegment(SegmentNames.Cooldown        ,      10         ,     12.00);
+    AddSegment(SegmentNames.Cooldown        ,      10         ,     "12:00",     PaceTypes.MinPerMi);
   }
 }
 
@@ -181,19 +194,20 @@ class Interval1hr1x4x: TimeBasedWorkoutClass {
     Filename    = null;
     Notes       = notes;
 
-    //                  Name               Time in Minutes       Target Pace
-    AddSegment(SegmentNames.WarmUp1         ,      10        ,      12.00);
-    AddSegment(SegmentNames.Slow            ,      3         ,      11.40);
+    //                                                             Target Pace
+    //                  Name               Time in Minutes       Minutes:Seconds     Pace Type
+    AddSegment(SegmentNames.WarmUp1         ,      10        ,      "12:00",     PaceTypes.MinPerMi);
+    AddSegment(SegmentNames.Slow            ,      3         ,      "11:24",     PaceTypes.MinPerMi);
 
-    AddSegment(SegmentNames.Comfortable     ,      3         ,      10.50);
-    AddSegment(SegmentNames.Slow            ,      2         ,      12.00);
+    AddSegment(SegmentNames.Comfortable     ,      3         ,      "10:30",     PaceTypes.MinPerMi);
+    AddSegment(SegmentNames.Slow            ,      2         ,      "12:00",     PaceTypes.MinPerMi);
 
 
     var iv2 = AddInterval(4);
-    iv2.AddSegment(SegmentNames.Accelerated ,      4         ,      9.65);
-    iv2.AddSegment(SegmentNames.Slow        ,      4         ,      12.00);
+    iv2.AddSegment(SegmentNames.Accelerated ,      4         ,      "09:39",     PaceTypes.MinPerMi);
+    iv2.AddSegment(SegmentNames.Slow        ,      4         ,      "12:00",     PaceTypes.MinPerMi);
 
-    AddSegment(SegmentNames.Cooldown        ,      10        ,      12.00);
+    AddSegment(SegmentNames.Cooldown        ,      10        ,      "12:00",     PaceTypes.MinPerMi);
   }
 }
 
