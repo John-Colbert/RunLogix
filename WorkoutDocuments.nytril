@@ -405,30 +405,13 @@ class RawRunningDocumentClass: RunningDocumentsClass {
               };
               Cell {
                 VAlign: VAligns.Bottom;
-                Span {
-                  Span {
-                    TextDigits: 1;
-                    Span {
-                      TextColor: Colors.Green;
-                      Tex.Uparrow;
-                    };
-                    ele.DistanceUp;
-                  };
-                  Space;
-                  Span {
-                    TextDigits: 1;
-                    Span {
-                      TextColor: Colors.Red;
-                      Tex.Downarrow;
-                    };
-                    ele.DistanceDown;
-                  };
-                };
+                ShowElevation(ele);
               };
             };
           }
 
           if (workout.RemainingDistance?.Distance > 0) {
+            var ele = Utilities.GetElevationMetrics(workout.RemainingDistance.ElevationReadings);
             Row {
               Cell;
               Cell {
@@ -441,7 +424,10 @@ class RawRunningDocumentClass: RunningDocumentsClass {
               Cell {
                 ShowPace(workout.RemainingDistance.Time, " min");
               };
-              Cell;
+              Cell {
+                VAlign: VAligns.Bottom;
+                ShowElevation(ele);
+              };
             };
           }
 
@@ -468,6 +454,26 @@ class RawRunningDocumentClass: RunningDocumentsClass {
     Span {
       TextHeight: 10 pts;
       Measures.DistanceAbbr;
+    };
+  };
+
+  ShowElevation (ElevationClass ele) = Span {
+    Span {
+      TextDigits: 1;
+      Span {
+        TextColor: Colors.Green;
+        Tex.Uparrow;
+      };
+      ele.DistanceUp;
+    };
+    Space;
+    Span {
+      TextDigits: 1;
+      Span {
+        TextColor: Colors.Red;
+        Tex.Downarrow;
+      };
+      ele.DistanceDown;
     };
   };
 
