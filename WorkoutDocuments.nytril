@@ -393,6 +393,7 @@ class RawRunningDocumentClass: RunningDocumentsClass {
           }
 
           foreach (var split in workout.Splits) {
+            var ele = Utilities.GetElevationMetrics(split.ElevationReadings);
             Row {
               Cell;
               Cell {
@@ -402,7 +403,28 @@ class RawRunningDocumentClass: RunningDocumentsClass {
               Cell {
                 ShowPace(split.Time, " min");
               };
-              Cell;
+              Cell {
+                Span {
+                  Span {
+                    TextDigits: 1;
+                    "Ele: ";
+                    Span {
+                      TextColor: Colors.Green;
+                      Tex.Uparrow;
+                    };
+                    ele.DistanceUp;
+                  };
+                  Space;
+                  Span {
+                    TextDigits: 1;
+                    Span {
+                      TextColor: Colors.Red;
+                      Tex.Downarrow;
+                    };
+                    ele.DistanceDown;
+                  };
+                };
+              };
             };
           }
 

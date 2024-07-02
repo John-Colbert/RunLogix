@@ -2,7 +2,8 @@ using IO;
 
 class Reading {
   var datetime Time;
-  var double Meters;
+  var double   Elevation,
+               Meters;
 }
 
 class AccumulatorClass {
@@ -30,6 +31,9 @@ class AccumulatorClass {
         foreach (var trkptEl in trkpts) {
           var timeEl = trkptEl.FindFirstElement("time");
           RowReading.Time = datetime.Parse8601(timeEl.Value);
+
+          var eleEl = trkptEl.FindFirstElement("ele");
+          RowReading.Elevation = eleEl.Value as double;
 
           var extensionsEl = trkptEl.FindFirstElement("extensions");
           var speedEl      = extensionsEl.FindFirstElement("speed");

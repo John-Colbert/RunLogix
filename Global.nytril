@@ -65,3 +65,29 @@ enum UnitSystems {
   Imperial
 }
 //======================================================================================
+
+namespace Utilities {
+  ElevationClass GetElevationMetrics(DoubleList elevationReadings) {
+    if (elevationReadings.Length <= 0)
+      return new ElevationClass(0, 0);
+
+    double start = elevationReadings[0];
+    //double max;
+    //double min;
+    double distanceUp = 0;
+    double distanceDown = 0;
+
+    double lastVal = start;
+    foreach (var ele in elevationReadings) {
+      //max = Math.Max(max, ele);
+      //min = Math.Min(min, ele);
+
+      if (ele > lastVal)
+        distanceUp += ele - lastVal;
+      else if (ele < lastVal)
+        distanceDown += lastVal - ele;
+    }
+
+    return new ElevationClass(distanceUp, distanceDown);
+  }
+}

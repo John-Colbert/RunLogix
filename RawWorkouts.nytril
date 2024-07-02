@@ -1,15 +1,19 @@
 using IO, Units, System;
 
+typedef DoubleList ListClass<double>;
 class DistancePerformance {
-  var DistanceTypes Type;
-  var double        Time,
-                    Distance;
-  var int           Readings;
-  Constructor(DistanceTypes type, double time, double distance, int readings) {
+  var DistanceTypes     Type;
+  var double            Time,
+                        Distance;
+  var int               Readings;
+  var DoubleList        ElevationReadings;
+
+  Constructor(DistanceTypes type, double time, double distance, int readings, DoubleList elevationReadings) {
     Type     = type;
     Time     = time;
     Distance = distance;
     Readings = readings;
+    ElevationReadings = elevationReadings;
   }
 }
 //=================================================================================
@@ -18,13 +22,15 @@ class RawWorkoutClass: WorkoutBase {
   var DistancePerformance            RemainingDistance;
   var double                         TotalDistance,
                                      TotalTime;
+  var ListClass<double>              ElevationReadings;
 
   Constructor {
     super.Constructor;
     Splits            = new(2);
-    RemainingDistance = new(DistanceTypes.Meters, 0, 0, 0);
+    RemainingDistance = new(DistanceTypes.Meters, 0, 0, 0, new(100));
     TotalDistance     = 0;
     TotalTime         = 0;
+    ElevationReadings = new(100);
   }
 
   void Build(FileEntryClass file) {
@@ -47,28 +53,32 @@ class RawWorkoutClass: WorkoutBase {
     int i = 0;
     int splitReadings = 0;
     while (i < readings.Length) {
+      ElevationReadings.Add(readings[i].Elevation);
       TotalDistance += readings[i++].Meters;
       splitReadings++;
 
-      AddSplit(ref splitReadings);
+      if (AddSplit(ref splitReadings, ElevationReadings))
+        ElevationReadings = new(100);
     }
 
     if (splitReadings > 0) {
       var time = splitReadings / 60;
       var distance = TotalDistance - Measures.MetersPerFactor * Splits.Length;
-      RemainingDistance = new(DistanceTypes.Meters, time, distance, splitReadings);
+      RemainingDistance = new(DistanceTypes.Meters, time, distance, splitReadings, ElevationReadings);
     }
 
     TotalTime = readings.Length / 60;
   }
 
-  void AddSplit(ref int splitReadings) {
+  bool AddSplit(ref int splitReadings, DoubleList elevationReadings) {
     double dist = Measures.MetersPerFactor * (Splits.Length + 1);
     if (splitReadings > 20 && TotalDistance >= dist && TotalDistance < dist + 15) {
       var time = splitReadings / 60;
-      Splits.Add(new DistancePerformance(Measures.DistanceType, time, 1, splitReadings));
+      Splits.Add(new DistancePerformance(Measures.DistanceType, time, 1, splitReadings, elevationReadings));
       splitReadings = 0;
+      return true;
     }
+    return false;
   }
 }
 //=================================================================================
