@@ -50,7 +50,7 @@ class RawWorkoutClass: WorkoutBase {
       TotalDistance += readings[i++].Meters;
       splitReadings++;
 
-      splitReadings = AddSplit(splitReadings);
+      AddSplit(ref splitReadings);
     }
 
     if (splitReadings > 0) {
@@ -62,14 +62,13 @@ class RawWorkoutClass: WorkoutBase {
     TotalTime = readings.Length / 60;
   }
 
-  int AddSplit(int splitReadings) {
+  void AddSplit(ref int splitReadings) {
     double dist = Measures.MetersPerFactor * (Splits.Length + 1);
     if (splitReadings > 20 && TotalDistance >= dist && TotalDistance < dist + 15) {
       var time = splitReadings / 60;
       Splits.Add(new DistancePerformance(Measures.DistanceType, time, 1, splitReadings));
       splitReadings = 0;
     }
-    return splitReadings;
   }
 }
 //=================================================================================

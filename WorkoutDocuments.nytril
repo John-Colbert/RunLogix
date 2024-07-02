@@ -79,17 +79,38 @@ class SummaryClass: RunningDocumentsClass {
     };
 
     Table (null, null, [1 inches, 0.25 inches, ColumnClass.Expand]) {
-      foreach (var workout in AllTimeBasedWorkouts) {
+      foreach (var rawWorkout in AllRawWorkouts) {
+      var timeBasedWorkout = AllTimeBasedWorkouts?.FindFirst(d => d.Filename == rawWorkout.Filename);
+      //foreach (var workout in AllTimeBasedWorkouts) {
+        string notes       = "";
+        string workoutName = "Standard Run";
+        datetime workoutDate;
+        double actualDistance = 0;
+        double actualTime     = 0;
 
-        if (workout.Notes is valid && workout.Notes.Length > 0) {
+
+        if (timeBasedWorkout is not null) {
+          notes          = timeBasedWorkout.Notes;
+          workoutDate    = timeBasedWorkout.WorkoutDate;
+          workoutName    = timeBasedWorkout.WorkoutName;
+          actualDistance = timeBasedWorkout.TotalActualDistance;
+          actualTime     = timeBasedWorkout.TotalActualTime;
+        }
+        else {
+          workoutDate = rawWorkout.StartTime;
+          actualDistance = rawWorkout.TotalDistance * Measures.MilesPerMeter;
+          actualTime     = rawWorkout.TotalTime;
+        }
+
+        if (notes is valid && notes.Length > 0) {
           Row (PadT(5 pts)) {
-            Cell { ShowDiaryDate(workout); };
+            Cell { ShowDiaryDate(workoutDate); };
             Cell { Chars.EmDash;           };
             Cell {
               Span {
                 TextHeight: 11 pts;
                 TextFamily: TextFamilies.TrebuchetMS;
-                workout.Notes;
+                notes;
               };
             };
           };
@@ -98,18 +119,18 @@ class SummaryClass: RunningDocumentsClass {
             Cell;
             Cell {
               Span {
-                ShowDetails(workout);
+                ShowDetails(workoutName, actualDistance, actualTime);
               };
             };
           };
         }
         else {
           Row (PadT(5 pts)) {
-            Cell { ShowDiaryDate(workout); };
+            Cell { ShowDiaryDate(workoutDate); };
             Cell { Chars.EmDash;           };
             Cell {
               Span {
-                ShowDetails(workout);
+                ShowDetails(workoutName, actualDistance, actualTime);
               };
             };
           };
@@ -118,11 +139,11 @@ class SummaryClass: RunningDocumentsClass {
     };
   };
 
-  ShowDiaryDate(workout) = Span {
+  ShowDiaryDate(datetime date) = Span {
     TextHeight: 12 pts;
     TextFormat: "MMM d, yyyy";
     TextColor: Colors.DimGray;
-    workout.WorkoutDate;
+    date;
   };
 
   ShowDistance(double distance) = Span {
@@ -135,13 +156,13 @@ class SummaryClass: RunningDocumentsClass {
     time minutes;
   };
 
-  ShowDetails(workout) = {
+  ShowDetails(string name, double actualDistance, double actualTime) = {
     TextHeight: 9 pts;
     TextColor: Colors.Gray;
     Separator: Space Chars.EmDash Space;
-    workout.WorkoutName;
-    ShowDistance(workout.TotalActualDistance);
-    ShowTime(workout.TotalActualTime);
+    name;
+    ShowDistance(actualDistance);
+    ShowTime(actualTime);
   };
 
   void GetMonthyActuals() {
