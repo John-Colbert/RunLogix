@@ -404,10 +404,10 @@ class RawRunningDocumentClass: RunningDocumentsClass {
                 ShowPace(split.Time, " min");
               };
               Cell {
+                VAlign: VAligns.Bottom;
                 Span {
                   Span {
                     TextDigits: 1;
-                    "Ele: ";
                     Span {
                       TextColor: Colors.Green;
                       Tex.Uparrow;

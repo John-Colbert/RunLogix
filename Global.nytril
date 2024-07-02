@@ -78,6 +78,7 @@ namespace Utilities {
     double distanceDown = 0;
 
     double lastVal = start;
+
     foreach (var ele in elevationReadings) {
       //max = Math.Max(max, ele);
       //min = Math.Min(min, ele);
@@ -86,6 +87,8 @@ namespace Utilities {
         distanceUp += ele - lastVal;
       else if (ele < lastVal)
         distanceDown += lastVal - ele;
+
+      lastVal = ele;
     }
 
     return new ElevationClass(distanceUp, distanceDown);
