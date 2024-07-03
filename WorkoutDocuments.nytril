@@ -458,6 +458,7 @@ class RawRunningDocumentClass: RunningDocumentsClass {
   };
 
   ShowElevation (ElevationClass ele) = Span {
+    TextHeight: 8 pts;
     Span {
       TextDigits: 1;
       Span {

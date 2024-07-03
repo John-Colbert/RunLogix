@@ -4,28 +4,32 @@ using Format, Units, IO, System;
 
 readonly TimeBasedWorkoutsClass Workouts    = new;
 readonly RawWorkoutsClass       RawWorkouts = new;
-readonly UnitSystems            UnitSystem  = UnitSystems.Metric;
+readonly UnitSystems            UnitSystem  = UnitSystems.Imperial;
 readonly FileEntryClass[]       Files       = EnumerateFiles(DataPath);
 
 //======================================================================================
 
 namespace Measures {
-  const double MetersPerKilometer     = (1 kilometer) intu meters;
-  const double KilometersPerMeter     = (1 meter) intu kilometers;
-  const double MetersPerMile          = (1 mile) intu meters;
-  const double MilesPerMeter          = (1 meter) intu miles;
-  const string Kilometer              = "Kilometer";
-  const string Mile                   = "Mile";
-  const string Kilometers             = "Kilometers";
-  const string Miles                  = "Miles";
+  const double MetersPerKilometer        = (1 kilometer) intu meters;
+  const double KilometersPerMeter        = (1 meter) intu kilometers;
+  const double MetersPerMile             = (1 mile) intu meters;
+  const double MilesPerMeter             = (1 meter) intu miles;
+  const string Kilometer                 = "Kilometer";
+  const string Mile                      = "Mile";
+  const string Kilometers                = "Kilometers";
+  const string Miles                     = "Miles";
 
-  readonly string DistanceAbbr        = UnitSystem == UnitSystems.Metric ? " km" : " mi";
-  readonly string MinutesPerAbbr      = UnitSystem == UnitSystems.Metric ? " min/km" : " min/mi";
-  readonly double PerMeterFactor      = UnitSystem == UnitSystems.Metric ? Measures.KilometersPerMeter : Measures.MilesPerMeter;
-  readonly double MetersPerFactor     = UnitSystem == UnitSystem.Metric  ? Measures.MetersPerKilometer : Measures.MetersPerMile;
-  readonly DistanceTypes DistanceType = UnitSystem == UnitSystem.Metric ? DistanceTypes.Kilometer : DistanceTypes.Mile;
-  readonly string DistanceUnitSingle  = UnitSystem == UnitSystem.Metric ? Kilometer : Mile;
-  readonly string DistanceUnitPlural  = UnitSystem == UnitSystem.Metric ? Kilometers : Miles;
+  const double MetersToFeetFactor        = 3.280839895;
+  const double MinPerMiToMinPerKMFactor  = 0.6213692038495188;
+  const double MinPerKmToMinPerMiFactor  = 1.6093491499172796;
+
+  readonly string DistanceAbbr           = UnitSystem == UnitSystems.Metric ? " km" : " mi";
+  readonly string MinutesPerAbbr         = UnitSystem == UnitSystems.Metric ? " min/km" : " min/mi";
+  readonly double PerMeterFactor         = UnitSystem == UnitSystems.Metric ? Measures.KilometersPerMeter : Measures.MilesPerMeter;
+  readonly double MetersPerFactor        = UnitSystem == UnitSystem.Metric  ? Measures.MetersPerKilometer : Measures.MetersPerMile;
+  readonly DistanceTypes DistanceType    = UnitSystem == UnitSystem.Metric ? DistanceTypes.Kilometer : DistanceTypes.Mile;
+  readonly string DistanceUnitSingle     = UnitSystem == UnitSystem.Metric ? Kilometer : Mile;
+  readonly string DistanceUnitPlural     = UnitSystem == UnitSystem.Metric ? Kilometers : Miles;
 }
 
 namespace Convert {
@@ -42,9 +46,9 @@ namespace Convert {
 
   double ConvertPace(double pace, PaceTypes fromType) {
     if (fromType == PaceTypes.MinPerMi)
-      return pace * 0.6213692038495188; //to min/km
+      return pace * Measures.MinPerMiToMinPerKMFactor;
     else
-      return pace * 1.6093491499172796; //to min/mi
+      return pace * Measures.MinPerKmToMinPerMiFactor;
   }
 }
 //======================================================================================
@@ -72,23 +76,23 @@ namespace Utilities {
       return new ElevationClass(0, 0);
 
     double start = elevationReadings[0];
-    //double max;
-    //double min;
     double distanceUp = 0;
     double distanceDown = 0;
 
     double lastVal = start;
 
     foreach (var ele in elevationReadings) {
-      //max = Math.Max(max, ele);
-      //min = Math.Min(min, ele);
-
       if (ele > lastVal)
         distanceUp += ele - lastVal;
       else if (ele < lastVal)
         distanceDown += lastVal - ele;
 
       lastVal = ele;
+    }
+
+    if (UnitSystem == UnitSystems.Imperial) {
+      distanceUp = distanceUp * Measures.MetersToFeetFactor;
+      distanceDown = distanceDown * Measures.MetersToFeetFactor;
     }
 
     return new ElevationClass(distanceUp, distanceDown);
