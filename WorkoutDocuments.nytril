@@ -15,15 +15,29 @@ class TimeDistanceClass : DataPointClass {
 //=======================================================================
 
 class RunningDocumentClass: DocumentClass {
-  Constructor(guid factid, string name) {
-    super.Constructor(factid, name);
+  Constructor(guid factid, string tabName, string docTitle) {
+    super.Constructor(factid, tabName);
+    Title = docTitle;
   }
 
-  ShowTitle = Paragraph {
-    TextHeight: 30 pts;
-    ParAlignment: ParAlignments.Right;
-    SpaceAfter: 20 pts;
-    "Run Logix";
+  ShowTitle = Block {
+    Paragraph {
+      ParAlignment: ParAlignments.Right;
+      TextHeight: 30 pts;
+      "Run Logix";
+    };
+
+    if (Title is valid) {
+      Paragraph {
+        ParAlignment: ParAlignments.Center;
+        TextHeight: 20 pts;
+        SpaceAfter: 10 pts;
+        Bold;
+        Title;
+      };
+    }
+    else
+      Paragraph { SpaceAfter: 20 pts; };
   };
 }
 //=======================================================================
@@ -34,7 +48,7 @@ class SummaryClass: RunningDocumentClass {
   var ListClass<TimeDistanceClass>     MonthlyActualDistance;
 
   Constructor {
-    super.Constructor(#ad080fa6-1765-48f7-862e-dc043ac95a16#, "Summary");
+    super.Constructor(#ad080fa6-1765-48f7-862e-dc043ac95a16#, "Summary", "Workouts Summary");
     TimeBasedWorkouts.Build;
     MonthlyActualDistance = new(12);
     AllRawWorkouts       = RawWorkouts.Workouts;
@@ -208,7 +222,7 @@ class PerformanceToTargetClass: RunningDocumentClass {
   var ListClass<TimeBasedWorkoutClass> RunWorkouts;
 
   Constructor {
-    super.Constructor(#029a3f5d-ebfd-4011-8d57-7f87c7b6b324#, "Performance to Target");
+    super.Constructor(#029a3f5d-ebfd-4011-8d57-7f87c7b6b324#, "Workout Performance", "Workout Performance to Target");
     RunWorkouts = TimeBasedWorkouts.Workouts;
   }
 
@@ -344,7 +358,7 @@ class PerformanceToTargetClass: RunningDocumentClass {
 class RawRunningDocumentClass: RunningDocumentClass {
 
   Constructor {
-    super.Constructor(#82bd5cf5-0150-4e79-95c6-3cb36f7824e9#, "All Basic Running Records");
+    super.Constructor(#82bd5cf5-0150-4e79-95c6-3cb36f7824e9#, "All Workouts", "All Running Workouts");
   }
 
   override GetDocument = Document(MarginLayout) {
