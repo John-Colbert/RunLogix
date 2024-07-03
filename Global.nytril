@@ -98,9 +98,4 @@ enum DistanceTypes {
   Kilometer,
   Mile
 }
-
-//enum UnitSystems {
-//  Metric,
-//  Imperial
-//}
 //======================================================================================
