@@ -4,7 +4,7 @@ using Format, Units, IO, System;
 
 readonly TimeBasedWorkoutsClass TimeBasedWorkouts = new;
 readonly RawWorkoutsClass       RawWorkouts       = new;
-readonly UnitSystems            UnitSystem        = UnitSystems.Imperial;
+readonly UnitSystems            UnitSystem        = Configuration.UnitSystem;
 readonly FileEntryClass[]       Files             = EnumerateFiles(DataPath);
 
 typedef DoubleList ListClass<double>;
@@ -99,8 +99,8 @@ enum DistanceTypes {
   Mile
 }
 
-enum UnitSystems {
-  Metric,
-  Imperial
-}
+//enum UnitSystems {
+//  Metric,
+//  Imperial
+//}
 //======================================================================================

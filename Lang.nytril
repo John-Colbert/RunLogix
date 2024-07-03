@@ -1,8 +1,14 @@
 include "English";
 
-ConfigurationClass Main.Configurations.English = new(#adb46816-7da5-4942-8749-e24a810cc115#, "English",
+ConfigurationClass Main.Configurations.EnglishImperial = new(#adb46816-7da5-4942-8749-e24a810cc115#, "English Imperial",
   Languages.English,
   PaperSystems.US,
   UnitSystems.Imperial
+);
+
+ConfigurationClass Main.Configurations.EnglishMetric = new(#c0b53cc1-129e-4ed0-a3e7-e3c29645991c#, "English Metric",
+  Languages.English,
+  PaperSystems.US,
+  UnitSystems.Metric
 );
 
