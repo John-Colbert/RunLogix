@@ -1,4 +1,6 @@
 readonly namespace Lang if (Language == Languages.English);
 
 Summary                              = "Summary";
+WorkoutsSummary                      = "Workouts Summary";
+Workouts                             = "Workouts";
 

@@ -48,12 +48,13 @@ class SummaryClass: RunningDocumentClass {
   var ListClass<TimeDistanceClass>     MonthlyActualDistance;
 
   Constructor {
-    super.Constructor(#ad080fa6-1765-48f7-862e-dc043ac95a16#, "Summary", "Workouts Summary");
+    super.Constructor(#ad080fa6-1765-48f7-862e-dc043ac95a16#, Lang.Summary, Lang.WorkoutsSummary);
     TimeBasedWorkouts.Build;
     MonthlyActualDistance = new(12);
     AllRawWorkouts       = RawWorkouts.Workouts;
     AllTimeBasedWorkouts = TimeBasedWorkouts.Workouts;
     GetMonthyActuals();
+    "Workouts Summary bla";
   }
 
   override GetDocument = Document(MarginLayout) {
