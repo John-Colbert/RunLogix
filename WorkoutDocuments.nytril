@@ -54,7 +54,6 @@ class SummaryClass: RunningDocumentClass {
     AllRawWorkouts       = RawWorkouts.Workouts;
     AllTimeBasedWorkouts = TimeBasedWorkouts.Workouts;
     GetMonthyActuals();
-    "Workouts Summary bla";
   }
 
   override GetDocument = Document(MarginLayout) {
@@ -419,6 +418,7 @@ class RawRunningDocumentClass: RunningDocumentClass {
               Cell {
                 VAlign: VAligns.Bottom;
                 ShowElevation(ele);
+                Utilities.GetElevationShape(split.ElevationReadings);
               };
             };
           }
@@ -440,6 +440,7 @@ class RawRunningDocumentClass: RunningDocumentClass {
               Cell {
                 VAlign: VAligns.Bottom;
                 ShowElevation(ele);
+                Utilities.GetElevationShape(workout.RemainingDistance.ElevationReadings);
               };
             };
           }

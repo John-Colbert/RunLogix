@@ -85,6 +85,39 @@ namespace Utilities {
 
     return new ElevationClass(distanceUp, distanceDown);
   }
+
+  GetElevationShape(DoubleList elevationReadings) = Canvas {
+    if (elevationReadings.Length <= 0)
+      return;
+
+    double width                 = (0.75 inches) intu pixels;
+    int readingsPerWidthPixel = elevationReadings.Length > width ? (elevationReadings.Length / width) as int : elevationReadings.Length;
+
+    double max = 0;
+    double min = double.MaxValue;
+
+    for (int i = 0; i < elevationReadings.Length; i += readingsPerWidthPixel) {
+      var e = elevationReadings[i];
+      max = Math.Max(e, max);
+      min = Math.Min(e, min);
+    }
+
+    double diff  = max - min;
+    double height = diff * 0.8;
+    double delta = 3;
+    double h = height - delta;
+
+    Shape(Colors.DarkGray, null, null, width, height) {
+      ClosedPath(0, height) {
+        for (int i = 0; i < elevationReadings.Length; i += readingsPerWidthPixel) {
+          var e = elevationReadings[i];
+
+          LineTo((i / elevationReadings.Length) * width, h - (e - min) / diff * h);
+        }
+        LineTo(width, height);
+      };
+    };
+  };
 }
 //======================================================================================
 
