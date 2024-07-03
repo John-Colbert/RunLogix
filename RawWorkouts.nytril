@@ -1,22 +1,5 @@
 using IO, Units, System;
 
-typedef DoubleList ListClass<double>;
-class DistancePerformance {
-  var DistanceTypes     Type;
-  var double            Time,
-                        Distance;
-  var int               Readings;
-  var DoubleList        ElevationReadings;
-
-  Constructor(DistanceTypes type, double time, double distance, int readings, DoubleList elevationReadings) {
-    Type     = type;
-    Time     = time;
-    Distance = distance;
-    Readings = readings;
-    ElevationReadings = elevationReadings;
-  }
-}
-//=================================================================================
 class RawWorkoutClass: WorkoutBase {
   var ListClass<DistancePerformance> Splits;
   var DistancePerformance            RemainingDistance;

@@ -100,6 +100,23 @@ class SegmentClass {
 }
 //===========================================================================
 
+class DistancePerformance {
+  var DistanceTypes     Type;
+  var double            Time,
+                        Distance;
+  var int               Readings;
+  var DoubleList        ElevationReadings;
+
+  Constructor(DistanceTypes type, double time, double distance, int readings, DoubleList elevationReadings) {
+    Type     = type;
+    Time     = time;
+    Distance = distance;
+    Readings = readings;
+    ElevationReadings = elevationReadings;
+  }
+}
+//===========================================================================
+
 class ElevationClass {
   var double DistanceUp,
              DistanceDown;

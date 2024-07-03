@@ -1,3 +1,4 @@
+
 class TimeBasedWorkoutClass: WorkoutBase {
   var ListClass<SegmentClass>  Segments,
                                SegmentList;

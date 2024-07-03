@@ -1,7 +1,5 @@
 using Format, Units;
 
-MarginLayout = new ExtentClass(new ThicknessClass(1 inch, 0.5 inches, 1 inch, 1 inch));
-
 class TimeDistanceClass : DataPointClass {
   var int Month;
 
@@ -16,7 +14,7 @@ class TimeDistanceClass : DataPointClass {
 }
 //=======================================================================
 
-class RunningDocumentsClass: DocumentClass {
+class RunningDocumentClass: DocumentClass {
   Constructor(guid factid, string name) {
     super.Constructor(factid, name);
   }
@@ -30,17 +28,17 @@ class RunningDocumentsClass: DocumentClass {
 }
 //=======================================================================
 
-class SummaryClass: RunningDocumentsClass {
+class SummaryClass: RunningDocumentClass {
   var ListClass<RawWorkoutClass>       AllRawWorkouts;
   var ListClass<TimeBasedWorkoutClass> AllTimeBasedWorkouts;
   var ListClass<TimeDistanceClass>     MonthlyActualDistance;
 
   Constructor {
     super.Constructor(#ad080fa6-1765-48f7-862e-dc043ac95a16#, "Summary");
-    Workouts.Build;
+    TimeBasedWorkouts.Build;
     MonthlyActualDistance = new(12);
     AllRawWorkouts       = RawWorkouts.Workouts;
-    AllTimeBasedWorkouts = Workouts.Workouts;
+    AllTimeBasedWorkouts = TimeBasedWorkouts.Workouts;
     GetMonthyActuals();
   }
 
@@ -55,7 +53,7 @@ class SummaryClass: RunningDocumentsClass {
 
     HAlign: HAligns.Center;
     Background: Colors.WhiteSmoke;
-    "{0} Workouts"(Workouts.Workouts.Length);
+    "{0} Workouts"(TimeBasedWorkouts.Workouts.Length);
     Chart(90%, 3 inches) {
       Marker: Markers.Circle(Colors.White, 0.5);
       Type: ChartTypes.Column;
@@ -206,12 +204,12 @@ class SummaryClass: RunningDocumentsClass {
 }
 //======================================================================================
 
-class PerformanceToTargetClass: RunningDocumentsClass {
+class PerformanceToTargetClass: RunningDocumentClass {
   var ListClass<TimeBasedWorkoutClass> RunWorkouts;
 
   Constructor {
     super.Constructor(#029a3f5d-ebfd-4011-8d57-7f87c7b6b324#, "Performance to Target");
-    RunWorkouts = Workouts.Workouts;
+    RunWorkouts = TimeBasedWorkouts.Workouts;
   }
 
   override GetDocument = Document(MarginLayout) {
@@ -343,7 +341,7 @@ class PerformanceToTargetClass: RunningDocumentsClass {
 }
 //====================================================================
 
-class RawRunningDocumentClass: RunningDocumentsClass {
+class RawRunningDocumentClass: RunningDocumentClass {
 
   Constructor {
     super.Constructor(#82bd5cf5-0150-4e79-95c6-3cb36f7824e9#, "All Basic Running Records");

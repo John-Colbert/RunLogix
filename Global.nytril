@@ -2,10 +2,14 @@ using Format, Units, IO, System;
 
 //======================================================================================
 
-readonly TimeBasedWorkoutsClass Workouts    = new;
-readonly RawWorkoutsClass       RawWorkouts = new;
-readonly UnitSystems            UnitSystem  = UnitSystems.Imperial;
-readonly FileEntryClass[]       Files       = EnumerateFiles(DataPath);
+readonly TimeBasedWorkoutsClass TimeBasedWorkouts = new;
+readonly RawWorkoutsClass       RawWorkouts       = new;
+readonly UnitSystems            UnitSystem        = UnitSystems.Imperial;
+readonly FileEntryClass[]       Files             = EnumerateFiles(DataPath);
+
+typedef DoubleList ListClass<double>;
+
+MarginLayout = new ExtentClass(new ThicknessClass(1 inch, 0.5 inches, 1 inch, 1 inch));
 
 //======================================================================================
 
@@ -31,6 +35,7 @@ namespace Measures {
   readonly string DistanceUnitSingle     = UnitSystem == UnitSystem.Metric ? Kilometer : Mile;
   readonly string DistanceUnitPlural     = UnitSystem == UnitSystem.Metric ? Kilometers : Miles;
 }
+//======================================================================================
 
 namespace Convert {
   double MinutesToDouble(string minutes) {
@@ -50,23 +55,6 @@ namespace Convert {
     else
       return pace * Measures.MinPerKmToMinPerMiFactor;
   }
-}
-//======================================================================================
-
-enum PaceTypes {
-  MinPerKm ("min/km"),
-  MinPerMi ("min/mi")
-}
-
-enum DistanceTypes {
-  Meters,
-  Kilometer,
-  Mile
-}
-
-enum UnitSystems {
-  Metric,
-  Imperial
 }
 //======================================================================================
 
@@ -98,3 +86,21 @@ namespace Utilities {
     return new ElevationClass(distanceUp, distanceDown);
   }
 }
+//======================================================================================
+
+enum PaceTypes {
+  MinPerKm ("min/km"),
+  MinPerMi ("min/mi")
+}
+
+enum DistanceTypes {
+  Meters,
+  Kilometer,
+  Mile
+}
+
+enum UnitSystems {
+  Metric,
+  Imperial
+}
+//======================================================================================
