@@ -91,7 +91,7 @@ namespace Utilities {
       return;
 
     double width                 = (0.75 inches) intu pixels;
-    int readingsPerWidthPixel = elevationReadings.Length > width ? (elevationReadings.Length / width) as int : elevationReadings.Length;
+    int readingsPerWidthPixel = elevationReadings.Length > width ? (elevationReadings.Length / width) as int : 1;
 
     double max = 0;
     double min = double.MaxValue;
@@ -103,8 +103,8 @@ namespace Utilities {
     }
 
     double diff  = max - min;
-    double height = diff * 0.8;
-    double delta = 3;
+    double height = 18; // diff * 0.8;
+    double delta = 6;
     double h = height - delta;
 
     Shape(Colors.DarkGray, null, null, width, height) {
@@ -112,7 +112,10 @@ namespace Utilities {
         for (int i = 0; i < elevationReadings.Length; i += readingsPerWidthPixel) {
           var e = elevationReadings[i];
 
-          LineTo((i / elevationReadings.Length) * width, h - (e - min) / diff * h);
+          if (diff == 0)
+            LineTo((i / elevationReadings.Length) * width, h - (e - min) / diff * h);
+          else
+            LineTo((i / elevationReadings.Length) * width, h - (e - min) / diff * h);
         }
         LineTo(width, height);
       };
