@@ -1,6 +1,19 @@
 readonly namespace Lang if (Language == Languages.English);
 
+Actual                               = "Actual";
+AllRunningWorkouts                   = "All Running Workouts";
+AllWorkouts                          = "All Workouts";
+Diary                                = "Diary";
+End                                  = "End";
+Pace                                 = "Pace";
+Performance                          = "Performance";
+Segment                              = "Segment";
+Splits                               = "Splits";
+StandardRun                          = "Standard Run";
 Summary                              = "Summary";
+Target                               = "Target";
+Timeactual                           = "Time(actual)";
+WorkoutPerformance                   = "Workout Performance";
+WorkoutPerformanceTo                 = "Workout Performance to Target";
 WorkoutsSummary                      = "Workouts Summary";
-Workouts                             = "Workouts";
 

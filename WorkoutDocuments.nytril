@@ -92,18 +92,17 @@ class SummaryClass: RunningDocumentClass {
 
     Paragraph {
       TextHeight: 16 pts;
-      "Diary"
+      Lang.Diary
     };
 
     Table (null, null, [1 inches, 0.25 inches, ColumnClass.Expand]) {
       foreach (var rawWorkout in AllRawWorkouts) {
-      var timeBasedWorkout = AllTimeBasedWorkouts?.FindFirst(d => d.Filename == rawWorkout.Filename);
-      //foreach (var workout in AllTimeBasedWorkouts) {
-        string notes       = "";
-        string workoutName = "Standard Run";
         datetime workoutDate;
-        double actualDistance = 0;
-        double actualTime     = 0;
+        var timeBasedWorkout   = AllTimeBasedWorkouts?.FindFirst(d => d.Filename == rawWorkout.Filename);
+        string notes           = "";
+        string workoutName     = Lang.StandardRun;
+        double actualDistance  = 0;
+        double actualTime      = 0;
 
 
         if (timeBasedWorkout is not null) {
@@ -121,35 +120,25 @@ class SummaryClass: RunningDocumentClass {
 
         if (notes is valid && notes.Length > 0) {
           Row (PadT(5 pts)) {
-            Cell { ShowDiaryDate(workoutDate); };
-            Cell { Chars.EmDash;           };
-            Cell {
-              Span {
-                TextHeight: 11 pts;
-                TextFamily: TextFamilies.TrebuchetMS;
-                notes;
-              };
+            ShowDiaryDate(workoutDate);
+            Chars.EmDash;
+            Span {
+              TextHeight: 11 pts;
+              TextFamily: TextFamilies.TrebuchetMS;
+              notes;
             };
           };
           Row {
-            Cell;
-            Cell;
-            Cell {
-              Span {
-                ShowDetails(workoutName, actualDistance, actualTime);
-              };
-            };
+            Empty;
+            Empty;
+            ShowDetails(workoutName, actualDistance, actualTime);
           };
         }
         else {
           Row (PadT(5 pts)) {
-            Cell { ShowDiaryDate(workoutDate); };
-            Cell { Chars.EmDash;           };
-            Cell {
-              Span {
-                ShowDetails(workoutName, actualDistance, actualTime);
-              };
-            };
+            ShowDiaryDate(workoutDate);
+            Chars.EmDash;
+            ShowDetails(workoutName, actualDistance, actualTime);
           };
         }
       }
@@ -173,7 +162,7 @@ class SummaryClass: RunningDocumentClass {
     time Space minutes;
   };
 
-  ShowDetails(string name, double actualDistance, double actualTime) = {
+  ShowDetails(string name, double actualDistance, double actualTime) = Span {
     TextHeight: 9 pts;
     TextColor: Colors.Gray;
     Separator: Space Chars.EmDash Space;
@@ -222,7 +211,7 @@ class PerformanceToTargetClass: RunningDocumentClass {
   var ListClass<TimeBasedWorkoutClass> RunWorkouts;
 
   Constructor {
-    super.Constructor(#029a3f5d-ebfd-4011-8d57-7f87c7b6b324#, "Workout Performance", "Workout Performance to Target");
+    super.Constructor(#029a3f5d-ebfd-4011-8d57-7f87c7b6b324#, Lang.WorkoutPerformance, Lang.WorkoutPerformanceTo);
     RunWorkouts = TimeBasedWorkouts.Workouts;
   }
 
@@ -261,13 +250,13 @@ class PerformanceToTargetClass: RunningDocumentClass {
       Table(null, null) {
         TextHeight: 7 pts;
         Row(PadAll(2 pts)) {
-          "Segment";
-          "Time(actual)";
-          "Target";
-          "Pace";
-          "Performance";
-          "Target "  Measures.DistanceUnitPlural;
-          "Actual " + Measures.DistanceUnitPlural;
+          Lang.Segment;
+          Lang.Timeactual;
+          Lang.Target;
+          Lang.Pace;
+          Lang.Performance;
+          Lang.Target Space Measures.DistanceUnitPlural;
+          Lang.Actual Space Measures.DistanceUnitPlural;
         };
 
         foreach (var segment in workout.SegmentList) {
@@ -296,7 +285,7 @@ class PerformanceToTargetClass: RunningDocumentClass {
         };
 
         Row(PadAll(2 pts)) {
-          "Summary";
+          Lang.Summary;
           Span {
             ShowTime(workout.TotalTargetTime, workout.TotalActualTime);
           };
@@ -358,7 +347,7 @@ class PerformanceToTargetClass: RunningDocumentClass {
 class RawRunningDocumentClass: RunningDocumentClass {
 
   Constructor {
-    super.Constructor(#82bd5cf5-0150-4e79-95c6-3cb36f7824e9#, "All Workouts", "All Running Workouts");
+    super.Constructor(#82bd5cf5-0150-4e79-95c6-3cb36f7824e9#, Lang.AllWorkouts, Lang.AllRunningWorkouts);
   }
 
   override GetDocument = Document(MarginLayout) {
@@ -368,22 +357,20 @@ class RawRunningDocumentClass: RunningDocumentClass {
       var distance = workout.TotalDistance * Measures.PerMeterFactor;
 
       Canvas(100%) {
-        Table (null, null, [1.25 inches, 0.35 inches, 1.5 inch, ColumnClass.Expand, 1.75 inches]) {
+        Table (null, null, [1.25 inches, 0.35 inches, 1.5 inch, ColumnClass.Expand, 0.875 inches, 0.875 inches]) {
           Row {
             TextHeight: 14 pts;
             SpaceBefore: 10 pts;
-            Cell {
+            Span {
               TextFormat: "MMM d, yyyy";
               workout.StartTime;
             };
             Cell(null, 2) {
               ShowDistance(distance);
             };
-            Cell {
-              var pace = workout.TotalTime / (workout.TotalDistance * Measures.PerMeterFactor);
-              ShowPace(pace, Measures.MinutesPerAbbr);
-            };
-            Cell {
+            var pace = workout.TotalTime / (workout.TotalDistance * Measures.PerMeterFactor);
+            ShowPace(pace, Measures.MinutesPerAbbr);
+            Cell(null, 2) {
               Span {
                 TextFormat: "hh:mmtt";
                 workout.StartTime;
@@ -396,55 +383,37 @@ class RawRunningDocumentClass: RunningDocumentClass {
 
           if (workout.Splits?.Length > 0) {
             Row {
-              Cell;
-              Cell { "Splits" };
-              Cell;
-              Cell;
-              Cell;
+              Empty;
+              Lang.Splits;
             };
           }
 
           foreach (var split in workout.Splits) {
             var ele = Utilities.GetElevationMetrics(split.ElevationReadings);
-            Row {
-              Cell;
-              Cell {
-                each1;
-              };
-              Cell;
-              Cell {
-                ShowPace(split.Time, " min");
-              };
-              Cell {
-                VAlign: VAligns.Bottom;
-                ShowElevation(ele);
-                Utilities.GetElevationShape(split.ElevationReadings);
-              };
+            Row (null, PadTB(2)) {
+              VAlign: VAligns.Baseline;
+              Empty;
+              each1;
+              Empty;
+              ShowPace(split.Time, " min");
+              ShowElevation(ele);
+              Utilities.GetElevationShape(split.ElevationReadings);
             };
           }
 
           if (workout.RemainingDistance?.Distance > 0) {
             var ele = Utilities.GetElevationMetrics(workout.RemainingDistance.ElevationReadings);
-            Row {
-              Cell;
-              Cell {
-                "End";
-              };
-              Cell {
-                var dist = workout.RemainingDistance.Distance * Measures.PerMeterFactor;
-                ShowDistance(dist);
-              };
-              Cell {
-                ShowPace(workout.RemainingDistance.Time, " min");
-              };
-              Cell {
-                VAlign: VAligns.Bottom;
-                ShowElevation(ele);
-                Utilities.GetElevationShape(workout.RemainingDistance.ElevationReadings);
-              };
+            Row (null, PadTB(2)) {
+              VAlign: VAligns.Center;
+              Empty;
+              Lang.End;
+              var dist = workout.RemainingDistance.Distance * Measures.PerMeterFactor;
+              ShowDistance(dist);
+              ShowPace(workout.RemainingDistance.Time, " min");
+              ShowElevation(ele);
+              Utilities.GetElevationShape(workout.RemainingDistance.ElevationReadings);
             };
           }
-
         };
       };
     }
@@ -475,8 +444,8 @@ class RawRunningDocumentClass: RunningDocumentClass {
     TextHeight: 8 pts;
     Span {
       TextDigits: 1;
-      Span {
-        TextColor: Colors.Green;
+      Shape (Colors.Green) {
+        Baseline: 85%;
         Tex.Uparrow;
       };
       ele.DistanceUp;
@@ -484,8 +453,8 @@ class RawRunningDocumentClass: RunningDocumentClass {
     Space;
     Span {
       TextDigits: 1;
-      Span {
-        TextColor: Colors.Red;
+      Shape (Colors.Red) {
+        Baseline: 82%;
         Tex.Downarrow;
       };
       ele.DistanceDown;
