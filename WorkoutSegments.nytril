@@ -1,0 +1,62 @@
+class SegmentsBase {
+  var string    Name;
+  var PaceTypes TargetPaceType;
+  var double    ActualTime,
+                ActualPace,
+                ActualDistance;
+                TargetTime,
+                TargetPace,
+                ConvertedTargetPace,
+                Performance,
+                TargetDistance,
+  var int       AddOrder;
+
+  Constructor(string name, double targetPace, PaceTypes targetPaceType) {
+    Name                 = name;
+    TargetPace           = targetPace;
+    TargetPaceType       = targetPaceType;
+    ConvertedTargetPace  = TargetPace;
+    ActualPace           = 0;
+    Performance          = 0;
+    TargetDistance       = 0;
+    AddOrder             = 0;
+
+    if (!TargetPaceMatchesSystem)
+      ConvertedTargetPace = Convert.ConvertPace(TargetPace, TargetPaceType);
+  }
+
+  private bool TargetPaceMatchesSystem {
+    var systemPace = UnitSystem == UnitSystems.Metric ? PaceTypes.MinPerKm : PaceTypes.MinPerMi;
+    return systemPace == TargetPaceType;
+  }
+}
+//===========================================================================
+
+class TimeSegmentClass : SegmentsBase {
+  Constructor(string name, double time, double targetPace, PaceTypes targetPaceType) {
+    super.Constructor(name, targetPace, targetPaceType);
+    TargetTime = time;
+  }
+}
+//===========================================================================
+
+class DistanceSegmentClass : SegmentsBase {
+  var DistanceTypes TargetDistanceType;
+  var double        ConvertedTargetDistance;
+
+  Constructor(string name, double distance, DistanceTypes distanceType, double targetPace, PaceTypes targetPaceType) {
+    super.Constructor(name, targetPace, targetPaceType);
+    TargetDistance     = distance;
+    TargetDistanceType = distanceType;
+
+    if (!TargetDistanceMatchesSystem)
+      ConvertedTargetDistance = Convert.ConvertDistance(TargetDistance, TargetDistanceType);
+  }
+
+  private bool TargetDistanceMatchesSystem {
+    var systemDistanceType = Measures.DistanceType;
+    return (TargetDistanceType == DistanceTypes.Mile      || TargetDistanceType == DistanceTypes.Miles      && systemDistanceType == DistanceTypes.Mile     ) ||
+           (TargetDistanceType == DistanceTypes.Kilometer || TargetDistanceType == DistanceTypes.Kilometers && systemDistanceType == DistanceTypes.Kilometer);
+  }
+}
+//===========================================================================

@@ -391,7 +391,7 @@ class RawRunningDocumentClass: RunningDocumentClass {
           foreach (var split in workout.Splits) {
             var ele = Utilities.GetElevationMetrics(split.ElevationReadings);
             Row (null, PadTB(2)) {
-              VAlign: VAligns.Baseline;
+              VAlign: VAligns.Center;
               Empty;
               each1;
               Empty;

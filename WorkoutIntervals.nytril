@@ -1,0 +1,44 @@
+class IntervalBase {
+  var int Repeats;
+  var int AddOrder;
+  var int Count;
+
+  Constructor(int repeats, int addOrder) {
+    Repeats  = repeats;
+    AddOrder = addOrder;
+    Count    = 0;
+  }
+}
+//===========================================================================
+
+class TimeIntervalClass: IntervalBase {
+  var ListClass<TimeSegmentClass> Segments;
+
+  Constructor(int repeats = 1, int addOrder) {
+    super.Constructor(repeats, addOrder);
+    Segments = new(2);
+  }
+
+  void AddSegment(string name, double minutes, string pace, PaceTypes paceType) {
+    double targetPace = Convert.MinutesToDouble(pace);
+    TimeSegmentClass segment = new(name, minutes, targetPace, paceType);
+    Segments.Add(segment);
+  }
+}
+//===========================================================================
+
+class DistanceIntervalClass: IntervalBase {
+  var ListClass<DistanceSegmentClass> Segments;
+
+  Constructor(int repeats = 1, int addOrder) {
+    super.Constructor(repeats, addOrder);
+    Segments = new(2);
+  }
+
+  void AddSegment(string name, double distance, DistanceTypes distanceTypes, string pace, PaceTypes paceType) {
+    double targetPace = Convert.MinutesToDouble(pace);
+    DistanceSegmentClass segment = new(name, distance, distanceTypes, targetPace, paceType);
+    Segments.Add(segment);
+  }
+}
+//===========================================================================

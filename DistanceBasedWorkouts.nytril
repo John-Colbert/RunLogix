@@ -1,8 +1,8 @@
 
-class TimeBasedWorkoutClass: ScheduledWorkoutsBase {
-  var ListClass<TimeSegmentClass>  Segments,
-                                   SegmentList;
-  var ListClass<TimeIntervalClass> Intervals;
+class DistanceBasedWorkoutClass: ScheduledWorkoutsBase {
+  var ListClass<DistanceSegmentClass>  Segments,
+                                       SegmentList;
+  var ListClass<DistanceIntervalClass> Intervals;
 
   Constructor(datetime date) {
     super.Constructor(date);
@@ -11,15 +11,15 @@ class TimeBasedWorkoutClass: ScheduledWorkoutsBase {
     Intervals            = new(2);
   }
 
-  void AddSegment(string name, double minutes, string pace, PaceTypes paceType) {
+  void AddSegment(string name, double distance, DistanceTypes distanceType, string pace, PaceTypes paceType) {
     double targetPace = Convert.MinutesToDouble(pace);
-    TimeSegmentClass segment = new(name, minutes, targetPace, paceType);
+    DistanceSegmentClass segment = new(name, distance, distanceType, targetPace, paceType);
     segment.AddOrder = AddOrder++;
     Segments.Add(segment);
   }
 
-  TimeIntervalClass AddInterval(int repeats) {
-    var iv = new TimeIntervalClass(repeats, AddOrder++);
+  DistanceIntervalClass AddInterval(int repeats) {
+    var iv = new DistanceIntervalClass(repeats, AddOrder++);
     Intervals.Add(iv);
     return iv;
   }
@@ -30,22 +30,22 @@ class TimeBasedWorkoutClass: ScheduledWorkoutsBase {
       return;
     }
 
-    TimeSegmentClass s;
+    DistanceSegmentClass s;
     for (int i = 1; i < AddOrder; i++) {
       s = Segments.FindFirst(d => d.AddOrder == i);
       if (s is not null)
         SegmentList.Add(s);
       else {
-        TimeIntervalClass iv = Intervals.FindFirst(d => d.AddOrder == i);
+        DistanceIntervalClass iv = Intervals.FindFirst(d => d.AddOrder == i);
         if (iv is not null) {
-          TimeSegmentClass[] segments = iv.Segments.ToArray * iv.Repeats;
-          foreach (var segment in segments) {
-            SegmentList.Add(new TimeSegmentClass(segment.Name, segment.TargetTime, segment.TargetPace, segment.TargetPaceType));
-          }
+          DistanceSegmentClass[] segments = iv.Segments.ToArray * iv.Repeats;
+          foreach (var segment in segments)
+            SegmentList.Add(new DistanceSegmentClass(segment.Name, segment.TargetDistance, segment.TargetDistanceType, segment.TargetPace, segment.TargetPaceType));
         }
       }
     }
-    SegmentList.Add(new TimeSegmentClass("Open", 100, 12.00, PaceTypes.MinPerMi));
+
+    SegmentList.Add(new DistanceSegmentClass("Open", 0, Measures.DistanceType, 12.00, PaceTypes.MinPerMi));
   }
 
   override void BuildSegments {
@@ -89,7 +89,7 @@ class TimeBasedWorkoutClass: ScheduledWorkoutsBase {
       }
 
       if (segment.Name != "Open") {
-        segment.TargetDistance = (segment.TargetTime / segment.ConvertedTargetPace);
+        segment.TargetTime = (segment.TargetDistance * segment.ConvertedTargetPace);
         TotalTargetTime        += segment.TargetTime;
         TotalTargetDistance    += segment.TargetDistance;
       }
@@ -105,15 +105,15 @@ class TimeBasedWorkoutClass: ScheduledWorkoutsBase {
 }
 //===========================================================================
 
-class TimeBasedWorkoutsClass {
-  var ListClass<TimeBasedWorkoutClass> Workouts;
+class DistanceBasedWorkoutsClass {
+  var ListClass<DistanceBasedWorkoutClass> Workouts;
 
   Constructor {
     Workouts = new(8);
   }
 
   Build = {
-    foreach(var run in TimeBasedRuns){
+    foreach(var run in DistanceBasedRuns){
       run.Build();
       Workouts.Add(run);
     }

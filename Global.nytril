@@ -18,6 +18,8 @@ namespace Measures {
   const double KilometersPerMeter        = (1 meter) intu kilometers;
   const double MetersPerMile             = (1 mile) intu meters;
   const double MilesPerMeter             = (1 meter) intu miles;
+  const double KilometersPerMile         = (1 mile) intu kilometers;
+  const double MilesPerKilometer         = (1 kilometer) intu miles;
   const string Kilometer                 = "Kilometer";
   const string Mile                      = "Mile";
   const string Kilometers                = "Kilometers";
@@ -54,6 +56,13 @@ namespace Convert {
       return pace * Measures.MinPerMiToMinPerKMFactor;
     else
       return pace * Measures.MinPerKmToMinPerMiFactor;
+  }
+
+  double ConvertDistance(double distance, DistanceTypes fromType) {
+    if (fromType == DistanceTypes.Mile || fromType == DistanceTypes.Miles)
+      return distance * Measures.KilometersPerMile;
+    else
+      return distance * Measures.MilesPerKilometer;
   }
 }
 //======================================================================================
@@ -103,8 +112,8 @@ namespace Utilities {
     }
 
     double diff  = max - min;
-    double height = 18; // diff * 0.8;
-    double delta = 6;
+    double height = 18;
+    double delta  = 6;
     double h = height - delta;
 
     Shape(Colors.DarkGray, null, null, width, height) {
@@ -132,6 +141,8 @@ enum PaceTypes {
 enum DistanceTypes {
   Meters,
   Kilometer,
-  Mile
+  Mile,
+  Kilometers,
+  Miles
 }
 //======================================================================================

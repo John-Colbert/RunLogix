@@ -1,5 +1,5 @@
 
-readonly TimeBasedWorkoutClass[] RunningWorkouts = [
+readonly TimeBasedWorkoutClass[] TimeBasedRuns = [
 //      Workout                Date        Notes
   new Interval1HR_5x       (#2024-03-29#),
   new Tempo1hr1x1x         (#2024-04-19#),
@@ -8,6 +8,11 @@ readonly TimeBasedWorkoutClass[] RunningWorkouts = [
   new Tempo1hr1x3x         (#2024-04-26#, "Legs sore and tired from Monday and Wednesday runs.  Hard to keep pace."),
   new LongEasy1hr40Min     (#2024-04-29#, "Took 3 miles to work out soreness. Slow pace, felt good."               ),
   new Interval1hr1x4x      (#2024-05-01#, "Felt good."                                                             ),
+];
+
+readonly DistanceBasedWorkoutClass[] DistanceBasedRuns = [
+//      Workout                Date        Notes
+  new IntervalsShort_5x    (#2024-03-29#),
 ];
 
 //===========================================================================
@@ -30,6 +35,31 @@ namespace SegmentNames {
        selected UnitSystem.
 */
 //===========================================================================
+class IntervalsShort_5x: DistanceBasedWorkoutClass {
+  Constructor(datetime date, string notes = null) {
+    super.Constructor(date);
+
+    WorkoutName = "Interval Short 5X";
+    Notes       = notes;
+
+    //                                                                                  Target Pace
+    //                  Name                   Distance           Type                Minutes:Seconds     Pace Type
+    AddSegment(SegmentNames.WarmUp1         ,      0.7    ,  DistanceTypes.Miles   ,      "12:00",     PaceTypes.MinPerMi);
+    AddSegment(SegmentNames.WarmUp2         ,      0.3    ,  DistanceTypes.Miles   ,      "11:15",     PaceTypes.MinPerMi);
+
+    AddSegment(SegmentNames.Comfortable     ,      1.75   ,  DistanceTypes.Miles   ,      "10:45",     PaceTypes.MinPerMi);
+    AddSegment(SegmentNames.Slow            ,      0.25   ,  DistanceTypes.Miles   ,      "11:45",     PaceTypes.MinPerMi);
+
+    var iv1 = AddInterval(5);
+    iv1.AddSegment(SegmentNames.Accelerated ,      0.3    ,  DistanceTypes.Miles   ,      "09:45",     PaceTypes.MinPerMi);
+    iv1.AddSegment(SegmentNames.Slow        ,      0.1    ,  DistanceTypes.Miles   ,      "11:45",     PaceTypes.MinPerMi);
+
+    AddSegment(SegmentNames.Cooldown        ,      0.5    ,  DistanceTypes.Miles   ,      "12:00",     PaceTypes.MinPerMi);
+  }
+}
+//--------------------------------------------------------------------------
+
+
 class Interval1HR_5x: TimeBasedWorkoutClass {
   Constructor(datetime date, string notes = null) {
     super.Constructor(date);
