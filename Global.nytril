@@ -9,7 +9,7 @@ readonly FileEntryClass[]       Files             = EnumerateFiles(DataPath);
 
 typedef DoubleList ListClass<double>;
 
-MarginLayout = new ExtentClass(new ThicknessClass(1 inch, 0.5 inches, 1 inch, 1 inch));
+readonly ThicknessClass MarginLayout = new(1 inch, 0.5 inches, 1 inch, 1 inch);
 
 //======================================================================================
 
