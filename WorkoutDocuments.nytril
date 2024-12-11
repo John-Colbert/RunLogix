@@ -121,7 +121,7 @@ class SummaryClass: RunningDocumentClass {
         if (notes is valid && notes.Length > 0) {
           Row (PadT(5 pts)) {
             ShowDiaryDate(workoutDate);
-            Chars.EmDash;
+            Tex.EmDash;
             Span {
               TextHeight: 11 pts;
               TextFamily: TextFamilies.TrebuchetMS;
@@ -137,7 +137,7 @@ class SummaryClass: RunningDocumentClass {
         else {
           Row (PadT(5 pts)) {
             ShowDiaryDate(workoutDate);
-            Chars.EmDash;
+            Tex.EmDash;
             ShowDetails(workoutName, actualDistance, actualTime);
           };
         }
@@ -165,7 +165,7 @@ class SummaryClass: RunningDocumentClass {
   ShowDetails(string name, double actualDistance, double actualTime) = Span {
     TextHeight: 9 pts;
     TextColor: Colors.Gray;
-    Separator: Space Chars.EmDash Space;
+    Separator: Space Tex.EmDash Space;
     name;
     ShowDistance(actualDistance);
     ShowTime(actualTime);
