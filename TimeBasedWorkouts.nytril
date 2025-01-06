@@ -113,9 +113,9 @@ class TimeBasedWorkoutsClass {
   }
 
   Build = {
-    foreach(var run in TimeBasedRuns){
-      run.Build();
-      Workouts.Add(run);
-    }
+    //foreach(var run in TimeBasedRuns){
+    //  run.Build();
+    //  Workouts.Add(run);
+    //}
   };
 }

@@ -42,12 +42,14 @@ class TimeSegmentClass : SegmentsBase {
 
 class DistanceSegmentClass : SegmentsBase {
   var DistanceTypes TargetDistanceType;
-  var double        ConvertedTargetDistance;
+  var double        ConvertedTargetDistance,
+                    TargetDistanceMeters;
 
   Constructor(string name, double distance, DistanceTypes distanceType, double targetPace, PaceTypes targetPaceType) {
     super.Constructor(name, targetPace, targetPaceType);
     TargetDistance     = distance;
     TargetDistanceType = distanceType;
+    TargetDistanceMeters = Convert.DistanceToMeters(TargetDistance, TargetDistanceType);
 
     if (!TargetDistanceMatchesSystem)
       ConvertedTargetDistance = Convert.ConvertDistance(TargetDistance, TargetDistanceType);
@@ -55,8 +57,8 @@ class DistanceSegmentClass : SegmentsBase {
 
   private bool TargetDistanceMatchesSystem {
     var systemDistanceType = Measures.DistanceType;
-    return (TargetDistanceType == DistanceTypes.Mile      || TargetDistanceType == DistanceTypes.Miles      && systemDistanceType == DistanceTypes.Mile     ) ||
-           (TargetDistanceType == DistanceTypes.Kilometer || TargetDistanceType == DistanceTypes.Kilometers && systemDistanceType == DistanceTypes.Kilometer);
+    return ((TargetDistanceType == DistanceTypes.Mile      || TargetDistanceType == DistanceTypes.Miles)      && systemDistanceType == DistanceTypes.Mile     ) ||
+           ((TargetDistanceType == DistanceTypes.Kilometer || TargetDistanceType == DistanceTypes.Kilometers) && systemDistanceType == DistanceTypes.Kilometer);
   }
 }
 //===========================================================================

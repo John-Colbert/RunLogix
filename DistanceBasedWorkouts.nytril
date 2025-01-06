@@ -59,9 +59,9 @@ class DistanceBasedWorkoutClass: ScheduledWorkoutsBase {
         EndTime   = readings.LastElement.Time;
 
         var distanceMeters = 0.0;
-        var targetReadings = segment.TargetTime * 60;
+        var targetDistance = segment.TargetDistanceMeters;
         var numReadings    = 0;
-        while (i < readings.Length && numReadings < targetReadings) {
+        while (i < readings.Length && distanceMeters < targetDistance) {
           distanceMeters += readings[i++].Meters;
           numReadings++;
         }

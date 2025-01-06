@@ -7,13 +7,17 @@ class RawWorkoutClass: WorkoutBase {
                                      TotalTime;
   var ListClass<double>              ElevationReadings;
 
-  Constructor {
+  Constructor() {
     super.Constructor;
     Splits            = new(2);
     RemainingDistance = new(DistanceTypes.Meters, 0, 0, 0, new(100));
     TotalDistance     = 0;
     TotalTime         = 0;
     ElevationReadings = new(100);
+  }
+
+  string GetStorageString() {
+    return Accumulator.GetStorageString();
   }
 
   void Build(FileEntryClass file) {
@@ -68,16 +72,24 @@ class RawWorkoutClass: WorkoutBase {
 
 class RawWorkoutsClass {
   readonly var ListClass<RawWorkoutClass>  Workouts;
+  var string StorageString;
 
   Constructor {
     var fileCount = Files.Length;
     Workouts = new(fileCount);
+    StorageString = ReadString(DataReadingsPath, IO.FileFormats.Nytril);
     ProgressComment("Processing " fileCount " GPX Files.");
+    int i = 0;
     foreach (var file in Files) {
       RawWorkoutClass workout = new;
       workout.Build(file);
+      StorageString = StorageString workout.GetStorageString();
       Workouts.Add(workout);
       ProgressPercent(each1, fileCount);
+      if (++i == 1)
+        break;
     }
+
+    IO.Write(StorageString, Folders.Source IO.FileName("DataReadings") Extensions.Text);
   }
 }

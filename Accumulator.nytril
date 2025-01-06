@@ -1,20 +1,40 @@
-using IO;
+using IO, Format;
 
 class Reading {
   var datetime Time;
   var double   Elevation,
-               Meters;
+               Meters,
+               Course,
+               HAcc,
+               VAcc;
+}
+
+class ReadingItem: Reading {
+  Constructor(datetime time, double elevation, double meters, double course, double hAcc, double vAcc) {
+    Time       = time;
+    Elevation  = elevation;
+    Meters     = meters;
+    Course     = course;
+    HAcc       = hAcc;
+    VAcc       = vAcc;
+  }
 }
 
 class AccumulatorClass {
   var string Filename;
+  var string StorageString;
   var ListClass<Reading> Readings;
   private var Reading RowReading;
 
-  Constructor {
-    Filename = "";
-    Readings = new(100);
-    RowReading = new();
+  Constructor() {
+    Filename       = "";
+    Readings       = new(100);
+    RowReading     = new;
+    StorageString  = [];
+  }
+
+  string GetStorageString() {
+    return StorageString;
   }
 
   void ReadFile(string path, string filename, bool useSourceRoot) {
@@ -29,22 +49,61 @@ class AccumulatorClass {
       var trkpts   = trkSegEl.Elements;
       if (trkpts is valid) {
         foreach (var trkptEl in trkpts) {
-          var timeEl = trkptEl.FindFirstElement("time");
-          RowReading.Time = datetime.Parse8601(timeEl.Value);
+          var timeEl       = trkptEl.FindFirstElement("time");
+          RowReading.Time  = datetime.Parse8601(timeEl.Value);
 
-          var eleEl = trkptEl.FindFirstElement("ele");
+          var eleEl            = trkptEl.FindFirstElement("ele");
           RowReading.Elevation = eleEl.Value as double;
 
           var extensionsEl = trkptEl.FindFirstElement("extensions");
           var speedEl      = extensionsEl.FindFirstElement("speed");
+          var course       = extensionsEl.FindFirstElement("course");
+          var hAcc         = extensionsEl.FindFirstElement("hAcc");
+          var vAcc         = extensionsEl.FindFirstElement("vAcc");
           var v = speedEl.Value;
           if (v is valid) {
             RowReading.Meters = v as double;
+            RowReading.Course = course.Value as double;
+            RowReading.HAcc   = hAcc.Value as double;
+            RowReading.VAcc   = vAcc.Value as double;
             Readings.Add(RowReading);
-            RowReading = new();
+            RowReading = new;
           }
         }
+        AddToStorageString();
       }
     }
+  }
+
+  void AddToStorageString() {
+    string v      = "";
+    string indent = "  ";
+
+    v += FilenameToVarName(Filename);
+    v += " = [";
+    v += LineBreak;
+
+    foreach (var reading in Readings) {
+      v += indent;
+      v += "new ReadingItem(";
+      v += "#" reading.Time "#, ";
+      v += reading.Elevation ", ";
+      v += reading.Meters ", ";
+      v += reading.Course ", ";
+      v += reading.HAcc ", ";
+      v += reading.VAcc;
+      v += "),";
+      v += LineBreak;
+    }
+    v += "];";
+    v += LineBreak LineBreak;
+
+    StorageString = v;
+  }
+
+  string FilenameToVarName(string filename) {
+    var s  = filename.Replace("-", "_");
+    s = s.Replace(".gpx", "");
+    return s.Replace(".", "");
   }
 }
