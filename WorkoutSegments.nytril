@@ -49,7 +49,7 @@ class DistanceSegmentClass : SegmentsBase {
     super.Constructor(name, targetPace, targetPaceType);
     TargetDistance     = distance;
     TargetDistanceType = distanceType;
-    TargetDistanceMeters = Convert.DistanceToMeters(TargetDistance, TargetDistanceType);
+    TargetDistanceMeters = Convert.ConvertDistance(TargetDistance, TargetDistanceType);
 
     if (!TargetDistanceMatchesSystem)
       ConvertedTargetDistance = Convert.ConvertDistance(TargetDistance, TargetDistanceType);
