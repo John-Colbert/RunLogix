@@ -2,15 +2,14 @@ using Format, Units, IO, System;
 
 //======================================================================================
 
-readonly TimeBasedWorkoutsClass TimeBasedWorkouts         = new;
-readonly DistanceBasedWorkoutsClass DistanceBasedWorkouts = new;
+readonly TimeBasedWorkoutsClass TimeBasedWorkouts = new;
 readonly RawWorkoutsClass       RawWorkouts       = new;
 readonly UnitSystems            UnitSystem        = Configuration.UnitSystem;
 readonly FileEntryClass[]       Files             = EnumerateFiles(DataPath);
 
 typedef DoubleList ListClass<double>;
 
-MarginLayout = new ThicknessClass(1 inch, 0.5 inches, 1 inch, 1 inch);
+readonly ThicknessClass MarginLayout = new(1 inch, 0.5 inches, 1 inch, 1 inch);
 
 //======================================================================================
 
@@ -64,13 +63,6 @@ namespace Convert {
       return distance * Measures.KilometersPerMile;
     else
       return distance * Measures.MilesPerKilometer;
-  }
-
-  double DistanceToMeters(double distance, DistanceTypes fromType) {
-    if (fromType == DistanceTypes.Mile || fromType == DistanceTypes.Miles)
-      return distance * Measures.MetersPerMile;
-    else
-      return distance * Measures.MetersPerKilometer;
   }
 }
 //======================================================================================

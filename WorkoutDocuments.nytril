@@ -121,7 +121,7 @@ class SummaryClass: RunningDocumentClass {
         if (notes is valid && notes.Length > 0) {
           Row (PadT(5 pts)) {
             ShowDiaryDate(workoutDate);
-            "-";
+            Tex.EmDash;
             Span {
               TextHeight: 11 pts;
               TextFamily: TextFamilies.TrebuchetMS;
@@ -137,7 +137,7 @@ class SummaryClass: RunningDocumentClass {
         else {
           Row (PadT(5 pts)) {
             ShowDiaryDate(workoutDate);
-            "-";
+            Tex.EmDash;
             ShowDetails(workoutName, actualDistance, actualTime);
           };
         }
@@ -165,7 +165,7 @@ class SummaryClass: RunningDocumentClass {
   ShowDetails(string name, double actualDistance, double actualTime) = Span {
     TextHeight: 9 pts;
     TextColor: Colors.Gray;
-    Separator: Space "-" Space;
+    Separator: Space Tex.EmDash Space;
     name;
     ShowDistance(actualDistance);
     ShowTime(actualTime);
@@ -390,7 +390,7 @@ class RawRunningDocumentClass: RunningDocumentClass {
 
           foreach (var split in workout.Splits) {
             var ele = Utilities.GetElevationMetrics(split.ElevationReadings);
-            Row (null, null, 16 pts) {
+            Row (null, PadTB(2)) {
               VAlign: VAligns.Center;
               Empty;
               each1;
@@ -441,7 +441,7 @@ class RawRunningDocumentClass: RunningDocumentClass {
   };
 
   ShowElevation (ElevationClass ele) = Span {
-    TextHeight: 9 pts;
+    TextHeight: 8 pts;
     Span {
       TextDigits: 1;
       Shape (Colors.Green) {
