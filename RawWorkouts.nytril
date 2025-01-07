@@ -1,4 +1,4 @@
-using IO, Units, System;
+using IO, Units, System, Format;
 
 class RawWorkoutClass: WorkoutBase {
   var ListClass<DistancePerformance> Splits;
@@ -16,9 +16,9 @@ class RawWorkoutClass: WorkoutBase {
     ElevationReadings = new(100);
   }
 
-  string GetStorageString() {
-    return Accumulator.GetStorageString();
-  }
+  //string GetStorageString() {
+  //  return Accumulator.GetStorageString();
+  //}
 
   void Build(FileEntryClass file) {
     ReadFile(file);
@@ -70,26 +70,46 @@ class RawWorkoutClass: WorkoutBase {
 }
 //=================================================================================
 
+typedef RunArray RunSessionClass[];
+typedef NewSessionList ListClass<RunSessionClass>;
 class RawWorkoutsClass {
-  readonly var ListClass<RawWorkoutClass>  Workouts;
-  var string StorageString;
+  readonly var ListClass<RawWorkoutClass> Workouts;
+  var NewSessionList NewSessions;
+  var RunSessionClass[] RunSessions;
 
   Constructor {
     var fileCount = Files.Length;
-    Workouts = new(fileCount);
-    StorageString = ReadString(DataReadingsPath, IO.FileFormats.Nytril);
+    Workouts      = new(fileCount);
+    NewSessions   = new(fileCount);
+    var build     = ReadScript(DataReadingsPath);
+    RunSessions   = build.Root.RunSessions as RunArray;
     ProgressComment("Processing " fileCount " GPX Files.");
     int i = 0;
     foreach (var file in Files) {
       RawWorkoutClass workout = new;
       workout.Build(file);
-      StorageString = StorageString workout.GetStorageString();
       Workouts.Add(workout);
+      NewSessions.Add(workout.Accumulator.RunSession);
       ProgressPercent(each1, fileCount);
-      if (++i == 1)
+      if (++i == 3)
         break;
     }
+    RunSessions += NewSessions.ToArray;
+    WriteStorage;
+  }
 
-    IO.Write(StorageString, Folders.Source IO.FileName("DataReadings") Extensions.Text);
+  GetText = TextBlock {
+    "\\* This file is auto generated. Existing data is NOT overwritten and can be modified in place if necessary.  New data will be added to the end of the file. *\\";
+    LineBreak;
+    "RunSessionClass[] RunSessions = [";
+
+    foreach (var session in RunSessions)
+      session.GetTextBlockLines;
+
+    "];";
+  };
+
+  void WriteStorage {
+    IO.Write(GetText, DataReadingsPath);
   }
 }

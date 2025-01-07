@@ -1,6 +1,6 @@
 using IO, Format;
 
-class Reading {
+class ReadingClass {
   var datetime Time;
   var double   Elevation,
                Meters,
@@ -9,7 +9,7 @@ class Reading {
                VAcc;
 }
 
-class ReadingItem: Reading {
+class ReadingItemClass: ReadingClass {
   Constructor(datetime time, double elevation, double meters, double course, double hAcc, double vAcc) {
     Time       = time;
     Elevation  = elevation;
@@ -20,22 +20,63 @@ class ReadingItem: Reading {
   }
 }
 
+class RunSessionClass {
+  var Filename;
+  var ReadingItemClass[] Readings;
+
+  Constructor(name, ReadingItemClass[] readings) {
+    Filename = name;
+    Readings = readings;
+  }
+
+  GetTextBlockLines() = {
+    string indent = "  ";
+    Span {
+      indent;
+      "new(\"";
+      Filename;
+      "\", [";
+    };
+
+    foreach (var reading in Readings) {
+      Span {
+        indent * 2;
+        "new(#";
+        reading.Time;
+        "#, ";
+        reading.Elevation ", ";
+        reading.Meters ", ";
+        reading.Course ", ";
+        reading.HAcc ", ";
+        reading.VAcc;
+        "),";
+      };
+    }
+    Span {
+      indent;
+      "]),";
+    };
+  };
+}
+
 class AccumulatorClass {
   var string Filename;
   var string StorageString;
-  var ListClass<Reading> Readings;
-  private var Reading RowReading;
+  var ListClass<ReadingItemClass> Readings;
+  var RunSessionClass RunSession;
+  private var ReadingItemClass RowReading;
+
 
   Constructor() {
     Filename       = "";
     Readings       = new(100);
-    RowReading     = new;
+    RowReading     = new(null, 0,0,0,0,0);
     StorageString  = [];
   }
 
-  string GetStorageString() {
-    return StorageString;
-  }
+  //string GetStorageString() {
+  //  return StorageString;
+  //}
 
   void ReadFile(string path, string filename, bool useSourceRoot) {
     Filename = filename;
@@ -67,43 +108,49 @@ class AccumulatorClass {
             RowReading.HAcc   = hAcc.Value as double;
             RowReading.VAcc   = vAcc.Value as double;
             Readings.Add(RowReading);
-            RowReading = new;
+            RowReading = new(null, 0,0,0,0,0);
           }
         }
-        AddToStorageString();
+        RunSession = new(Filename, Readings.ToArray);
+        //WriteTextBlockLines();
       }
     }
   }
 
-  void AddToStorageString() {
-    string v      = "";
+  WriteTextBlockLines() = {
     string indent = "  ";
+    LineBreak;
+    LineBreak;
 
-    v += FilenameToVarName(Filename);
-    v += " = [";
-    v += LineBreak;
+    Span {
+      indent;
+      "new(\"";
+      Filename;
+      "\", [";
+    };
 
     foreach (var reading in Readings) {
-      v += indent;
-      v += "new ReadingItem(";
-      v += "#" reading.Time "#, ";
-      v += reading.Elevation ", ";
-      v += reading.Meters ", ";
-      v += reading.Course ", ";
-      v += reading.HAcc ", ";
-      v += reading.VAcc;
-      v += "),";
-      v += LineBreak;
+      Span {
+        indent * 2;
+        "new(#";
+        reading.Time;
+        "#, ";
+        reading.Elevation ", ";
+        reading.Meters ", ";
+        reading.Course ", ";
+        reading.HAcc ", ";
+        reading.VAcc;
+        "),";
+      };
     }
-    v += "];";
-    v += LineBreak LineBreak;
+    "];";
+    LineBreak
+    LineBreak;
+  };
 
-    StorageString = v;
-  }
-
-  string FilenameToVarName(string filename) {
-    var s  = filename.Replace("-", "_");
-    s = s.Replace(".gpx", "");
-    return s.Replace(".", "");
-  }
+  //string FilenameToVarName(string filename) {
+  //  var s  = filename.Replace("-", "_");
+  //  s = s.Replace(".gpx", "");
+  //  return s.Replace(".", "");
+  //}
 }

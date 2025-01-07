@@ -1,8 +1,4 @@
-/* Auto-Generated file.  Data that has already been written, can be modified.  New data will be added to the end of the file */
+\* This file is auto generated. Existing data is NOT overwritten and can be modified in place if necessary.  New data will be added to the end of the file. *\
 
-namespace DataReadings;
-
-route_20181225_418pm = [
-  new ReadingItem(#2018-12-25 16:16:18#, 0, 0, 0, 0, 0)
+RunSessionClass[] RunSessions = [
 ];
-
