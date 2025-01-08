@@ -29,33 +29,16 @@ class RunSessionClass {
     Readings = readings;
   }
 
-  GetTextBlockLines() = {
-    string indent = "  ";
-    Span {
-      indent;
-      "new(\"";
-      Filename;
-      "\", [";
-    };
+  GetTextBlockLines() = TextBlock {
+    IndentSpace: 2;
+    "new(\"{0}\", ["(Filename);
 
-    foreach (var reading in Readings) {
-      Span {
-        indent * 2;
-        "new(#";
-        reading.Time;
-        "#, ";
-        reading.Elevation ", ";
-        reading.Meters ", ";
-        reading.Course ", ";
-        reading.HAcc ", ";
-        reading.VAcc;
-        "),";
-      };
-    }
-    Span {
-      indent;
-      "]),";
+    TextBlock {
+      IndentSpace: 2;
+      foreach (var reading in Readings)
+        "new(#{0}#, {1}, {2}, {3}, {4}, {5}),"(reading.Time, reading.Elevation, reading.Meters, reading.Course, reading.HAcc, reading.VAcc) ;
     };
+    "]),";
   };
 }
 
@@ -63,9 +46,7 @@ class AccumulatorClass {
   var string Filename;
   var string StorageString;
   var ListClass<ReadingItemClass> Readings;
-  var RunSessionClass RunSession;
   private var ReadingItemClass RowReading;
-
 
   Constructor() {
     Filename       = "";
@@ -74,13 +55,9 @@ class AccumulatorClass {
     StorageString  = [];
   }
 
-  //string GetStorageString() {
-  //  return StorageString;
-  //}
-
-  void ReadFile(string path, string filename, bool useSourceRoot) {
-    Filename = filename;
-    var dir = useSourceRoot ? Folders.Source : path;
+  RunSessionClass ReadFile(string path, string filename, bool useSourceRoot) {
+    Filename   = filename;
+    var dir    = useSourceRoot ? Folders.Source : path;
 
     var file = XMLElementClass.Read(dir FileName(filename));
     if (file is valid) {
@@ -111,46 +88,9 @@ class AccumulatorClass {
             RowReading = new(null, 0,0,0,0,0);
           }
         }
-        RunSession = new(Filename, Readings.ToArray);
-        //WriteTextBlockLines();
+        return new(Filename, Readings.ToArray);
       }
     }
+    return null;
   }
-
-  WriteTextBlockLines() = {
-    string indent = "  ";
-    LineBreak;
-    LineBreak;
-
-    Span {
-      indent;
-      "new(\"";
-      Filename;
-      "\", [";
-    };
-
-    foreach (var reading in Readings) {
-      Span {
-        indent * 2;
-        "new(#";
-        reading.Time;
-        "#, ";
-        reading.Elevation ", ";
-        reading.Meters ", ";
-        reading.Course ", ";
-        reading.HAcc ", ";
-        reading.VAcc;
-        "),";
-      };
-    }
-    "];";
-    LineBreak
-    LineBreak;
-  };
-
-  //string FilenameToVarName(string filename) {
-  //  var s  = filename.Replace("-", "_");
-  //  s = s.Replace(".gpx", "");
-  //  return s.Replace(".", "");
-  //}
 }
