@@ -72,17 +72,45 @@ class RawWorkoutClass: WorkoutBase {
 
 typedef RunArray RunSessionClass[];
 typedef NewSessionList ListClass<RunSessionClass>;
+typedef IncomingFileNames ListClass<string>;
+typedef ExistingFileNames ListClass<string>;
+typedef ToAddFileNames ListClass<string>;
 class RawWorkoutsClass {
   readonly var ListClass<RawWorkoutClass> Workouts;
   var NewSessionList NewSessions;
-  var RunSessionClass[] RunSessions;
+  var RunSessionClass[] ExistingSessions;
 
   Constructor {
-    var fileCount = Files.Length;
-    Workouts      = new(fileCount);
-    NewSessions   = new(fileCount);
-    var build     = ReadScript(DataReadingsPath);
-    RunSessions   = build.Root.RunSessions as RunArray;
+    var fileCount     = Files.Length;
+    Workouts          = new(fileCount);
+    NewSessions       = new(fileCount);
+    var build         = ReadScript(DataReadingsPath);
+    ExistingSessions  = build.Root.RunSessions as RunArray;
+
+    IncomingFileNames incomingFileNames = new(fileCount);
+    foreach (FileEntryClass file in Files)
+      incomingFileNames.Add(file.FileName);
+    incomingFileNames.Sort;
+
+    ExistingFileNames existingFileNames = new(fileCount);
+    foreach (RunSessionClass file in ExistingSessions)
+      existingFileNames.Add(file.Filename);
+    existingFileNames.Sort;
+
+    bool match = false;
+    ToAddFileNames toAddFileNames = new(fileCount);
+    foreach (var inName in incomingFileNames) {
+      match = false;
+      foreach (var existingName in existingFileNames) {
+        if (existingName == inName) {
+          match = true;
+          break;
+        }
+      }
+      if (!match)
+        toAddFileNames.Add(inName);
+    }
+
     ProgressComment("Processing " fileCount " GPX Files.");
     int i = 0;
     foreach (var file in Files) {
@@ -94,16 +122,16 @@ class RawWorkoutsClass {
       if (++i == 3)
         break;
     }
-    RunSessions += NewSessions.ToArray;
+    ExistingSessions += NewSessions.ToArray;
     WriteStorage;
   }
 
   GetText = TextBlock {
-    "\\* This file is auto generated. Existing data is NOT overwritten and can be modified in place if necessary.  New data will be added to the end of the file. *\\";
+    "/* This file is auto generated. Existing data is NOT overwritten and can be modified in place if necessary.  New data is always added to the end of the file. */";
     LineBreak;
     "RunSessionClass[] RunSessions = [";
 
-    foreach (var session in RunSessions)
+    foreach (var session in ExistingSessions)
       session.GetTextBlockLines;
 
     "];";
