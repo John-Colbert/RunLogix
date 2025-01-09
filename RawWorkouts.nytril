@@ -180,7 +180,8 @@ class RawWorkoutsClass {
             "new(#{0}#, {1}, {2}, {3}, {4}, {5}),"(reading.Time, reading.Elevation, reading.Meters, reading.Course, reading.HAcc, reading.VAcc);
         };
         "]),";
-        var b = ProgressPercent(progress += progressPer, 100);
+        if (!ProgressPercent(progress += progressPer, 100))
+          break;
       }
     };
     "];";
