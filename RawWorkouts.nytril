@@ -71,41 +71,45 @@ class RawWorkoutClass: WorkoutBase {
 //=================================================================================
 
 typedef RunArray RunSessionClass[];
-typedef NewSessionList    ListClass<RunSessionClass>;
-typedef IncomingFileNames ListClass<string>;
-typedef ExistingFileNames ListClass<string>;
-typedef ToAddFileNames    ListClass<string>;
+//typedef NewSessionList    ListClass<RunSessionClass>;
+//typedef IncomingFileNames ListClass<string>;
+//typedef ExistingFileNames ListClass<string>;
+//typedef ToAddFileNames    ListClass<string>;
 
 class RawWorkoutsClass {
-  readonly var AccumulatorClass Accumulator;
+  readonly var AccumulatorClass           Accumulator;
   readonly var ListClass<RawWorkoutClass> Workouts;
-  var NewSessionList NewSessions;
-  var RunSessionClass[] ExistingSessions;
+  readonly var ListClass<RunSessionClass> NewSessions;
+  readonly var RunSessionClass[]          ExistingSessions;
 
   Constructor {
     Accumulator       = new;
     var fileCount     = Files.Length;
     Workouts          = new(fileCount);
     NewSessions       = new(fileCount);
+
+   // Read storage
+    var progressTotal = 100;
+    ProgressPercent(0, progressTotal);
+    ProgressComment("Reading Stored Run Sessions");
     var build         = ReadScript(DataReadingsPath);
     ExistingSessions  = build.Root.RunSessions as RunArray;
 
     // Reconcile the existing to the new
-    var progressTotal = 100;
-    ProgressPercent(0, progressTotal);
+    ProgressPercent(10, progressTotal);
     ProgressComment("Reconciling data ");
-    IncomingFileNames incomingFileNames = new(fileCount);
+    ListClass<string> incomingFileNames = new(fileCount);
     foreach (FileEntryClass file in Files)
       incomingFileNames.Add(file.FileName);
     incomingFileNames.Sort;
 
-    ExistingFileNames existingFileNames = new(fileCount);
+    ListClass<string> existingFileNames = new(fileCount);
     foreach (RunSessionClass file in ExistingSessions)
       existingFileNames.Add(file.Filename);
     existingFileNames.Sort;
 
     bool match = false;
-    ToAddFileNames toAddFileNames = new(fileCount);
+    ListClass<string> toAddFileNames = new(fileCount);
     foreach (var inName in incomingFileNames) {
       match = false;
       foreach (var existingName in existingFileNames) {
@@ -121,10 +125,10 @@ class RawWorkoutsClass {
     ProgressPercent(progress, progressTotal);
 
     // Parse the missing files and add to storage
-    bool haveFilesToAdd = toAddFileNames.Length > 0;
-    if (haveFilesToAdd) {
-      double progressPer = 25 / toAddFileNames.Length;
-      ProgressComment("Reading " toAddFileNames.Length " GPX Files.");
+    var toAddCount = toAddFileNames.Length;
+    if (toAddCount > 0) {
+      double progressPer = 25 / toAddCount;
+      ProgressComment("Reading " toAddCount " GPX Files.");
       //ListClass<RunSessionClass> list = new(toAddFileNames.Length);
       foreach (var filename in toAddFileNames) {
         NewSessions.Add(Accumulator.ReadFile(DataPath, filename, false));
@@ -163,12 +167,22 @@ class RawWorkoutsClass {
     Empty;
     "RunSessionClass[] RunSessions = [";
 
-    //double progress    = 50;
-    //double progressPer = 25 / ExistingSessions.Length;
-    foreach (var session in ExistingSessions)
-      session.GetTextBlockLines;
-      //ProgressPercent(progress += progressPer, 100);
+    double progress    = 50;
+    double progressPer = 25 / ExistingSessions.Length;
+    TextBlock {
+      foreach (var session in ExistingSessions) {
+        IndentSpace: 2;
+        "new(\"{0}\", ["(session.Filename);
 
+        TextBlock {
+          IndentSpace: 2;
+          foreach (var reading in session.Readings)
+            "new(#{0}#, {1}, {2}, {3}, {4}, {5}),"(reading.Time, reading.Elevation, reading.Meters, reading.Course, reading.HAcc, reading.VAcc);
+        };
+        "]),";
+        var b = ProgressPercent(progress += progressPer, 100);
+      }
+    };
     "];";
   };
 

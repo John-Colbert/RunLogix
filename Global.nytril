@@ -99,7 +99,7 @@ namespace Utilities {
     if (elevationReadings.Length <= 0)
       return;
 
-    double width                 = (0.75 inches) intu pixels;
+    double width              = (0.75 inches) intu pixels;
     int readingsPerWidthPixel = elevationReadings.Length > width ? (elevationReadings.Length / width) as int : 1;
 
     double max = 0;

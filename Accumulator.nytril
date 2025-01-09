@@ -1,15 +1,13 @@
 using IO, Format;
 
-class ReadingClass {
-  var datetime Time;
-  var double   Elevation,
-               Meters,
-               Course,
-               HAcc,
-               VAcc;
-}
+class ReadingItemClass {
+  readonly var datetime Time;
+  readonly var double   Elevation,
+                        Meters,
+                        Course,
+                        HAcc,
+                        VAcc;
 
-class ReadingItemClass: ReadingClass {
   Constructor(datetime time, double elevation, double meters, double course, double hAcc, double vAcc) {
     Time       = time;
     Elevation  = elevation;
@@ -21,37 +19,23 @@ class ReadingItemClass: ReadingClass {
 }
 
 class RunSessionClass {
-  var Filename;
-  var ReadingItemClass[] Readings;
+  readonly var Filename;
+  readonly var ReadingItemClass[] Readings;
 
   Constructor(name, ReadingItemClass[] readings) {
     Filename = name;
     Readings = readings;
   }
-
-  GetTextBlockLines() = TextBlock {
-    IndentSpace: 2;
-    "new(\"{0}\", ["(Filename);
-
-    TextBlock {
-      IndentSpace: 2;
-      foreach (var reading in Readings)
-        "new(#{0}#, {1}, {2}, {3}, {4}, {5}),"(reading.Time, reading.Elevation, reading.Meters, reading.Course, reading.HAcc, reading.VAcc) ;
-    };
-    "]),";
-  };
 }
 
 class AccumulatorClass {
   var string Filename;
   var string StorageString;
   var ListClass<ReadingItemClass> Readings;
-  private var ReadingItemClass RowReading;
 
   Constructor() {
     Filename       = "";
     Readings       = new(100);
-    RowReading     = new(null, 0,0,0,0,0);
     StorageString  = [];
   }
 
@@ -68,10 +52,10 @@ class AccumulatorClass {
       if (trkpts is valid) {
         foreach (var trkptEl in trkpts) {
           var timeEl       = trkptEl.FindFirstElement("time");
-          RowReading.Time  = datetime.Parse8601(timeEl.Value);
+          var time         = datetime.Parse8601(timeEl.Value);
 
-          var eleEl            = trkptEl.FindFirstElement("ele");
-          RowReading.Elevation = eleEl.Value as double;
+          var eleEl        = trkptEl.FindFirstElement("ele");
+          var elevation    = eleEl.Value as double;
 
           var extensionsEl = trkptEl.FindFirstElement("extensions");
           var speedEl      = extensionsEl.FindFirstElement("speed");
@@ -79,16 +63,12 @@ class AccumulatorClass {
           var hAcc         = extensionsEl.FindFirstElement("hAcc");
           var vAcc         = extensionsEl.FindFirstElement("vAcc");
           var v = speedEl.Value;
-          if (v is valid) {
-            RowReading.Meters = v as double;
-            RowReading.Course = course.Value as double;
-            RowReading.HAcc   = hAcc.Value as double;
-            RowReading.VAcc   = vAcc.Value as double;
-            Readings.Add(RowReading);
-            RowReading = new(null, 0,0,0,0,0);
-          }
+          if (v is valid)
+            Readings.Add(new(time, elevation, v as double, course.Value as double, hAcc.Value as double, vAcc.Value as double));
         }
-        return new(Filename, Readings.ToArray);
+        RunSessionClass runsession = new(Filename, Readings.ToArray);
+        Readings.Clear;
+        return runsession;
       }
     }
     return null;
