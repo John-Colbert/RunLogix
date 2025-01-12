@@ -51,7 +51,7 @@ class DistanceBasedWorkoutClass: ScheduledWorkoutsBase {
   override void BuildSegments {
     int i = 0;
 
-    var readings = Accumulator.Readings;
+    var readings = WorkoutSession.Readings;
 
     foreach (var segment in SegmentList) {
       if (readings.Length > 0) {

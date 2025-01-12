@@ -1,7 +1,8 @@
 using Format, Units, IO, System;
 
 class WorkoutBase {
-  var AccumulatorClass Accumulator;
+  //var AccumulatorClass Accumulator;
+  var RunSessionClass  WorkoutSession;
   var string           Filename;
   var datetime         StartTime,
                        EndTime;
@@ -9,27 +10,28 @@ class WorkoutBase {
 
 
   Constructor() {
-    Accumulator   = new;
-    Filename      = null;
-    UseSourceRoot = false;
+    //Accumulator   = new;
+    WorkoutSession = null;
+    Filename       = null;
+    UseSourceRoot  = false;
   }
 
-  void GetFilePath(datetime workoutDate) {
-    UseSourceRoot = Filename is not null;
+  //void GetFilePath(datetime workoutDate) {
+  //  UseSourceRoot = Filename is not null;
+  //
+  //  if (!UseSourceRoot) {
+  //    string namePrefix = "route_{0}_"(GetWorkoutDateName(workoutDate));
+  //
+  //    foreach(var file in Files) {
+  //      if (file.FileName.StartsWith(namePrefix)) {
+  //        Filename = file.FileName;
+  //        break;
+  //      }
+  //    }
+  //  }
+  //}
 
-    if (!UseSourceRoot) {
-      string namePrefix = "route_{0}_"(GetWorkoutDateName(workoutDate));
-
-      foreach(var file in Files) {
-        if (file.FileName.StartsWith(namePrefix)) {
-          Filename = file.FileName;
-          break;
-        }
-      }
-    }
-  }
-
-  private string GetWorkoutDateName(datetime workoutDate) {
+  public string GetWorkoutDateName(datetime workoutDate) {
     string year  = workoutDate.Year;
     string month = workoutDate.Month;
     string day   = workoutDate.Day;
@@ -87,13 +89,32 @@ abstract class ScheduledWorkoutsBase: WorkoutBase {
   //}
 
   void Build {
-    GetFilePath(WorkoutDate);
-    if (Filename is not null) {
-      var wo = RawWorkouts.Workouts;
-      Accumulator = wo?.FindFirst(d => d.Filename == Filename).Accumulator;
+    //GetFilePath(WorkoutDate);
+    //UseSourceRoot = Filename is not null;
+
+    string namePrefix = "route_{0}_"(GetWorkoutDateName(WorkoutDate));
+
+    foreach(var workout in RawWorkouts.WorkoutSessions){
+      if (workout.Filename.StartsWith(namePrefix)) {
+        WorkoutSession = workout;
+        break;
+      }
     }
-    BuildSegmentList();
-    BuildSegments();
+
+    //foreach(var file in Files) {
+    //  if (file.FileName.StartsWith(namePrefix)) {
+    //    Filename = file.FileName;
+    //    break;
+    //  }
+    //}
+    //}
+
+    //if (Filename is not null) {
+    //  var wo = RawWorkouts.Workouts;
+    //  Accumulator = wo?.FindFirst(d => d.Filename == Filename).Accumulator;
+    //}
+      BuildSegmentList();
+      BuildSegments();
   }
 
   abstract void BuildSegmentList;
@@ -179,7 +200,6 @@ abstract class ScheduledWorkoutsBase: WorkoutBase {
   //}
 }
 //===========================================================================
-
 
 
 class DistancePerformance {

@@ -49,9 +49,9 @@ class SummaryClass: RunningDocumentClass {
 
   Constructor {
     super.Constructor(#ad080fa6-1765-48f7-862e-dc043ac95a16#, Lang.Summary, Lang.WorkoutsSummary);
+    AllRawWorkouts        = RawWorkouts.RawWorkouts;
     TimeBasedWorkouts.Build;
     MonthlyActualDistance = new(12);
-    AllRawWorkouts       = RawWorkouts.Workouts;
     AllTimeBasedWorkouts = TimeBasedWorkouts.Workouts;
     GetMonthyActuals();
   }
@@ -353,7 +353,7 @@ class RawRunningDocumentClass: RunningDocumentClass {
   override GetDocument = Document(MarginLayout) {
     ShowTitle;
 
-    foreach (var workout in RawWorkouts.Workouts) {
+    foreach (var workout in RawWorkouts.RawWorkouts) {
       var distance = workout.TotalDistance * Measures.PerMeterFactor;
 
       Canvas(100%) {

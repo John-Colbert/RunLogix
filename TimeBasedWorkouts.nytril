@@ -51,10 +51,10 @@ class TimeBasedWorkoutClass: ScheduledWorkoutsBase {
   override void BuildSegments {
     int i = 0;
 
-    var readings = Accumulator.Readings;
+    var readings = WorkoutSession?.Readings;
 
     foreach (var segment in SegmentList) {
-      if (readings.Length > 0) {
+      if (readings is not null && readings.Length > 0) {
         StartTime = readings.FirstElement.Time;
         EndTime   = readings.LastElement.Time;
 
@@ -113,9 +113,9 @@ class TimeBasedWorkoutsClass {
   }
 
   Build = {
-    //foreach(var run in TimeBasedRuns){
-    //  run.Build();
-    //  Workouts.Add(run);
-    //}
+    foreach(var run in TimeBasedRuns){
+      run.Build();
+      Workouts.Add(run);
+    }
   };
 }
