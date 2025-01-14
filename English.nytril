@@ -5,6 +5,7 @@ AllRunningWorkouts                   = "All Running Workouts";
 AllWorkouts                          = "All Workouts";
 Diary                                = "Diary";
 End                                  = "End";
+Home                                 = "Home";
 Pace                                 = "Pace";
 Performance                          = "Performance";
 Segment                              = "Segment";

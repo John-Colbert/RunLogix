@@ -1,0 +1,25 @@
+using Format, Units;
+
+class HomeClass : DocumentClass {
+
+  Constructor() {
+    super.Constructor(#faf514cc-cfcf-42f6-8ae5-91d74b13234e#, Lang.Home);
+  }
+
+  override GetDocument = Document(MarginLayout) {
+    Paragraph {
+      ParAlignment: ParAlignments.Right;
+      TextHeight: 30 pts;
+      "Run Logix";
+
+    };
+    Paragraph {
+      Span {
+        Action: new ActionClass(Actions.ToDocument, #ad080fa6-1765-48f7-862e-dc043ac95a16#);
+        "Summary Document";
+      };
+    };
+  };
+}
+
+
