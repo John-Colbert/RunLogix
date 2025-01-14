@@ -52,7 +52,7 @@ class SummaryClass: RunningDocumentClass {
     AllRawWorkouts        = RawWorkouts.RawWorkouts;
     TimeBasedWorkouts.Build;
     MonthlyActualDistance = new(12);
-    AllTimeBasedWorkouts = TimeBasedWorkouts.Workouts;
+    AllTimeBasedWorkouts  = TimeBasedWorkouts.Workouts;
     GetMonthyActuals();
   }
 

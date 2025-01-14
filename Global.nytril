@@ -1,13 +1,8 @@
 using Format, Units, IO, System;
 
 //======================================================================================
-
-readonly TimeBasedWorkoutsClass TimeBasedWorkouts = new;
-readonly RawWorkoutsClass       RawWorkouts       = new;
-readonly UnitSystems            UnitSystem        = Configuration.UnitSystem;
-readonly FileEntryClass[]       Files             = EnumerateFiles(DataPath);
-
 typedef DoubleList ListClass<double>;
+typedef RunArray RunSessionClass[];
 
 readonly ThicknessClass MarginLayout = new(1 inch, 0.5 inches, 1 inch, 1 inch);
 

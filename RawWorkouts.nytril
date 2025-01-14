@@ -16,22 +16,12 @@ class RawWorkoutClass: WorkoutBase {
     ElevationReadings = new(100);
   }
 
-  //string GetStorageString() {
-  //  return Accumulator.GetStorageString();
-  //}
-
   void Build(ReadingItemClass[] readings) {
-    //ReadFile(file);
     BuildWorkout(readings);
   }
 
-  //void ReadFile(FileEntryClass file) {
-  //  Filename = file.FileName;
-  //  Accumulator.ReadFile(DataPath, Filename, false);
-  //}
 
   void BuildWorkout(ReadingItemClass[] readings) {
-    //var readings = Accumulator.Readings;
     if (readings.Length > 0) {
       StartTime = readings.FirstElement.Time;
       EndTime   = readings.LastElement.Time;
@@ -70,28 +60,45 @@ class RawWorkoutClass: WorkoutBase {
 }
 //=================================================================================
 
-typedef RunArray RunSessionClass[];
-class RawWorkoutsClass {
+class BuildWorkoutsClass {
+  readonly var FileEntryClass[]           StorageFiles;
   readonly var AccumulatorClass           Accumulator;
   readonly var ListClass<RawWorkoutClass> RawWorkouts;
   readonly var ListClass<RunSessionClass> NewSessions;
-  readonly var RunSessionClass[]          WorkoutSessions;
+  readonly var ListClass<RunSessionClass> WorkoutSessions;
 
   Constructor {
+    StorageFiles      = EnumerateFiles(DataStoragePath);
     Accumulator       = new;
     var fileCount     = Files.Length;
-    RawWorkouts          = new(fileCount);
+    WorkoutSessions   = new(fileCount);
+    RawWorkouts       = new(fileCount);
     NewSessions       = new(fileCount);
 
    // Read storage
+   double progress    = 0;
     var progressTotal = 100;
     ProgressPercent(0, progressTotal);
     ProgressComment("Reading Stored Run Sessions");
-    var build         = ReadScript(DataReadingsPath);
-    WorkoutSessions   = build.Root.RunSessions as RunArray;
+
+    ListClass<string> paths = new(StorageFiles.Length);
+    foreach (var file in StorageFiles)
+      paths.Add(file.Path);
+
+    //var build           = ReadScripts(paths.ToArray());
+
+    if (paths.Length > 0) {
+      double progressPer = 40 / paths.Length;
+      foreach (var path in paths) {
+        var build  = ReadScript(path);
+        WorkoutSessions.Add(build.Root.RunSession as RunSessionClass);
+        ProgressPercent(progress += progressPer, progressTotal);
+      }
+    }
+    else
+      progress = 0;
 
     // Reconcile the existing to the incoming
-    ProgressPercent(10, progressTotal);
     ProgressComment("Reconciling data ");
     ListClass<string> incomingFileNames = new(fileCount);
     foreach (FileEntryClass file in Files)
@@ -116,32 +123,32 @@ class RawWorkoutsClass {
       if (!match)
         toAddFileNames.Add(inName);
     }
-    double progress = 25;
-    ProgressPercent(progress, progressTotal);
 
     // Parse the missing incoming files and add to storage and workoutsessions
     var toAddCount = toAddFileNames.Length;
     if (toAddCount > 0) {
-      double progressPer = 25 / toAddCount;
-      ProgressComment("Reading " toAddCount " GPX Files.");
+      double progressAdjust = progress == 0 ? 40 : 0;
+      double progressPer = (progressAdjust + 40) / toAddCount;
+      ProgressComment("Creating " toAddCount " Data Files.");
       //ListClass<RunSessionClass> list = new(toAddFileNames.Length);
       foreach (var filename in toAddFileNames) {
-        NewSessions.Add(Accumulator.ReadFile(DataPath, filename, false));
+        var session = Accumulator.ReadFile(DataPath, filename, false);
+        NewSessions.Add(session);
+        WriteStorageFile(session);
         ProgressPercent(progress += progressPer, progressTotal);
       }
       WorkoutSessions += NewSessions.ToArray;
       ProgressComment("Writing Storage File.");
-      WriteStorage();
-      progress = 75;
+      //WriteStorage();
     }
     else {
-      progress = 75;
+      progress = 80;
       ProgressPercent(progress, progressTotal);
     }
 
     //Build the workouts from the existing list
     int sessionCount = WorkoutSessions.Length;
-    double progressPer = 25 / sessionCount;
+    double progressPer = 20 / sessionCount;
     ProgressComment("Building " sessionCount " Workouts.");
     foreach (var file in WorkoutSessions) {
       RawWorkoutClass rawworkout = new;
@@ -176,6 +183,24 @@ class RawWorkoutsClass {
     };
     "];";
   };
+
+  GetWorkoutText(RunSessionClass workoutSession) = TextBlock {
+    "/* This file is auto generated. Existing data is NOT overwritten and can be modified in place if necessary. */";
+    Empty;
+    Empty;
+    "RunSessionClass RunSession = new(\"{0}\", ["(workoutSession.Filename);
+    TextBlock {
+      IndentSpace: 2;
+      foreach (var reading in workoutSession.Readings)
+        "new(#{0}#, {1}, {2}, {3}, {4}, {5}),"(reading.Time, reading.Elevation, reading.Meters, reading.Course, reading.HAcc, reading.VAcc);
+    };
+    "]);";
+  };
+
+  void WriteStorageFile(RunSessionClass workoutSession) {
+    var fn = workoutSession.Filename.Replace(".gpx", "");
+    IO.Write(GetWorkoutText(workoutSession), DataStoragePath FileName(fn) Extensions.Nytril);
+  }
 
   void WriteStorage {
     IO.Write(GetText, DataReadingsPath);
