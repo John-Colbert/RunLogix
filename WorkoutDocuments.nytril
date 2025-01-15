@@ -49,14 +49,15 @@ class SummaryClass: RunningDocumentClass {
 
   Constructor {
     super.Constructor(#ad080fa6-1765-48f7-862e-dc043ac95a16#, Lang.Summary, Lang.WorkoutsSummary);
-    AllRawWorkouts        = RawWorkouts.RawWorkouts;
-    TimeBasedWorkouts.Build;
     MonthlyActualDistance = new(12);
-    AllTimeBasedWorkouts  = TimeBasedWorkouts.Workouts;
-    GetMonthyActuals();
   }
 
   override GetDocument = Document(MarginLayout) {
+    AllRawWorkouts        = RawWorkouts.RawWorkouts;
+    TimeBasedWorkouts.Build;
+    AllTimeBasedWorkouts  = TimeBasedWorkouts.Workouts;
+    GetMonthyActuals();
+
     ShowTitle;
     ShowDistanceChart;
     ShowDiary;
@@ -67,7 +68,7 @@ class SummaryClass: RunningDocumentClass {
 
     HAlign: HAligns.Center;
     Background: Colors.WhiteSmoke;
-    "{0} Workouts"(TimeBasedWorkouts.Workouts.Length);
+    "{0} Workouts"(AllTimeBasedWorkouts.Length);
     Chart(90%, 3 inches) {
       Marker: Markers.Circle(Colors.White, 0.5);
       Type: ChartTypes.Column;
@@ -212,10 +213,12 @@ class PerformanceToTargetClass: RunningDocumentClass {
 
   Constructor {
     super.Constructor(#029a3f5d-ebfd-4011-8d57-7f87c7b6b324#, Lang.WorkoutPerformance, Lang.WorkoutPerformanceTo);
-    RunWorkouts = TimeBasedWorkouts.Workouts;
   }
 
   override GetDocument = Document(MarginLayout) {
+    TimeBasedWorkouts.Build;
+    RunWorkouts = TimeBasedWorkouts.Workouts;
+
     ShowTitle;
 
     foreach(var workout in RunWorkouts) {

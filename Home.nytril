@@ -1,9 +1,47 @@
 using Format, Units;
 
-class HomeClass : DocumentClass {
+class DataClass: FactClass {
+  field bool LoadRecords;
 
-  Constructor() {
+  Constructor {
+    super.Constructor(#1e9cb57c-aa58-4d21-82f5-34a1a1650424#);
+    ReadFromStorage;
+  }
+}
+//=======================================================
+
+class LoadDataActionClass: ActionClass {
+  var DataClass Data;
+
+  Constructor(DataClass data) {
+    super.Constructor(Actions.Execute, null);
+    Data = data;
+  }
+
+  override EventResponseClass Execute {
+    Data.LoadRecords = true;
+    Data.WriteToStorage;
+    return EventResponses.Rebuild;
+  }
+}
+//=======================================================
+
+class HomeClass: DocumentClass {
+  var DataClass                   Data;
+  var ListClass<RawWorkoutClass>  AllRawWorkouts;
+
+  Constructor {
     super.Constructor(#faf514cc-cfcf-42f6-8ae5-91d74b13234e#, Lang.Home);
+    Data = new;
+
+    if (Data.LoadRecords)
+      LoadRecords;
+  }
+
+  void LoadRecords {
+    AllRawWorkouts  = RawWorkouts.RawWorkouts;
+    Data.LoadRecords = false;
+    Data.WriteToStorage;
   }
 
   override GetDocument = Document(MarginLayout) {
@@ -11,15 +49,58 @@ class HomeClass : DocumentClass {
       ParAlignment: ParAlignments.Right;
       TextHeight: 30 pts;
       "Run Logix";
-
     };
+    HBox(null, null, BorderAll(1) + PadAll(4)) {
+      BorderRadius: 2 pts;
+      Span {
+        Action: new LoadDataActionClass(Data);
+        "Read In New Workouts";
+      };
+    };
+    Paragraph;
     Paragraph {
       Span {
         Action: new ActionClass(Actions.ToDocument, #ad080fa6-1765-48f7-862e-dc043ac95a16#);
+        Bold;
         "Summary Document";
       };
     };
+    Paragraph {
+      LeftIndent: 10 pts;
+      Italic;
+      "This document shows a very basic listing of all workouts completed, any comments, and includes a monthly total distance chart.";
+    };
+    Paragraph;
+
+    Paragraph {
+      Span {
+        Action: new ActionClass(Actions.ToDocument, #029a3f5d-ebfd-4011-8d57-7f87c7b6b324#);
+        Bold;
+        "Workout Performance to Target Document";
+      };
+    };
+    Paragraph {
+      LeftIndent: 10 pts;
+      Italic;
+      "This document matches up workouts in storage to scheduled workouts and shows actual performance to expectations";
+    };
+    Paragraph;
+    Paragraph {
+      Span {
+        Action: new ActionClass(Actions.ToDocument, #82bd5cf5-0150-4e79-95c6-3cb36f7824e9#);
+        Bold;
+        "Raw Workouts Document";
+      };
+
+    };
+    Paragraph {
+      LeftIndent: 10 pts;
+      Italic;
+      "This document shows every run in storage including splits based on the selected measurement system (either miles or kilometers) and elevation gain/loss per split.";
+    };
   };
 }
+
+
 
 
