@@ -1,7 +1,9 @@
-using IO;
+using IO, System;
 
 include "Global";
+include "BuildWorkouts";
 include "Accumulator";
+include "Home";
 include "WorkoutClasses";
 include "WorkoutIntervals";
 include "WorkoutSegments";
@@ -12,10 +14,20 @@ include "WorkoutDocuments";
 include "RawWorkouts";
 include "Lang";
 
-readonly DataPath = Folders.Source Folder("apple_health_export") Folder("workout-routes");
+readonly DataPath         = Folders.Source Folder("apple_health_export") Folder("workout-routes");
+readonly DataReadingsPath = Folders.Source IO.FileName("DataReadings") Extensions.Nytril;
+readonly DataStoragePath  = Folders.Source Folder("DataFiles");
+
+readonly TimeBasedWorkoutsClass TimeBasedWorkouts = new;
+readonly BuildWorkoutsClass     RawWorkouts       = new;
+readonly UnitSystems            UnitSystem        = Configuration.UnitSystem;
+readonly FileEntryClass[]       Files             = EnumerateFiles(DataPath);
+
+readonly SummaryClass SummaryDocument = new;
 
 readonly DocumentClass[] Main.Documents = [
-  new SummaryClass,
+  new HomeClass,
+  //new SummaryClass,
   new PerformanceToTargetClass,
   new RawRunningDocumentClass
 ];
