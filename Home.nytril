@@ -60,7 +60,7 @@ class HomeClass: DocumentClass {
     Paragraph;
     Paragraph {
       Span {
-        Action: new ActionClass(Actions.ToDocument, #ad080fa6-1765-48f7-862e-dc043ac95a16#);
+        Action: new ActionClass(Actions.ToDocument, SummaryDocument);
         Bold;
         "Summary Document";
       };
