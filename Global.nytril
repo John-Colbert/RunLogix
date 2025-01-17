@@ -8,6 +8,26 @@ readonly ThicknessClass MarginLayout = new(1 inch, 0.5 inches, 1 inch, 1 inch);
 
 //======================================================================================
 
+readonly namespace Measures if (UnitSystem == UnitSystems.Metric) {
+  const string DistanceAbbr           = " km";
+  const string MinutesPerAbbr         = " min/km";
+  const double PerMeterFactor         = Measures.KilometersPerMeter;
+  const double MetersPerFactor        = Measures.MetersPerKilometer;
+  readonly DistanceTypes DistanceType = DistanceTypes.Kilometer;
+  const string DistanceUnitSingle     = Kilometer;
+  const string DistanceUnitPlural     = Kilometers;
+}
+
+readonly namespace Measures if (UnitSystem == UnitSystems.Imperial) {
+  const string DistanceAbbr           = " mi";
+  const string MinutesPerAbbr         = " min/mi";
+  const double PerMeterFactor         = Measures.MilesPerMeter;
+  const double MetersPerFactor        = Measures.MetersPerMile;
+  readonly DistanceTypes DistanceType = DistanceTypes.Mile;
+  const string DistanceUnitSingle     = Mile;
+  const string DistanceUnitPlural     = Miles;
+}
+
 namespace Measures {
   const double MetersPerKilometer        = (1 kilometer) intu meters;
   const double KilometersPerMeter        = (1 meter) intu kilometers;
@@ -23,14 +43,6 @@ namespace Measures {
   const double MetersToFeetFactor        = 3.280839895;
   const double MinPerMiToMinPerKMFactor  = 0.6213692038495188;
   const double MinPerKmToMinPerMiFactor  = 1.6093491499172796;
-
-  readonly string DistanceAbbr           = UnitSystem == UnitSystems.Metric ? " km" : " mi";
-  readonly string MinutesPerAbbr         = UnitSystem == UnitSystems.Metric ? " min/km" : " min/mi";
-  readonly double PerMeterFactor         = UnitSystem == UnitSystems.Metric ? Measures.KilometersPerMeter : Measures.MilesPerMeter;
-  readonly double MetersPerFactor        = UnitSystem == UnitSystem.Metric  ? Measures.MetersPerKilometer : Measures.MetersPerMile;
-  readonly DistanceTypes DistanceType    = UnitSystem == UnitSystem.Metric ? DistanceTypes.Kilometer : DistanceTypes.Mile;
-  readonly string DistanceUnitSingle     = UnitSystem == UnitSystem.Metric ? Kilometer : Mile;
-  readonly string DistanceUnitPlural     = UnitSystem == UnitSystem.Metric ? Kilometers : Miles;
 }
 //======================================================================================
 
