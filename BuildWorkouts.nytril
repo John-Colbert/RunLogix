@@ -15,8 +15,8 @@ class BuildWorkoutsClass {
     RawWorkouts       = new(fileCount);
     NewSessions       = new(fileCount);
 
-   // Read storage
-   double progress    = 0;
+    // Read storage
+    double progress   = 0;
     var progressTotal = 100;
     ProgressPercent(0, progressTotal);
     ProgressComment("Reading Stored Run Sessions");
