@@ -39,7 +39,7 @@ class HomeClass: DocumentClass {
   }
 
   void LoadRecords {
-    AllRawWorkouts  = RawWorkouts.RawWorkouts;
+    AllRawWorkouts  = RawWorkoutSessions.RawWorkouts;
     Data.LoadRecords = false;
     Data.WriteToStorage;
   }

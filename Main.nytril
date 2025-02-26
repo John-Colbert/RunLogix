@@ -1,7 +1,7 @@
 using IO, System;
 
 include "Global";
-include "BuildWorkouts";
+include "BuildWorkoutSessions";
 include "Accumulator";
 include "Home";
 include "WorkoutClasses";
@@ -18,10 +18,10 @@ readonly DataPath         = Folders.Source Folder("apple_health_export") Folder(
 readonly DataReadingsPath = Folders.Source IO.FileName("DataReadings") Extensions.Nytril;
 readonly DataStoragePath  = Folders.Source Folder("DataFiles");
 
-readonly TimeBasedWorkoutsClass TimeBasedWorkouts = new;
-readonly BuildWorkoutsClass     RawWorkouts       = new;
-readonly UnitSystems            UnitSystem        = Configuration.UnitSystem;
-readonly FileEntryClass[]       Files             = EnumerateFiles(DataPath);
+readonly TimeBasedWorkoutsClass    TimeBasedWorkouts = new;
+readonly BuildWorkoutSessionsClass RawWorkouts       = new;
+readonly UnitSystems               UnitSystem        = Configuration.UnitSystem;
+readonly FileEntryClass[]          Files             = EnumerateFiles(DataPath);
 
 readonly SummaryClass SummaryDocument = new;
 

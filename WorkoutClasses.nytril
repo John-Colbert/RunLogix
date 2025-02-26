@@ -61,7 +61,7 @@ abstract class ScheduledWorkoutsBase: WorkoutBase {
   void Build {
     string namePrefix = "route_{0}_"(GetWorkoutDateName(WorkoutDate));
 
-    foreach(var workout in RawWorkouts.WorkoutSessions){
+    foreach(var workout in RawWorkoutSessions.WorkoutSessions){
       if (workout.Filename.StartsWith(namePrefix)) {
         WorkoutSession = workout;
         break;
