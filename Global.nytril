@@ -29,12 +29,12 @@ readonly namespace Measures if (UnitSystem == UnitSystems.Imperial) {
 }
 
 namespace Measures {
-  const double MetersPerKilometer        = (1 kilometer) intu meters;
-  const double KilometersPerMeter        = (1 meter) intu kilometers;
-  const double MetersPerMile             = (1 mile) intu meters;
-  const double MilesPerMeter             = (1 meter) intu miles;
-  const double KilometersPerMile         = (1 mile) intu kilometers;
-  const double MilesPerKilometer         = (1 kilometer) intu miles;
+  const double MetersPerKilometer        = (1 kilometer) toscale meters;
+  const double KilometersPerMeter        = (1 meter) toscale kilometers;
+  const double MetersPerMile             = (1 mile) toscale meters;
+  const double MilesPerMeter             = (1 meter) toscale miles;
+  const double KilometersPerMile         = (1 mile) toscale kilometers;
+  const double MilesPerKilometer         = (1 kilometer) toscale miles;
   const string Kilometer                 = "Kilometer";
   const string Mile                      = "Mile";
   const string Kilometers                = "Kilometers";
@@ -106,7 +106,7 @@ namespace Utilities {
     if (elevationReadings.Length <= 0)
       return;
 
-    double width              = (0.75 inches) intu pixels;
+    double width              = (0.75 inches) toscale pixels;
     int readingsPerWidthPixel = elevationReadings.Length > width ? (elevationReadings.Length / width) as int : 1;
 
     double max = 0;
