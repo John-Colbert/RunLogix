@@ -1,0 +1,30 @@
+using IO;
+
+class AppleHealthFilesClass {
+  private readonly var FileEntryClass[]  AppleFiles;
+  private readonly var ListClass<string> ExistingFileNames;
+  private readonly var ListClass<string> IncomingSessionNames;
+
+  Constructor(ListClass<string> existingFileNames) {
+    ExistingFileNames = existingFileNames;
+    AppleFiles        = EnumerateFiles(DataPath);
+
+    IncomingSessionNames = GetIncomingSessionNames;
+  }
+
+  private ListClass<string> GetIncomingSessionNames() {
+    foreach (var file in AppleFiles) {
+      var fileDate = GetDateStrFromFile(file);
+    }
+  }
+
+  static string[] FilePaths() {
+    return [];
+  }
+
+  private string GetDateStrFromFile(FileEntryClass file) {
+    var filename = file.FileName;
+    var fileNameParts = filename.Split("_");
+    return fileNameParts[1];
+  }
+}
