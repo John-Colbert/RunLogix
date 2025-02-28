@@ -19,11 +19,13 @@ class ReadingItemClass {
 }
 
 class RunSessionClass {
-  readonly var Filename;
+  readonly var string             Filename;
+  readonly var ListClass<string>  WorkoutFileNames;
   readonly var ReadingItemClass[] Readings;
 
-  Constructor(name, ReadingItemClass[] readings) {
+  Constructor(string name, ReadingItemClass[] readings) {
     Filename = name;
+    WorkoutFileNames = new(1);
     Readings = readings;
   }
 }

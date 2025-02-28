@@ -1,20 +1,50 @@
 using IO;
 
 class AppleHealthFilesClass {
-  private readonly var FileEntryClass[]  AppleFiles;
   private readonly var ListClass<string> ExistingFileNames;
-  private readonly var ListClass<string> IncomingSessionNames;
 
-  Constructor(ListClass<string> existingFileNames) {
-    ExistingFileNames = existingFileNames;
-    AppleFiles        = EnumerateFiles(DataPath);
-
-    IncomingSessionNames = GetIncomingSessionNames;
+  Constructor() {
+    ExistingFileNames = GetExistingFileNames();
+    ProcessIncomingFiles();
   }
 
-  private ListClass<string> GetIncomingSessionNames() {
-    foreach (var file in AppleFiles) {
+  private ListClass<string> GetExistingFileNames() {
+    ListClass<string> retlist;
+    foreach (RunSessionClass file in NytrilDataFiles) {
+      retlist.AddEach(file.WorkoutFileNames.ToArray);
+    }
+    return retlist;
+  }
+
+  private void ProcessIncomingFiles() {
+    var length = AppleFiles.Length;
+    for (var i = 0; i < length; i++) {
+      var file     = AppleFiles[i];
+      var fileName = file.FileName;
+
+      if (ExistingFileNames.FindFirstIndex(d => d == fileName) > -1)
+        continue;
+
       var fileDate = GetDateStrFromFile(file);
+      if (i + 1 < length) {
+        var nextfile     = AppleFiles[i + 1];
+        var nextfileDate = GetDateStrFromFile(nextfile);
+        if (fileDate != nextfileDate) {
+          //Process file and continue
+        }
+        else {
+          while (fileDate == nextfileDate) {
+            //Process file and write to new run session class
+            //Open next file and write to a temp run session class
+            //Verify the first entry of next follows last entry of file.
+            //If so,
+            //  add entrires to the file's run session class
+            //  update nextfileDate to the next next file
+            //IF NOT
+            //  Write file session to disk and exit while loop
+          }
+        }
+      }
     }
   }
 

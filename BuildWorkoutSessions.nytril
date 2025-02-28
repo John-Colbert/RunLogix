@@ -10,7 +10,7 @@ class BuildWorkoutSessionsClass {
   Constructor {
     StorageFiles      = EnumerateFiles(DataSessionsPath);
     Accumulator       = new;
-    var fileCount     = Files.Length;
+    var fileCount     = AppleFiles.Length;
     WorkoutSessions   = new(fileCount);
     RawWorkouts       = new(fileCount);
     NewSessions       = new(fileCount);
@@ -48,7 +48,7 @@ class BuildWorkoutSessionsClass {
     // Reconcile the existing to the incoming
     ProgressComment("Reconciling data ");
     ListClass<string> incomingFileNames = new(fileCount);
-    foreach (FileEntryClass file in Files)
+    foreach (FileEntryClass file in AppleFiles)
       incomingFileNames.Add(file.FileName);
     incomingFileNames.Sort;
 
@@ -73,7 +73,7 @@ class BuildWorkoutSessionsClass {
       double progressPer = (progressAdjust + 40) / toAddCount;
       ProgressComment("Creating " toAddCount " Data Files.");
       foreach (var filename in toAddFileNames) {
-        var session = Accumulator.ReadFile(DataPath, filename, false);
+        var session = Accumulator.ReadFile(AppleFilesPath, filename, false);
         NewSessions.Add(session);
         WriteStorageFile(session);
         ProgressPercent(progress += progressPer, progressTotal);
