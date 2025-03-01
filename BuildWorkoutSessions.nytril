@@ -73,7 +73,8 @@ class BuildWorkoutSessionsClass {
       double progressPer = (progressAdjust + 40) / toAddCount;
       ProgressComment("Creating " toAddCount " Data Files.");
       foreach (var filename in toAddFileNames) {
-        var session = Accumulator.ReadFile(AppleFilesPath, filename, false);
+        var readings = Accumulator.ReadFile(AppleFilesPath, filename, false);
+        RunSessionClass session = new(filename, new(1), readings.ToArray);
         NewSessions.Add(session);
         WriteStorageFile(session);
         ProgressPercent(progress += progressPer, progressTotal);

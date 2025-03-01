@@ -23,9 +23,9 @@ class RunSessionClass {
   readonly var ListClass<string>  WorkoutFileNames;
   readonly var ReadingItemClass[] Readings;
 
-  Constructor(string name, ReadingItemClass[] readings) {
+  Constructor(string name, ListClass<string>  workoutFileNames, ReadingItemClass[] readings) {
     Filename = name;
-    WorkoutFileNames = new(1);
+    WorkoutFileNames = workoutFileNames;
     Readings = readings;
   }
 }
@@ -41,7 +41,8 @@ class AccumulatorClass {
     StorageString  = [];
   }
 
-  RunSessionClass ReadFile(string path, string filename, bool useSourceRoot) {
+  ListClass<ReadingItemClass> ReadFile(string path, string filename, bool useSourceRoot = false) {
+    Readings.Clear;
     Filename   = filename;
     var dir    = useSourceRoot ? Folders.Source : path;
 
@@ -68,9 +69,11 @@ class AccumulatorClass {
           if (v is valid)
             Readings.Add(new(time, elevation, v as double, course.Value as double, hAcc.Value as double, vAcc.Value as double));
         }
-        RunSessionClass runsession = new(Filename, Readings.ToArray);
-        Readings.Clear;
-        return runsession;
+        //ListClass<string> workoutFileNames = new(1);
+        //workoutFileNames.Add(filename);
+        //RunSessionClass runsession = new(Filename, workoutFileNames, Readings.ToArray);
+        //Readings.Clear;
+        return Readings;
       }
     }
     return null;
