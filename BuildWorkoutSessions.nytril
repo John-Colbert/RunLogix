@@ -1,11 +1,11 @@
 using IO, System, Format;
 
 class BuildWorkoutSessionsClass {
-  readonly var FileEntryClass[]           StorageFiles;
-  readonly var AccumulatorClass           Accumulator;
-  readonly var ListClass<RawWorkoutClass> RawWorkouts;
-  readonly var ListClass<RunSessionClass> NewSessions;
-  readonly var ListClass<RunSessionClass> WorkoutSessions;
+  private readonly var FileEntryClass[]           StorageFiles;
+  private readonly var AccumulatorClass           Accumulator;
+  readonly var ListClass<RawWorkoutClass>         RawWorkouts;
+  private readonly var ListClass<RunSessionClass> NewSessions;
+  readonly var ListClass<RunSessionClass>         WorkoutSessions;
 
   Constructor {
     StorageFiles      = EnumerateFiles(DataSessionsPath);

@@ -44,9 +44,10 @@ class AccumulatorClass {
   ListClass<ReadingItemClass> ReadFile(string path, string filename, bool useSourceRoot = false) {
     Readings.Clear;
     Filename   = filename;
-    var dir    = useSourceRoot ? Folders.Source : path;
+    var dir    = useSourceRoot ? Folders.Source : Folder(path);
 
-    var file = XMLElementClass.Read(dir FileName(filename));
+    var fullpath = dir IO.FileName(filename); // "/" filename;
+    var file = XMLElementClass.Read(fullpath);
     if (file is valid) {
       var gpxEl    = file.FindFirstElement("gpx");
       var trkEl    = gpxEl.FindFirstElement("trk");

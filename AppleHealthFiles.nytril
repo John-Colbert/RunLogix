@@ -4,23 +4,26 @@ class AppleHealthFilesClass {
   private readonly var AccumulatorClass  Accumulator;
   private readonly var ListClass<string> ExistingFileNames;
   readonly var ListClass<RunSessionClass> WorkoutSessions;
+  readonly var ListClass<RawWorkoutClass> RawWorkouts;
 
   Constructor() {
     Accumulator       = new;
     var fileCount     = AppleFiles.Length;
     WorkoutSessions   = new(fileCount);
+    RawWorkouts       = new(fileCount);
     ExistingFileNames = ProcessNytrilWorkoutFiles();
     ProcessIncomingFiles();
   }
 
   private ListClass<string> ProcessNytrilWorkoutFiles() {
-    ListClass<string> retlist;
+    ListClass<string> retlist = new(1);
     foreach (FileEntryClass file in NytrilDataFiles) {
       var path     = file.Path;
       var build    = ReadScript(path);
       var session  = build.Root.RunSession as RunSessionClass;
       retlist.AddEach(session.WorkoutFileNames.ToArray);
       WorkoutSessions.Add(session);
+      AddToRawWorkouts(session);
     }
     return retlist;
   }
@@ -43,46 +46,53 @@ class AppleHealthFilesClass {
 
           ListClass<string> workoutFileNames = new(1);
           workoutFileNames.Add(fileName);
-          RunSessionClass runsession = new(fileName, workoutFileNames, readings.ToArray);
-          WriteStorageFile(runsession);
-          WorkoutSessions.Add(runsession);
+          AddSessionAndWriteOut(fileName, workoutFileNames, readings);
         }
         else {
-          //Process file and write to new run session class
           ListClass<string> workoutFileNames = new(1);
           workoutFileNames.Add(fileName);
 
-          var readings = Accumulator.ReadFile(AppleFilesPath, fileName);
+          var readings        = Accumulator.ReadFile(AppleFilesPath, fileName);
           var lastDateOfFirst = readings[readings.Length - 1].Time;
 
           while (fileDate == nextfileDate) {
-            //Open next file and write to a temp run session class
-            var nextFileName = nextfile.FileName;
-            var nextReadings = Accumulator.ReadFile(AppleFilesPath, nextFileName);
+            var nextFileName    = nextfile.FileName;
+            var nextReadings    = Accumulator.ReadFile(AppleFilesPath, nextFileName);
             var firstDateOfNext = nextReadings[0].Time;
 
-            //Verify the first entry of next follows last entry of first.
             var timeDifference = firstDateOfNext - lastDateOfFirst;
-            //If so,
             if (timeDifference.Seconds == 1) {
               workoutFileNames.Add(nextFileName);
-              //  add entrires to the file's run session class
               readings.AddEach(nextReadings.ToArray);
+
+              //Get the new last date of readings
               lastDateOfFirst  = nextReadings[nextReadings.Length - 1].Time;
-              //  update nextfileDate to the next next file
+
+              //  update next file with next next file
               i++;
               nextfile     = AppleFiles[i + 1];
               nextfileDate = GetDateStrFromFile(nextfile);
             }
             else
-              break;
+              return;
           }
-          RunSessionClass runsession = new(fileName, workoutFileNames, readings.ToArray);
-          WriteStorageFile(runsession);
-          WorkoutSessions.Add(runsession);
+          AddSessionAndWriteOut(fileName, workoutFileNames, readings);
         }
       }
     }
+  }
+
+  private void AddSessionAndWriteOut(string fileName, ListClass<string> workoutFileNames, ListClass<ReadingItemClass> readings) {
+    RunSessionClass session = new(fileName, workoutFileNames, readings.ToArray);
+    WriteStorageFile(session);
+    WorkoutSessions.Add(session);
+    AddToRawWorkouts(session);
+  }
+
+  private void AddToRawWorkouts(RunSessionClass session) {
+    RawWorkoutClass rawworkout = new;
+    rawworkout.Build(session.Readings);
+    RawWorkouts.Add(rawworkout);
   }
 
   static string[] FilePaths() {
