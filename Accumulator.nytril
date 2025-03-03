@@ -33,16 +33,14 @@ class RunSessionClass {
 class AccumulatorClass {
   var string Filename;
   var string StorageString;
-  var ListClass<ReadingItemClass> Readings;
 
   Constructor() {
     Filename       = "";
-    Readings       = new(100);
     StorageString  = [];
   }
 
   ListClass<ReadingItemClass> ReadFile(string path, string filename, bool useSourceRoot = false) {
-    Readings.Clear;
+    ListClass<ReadingItemClass> readings = new(100);
     Filename   = filename;
     var dir    = useSourceRoot ? Folders.Source : Folder(path);
 
@@ -68,13 +66,13 @@ class AccumulatorClass {
           var vAcc         = extensionsEl.FindFirstElement("vAcc");
           var v = speedEl.Value;
           if (v is valid)
-            Readings.Add(new(time, elevation, v as double, course.Value as double, hAcc.Value as double, vAcc.Value as double));
+            readings.Add(new(time, elevation, v as double, course.Value as double, hAcc.Value as double, vAcc.Value as double));
         }
         //ListClass<string> workoutFileNames = new(1);
         //workoutFileNames.Add(filename);
         //RunSessionClass runsession = new(Filename, workoutFileNames, Readings.ToArray);
         //Readings.Clear;
-        return Readings;
+        return readings;
       }
     }
     return null;
