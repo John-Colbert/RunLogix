@@ -1,18 +1,52 @@
 using IO, Format;
 
+class AppleFileItemClass {
+  var datetime FileNameDate;
+  var FileEntryClass File;
+
+  Constructor(datetime fileNameDate, FileEntryClass file) {
+    FileNameDate = fileNameDate;
+    File         = file;
+  }
+}
+
 class AppleHealthFilesClass {
+  private readonly var ListClass<AppleFileItemClass> AppleWorkoutFiles;
   private readonly var AccumulatorClass  Accumulator;
   private readonly var ListClass<string> ExistingFileNames;
   readonly var ListClass<RunSessionClass> WorkoutSessions;
   readonly var ListClass<RawWorkoutClass> RawWorkouts;
 
   Constructor() {
-    Accumulator       = new;
     var fileCount     = AppleFiles.Length;
+    AppleWorkoutFiles = new(fileCount);
+    CreateSortableAppleFiles();
+    AppleWorkoutFiles.SortField(false, d => d.FileNameDate);
+    Accumulator       = new;
     WorkoutSessions   = new(fileCount);
     RawWorkouts       = new(fileCount);
     ExistingFileNames = ProcessNytrilWorkoutFiles();
     ProcessIncomingFiles();
+  }
+
+  private void CreateSortableAppleFiles() {
+    foreach (var file in AppleFiles) {
+      var nameParts           = file.FileName.Split("_");
+      var dateParts           = nameParts[1].Split("-");
+      var timeParts           = nameParts[2].Split(".");
+      var hour                = timeParts[0] as int;
+      var timeWithIndicator   = timeParts[1];
+      var tiLength            = timeWithIndicator.Length;
+      var tIndicator          = timeWithIndicator[(tiLength - 2)..(tiLength - 1)];
+      var year                = dateParts[0] as int;
+      var month               = dateParts[1] as int;
+      var day                 = dateParts[2] as int;
+      hour                    = tIndicator == "pm" ? hour + 12 : hour;
+      var minutes             = timeWithIndicator.Replace(tIndicator, "") as int;
+      datetime date = new(year, month, day, hour, minutes); //dateParts[0], dateParts[1], dateParts[2], hour, minutes
+      var appleFile = new AppleFileItemClass(date, file);
+      AppleWorkoutFiles.Add(appleFile);
+    }
   }
 
   private ListClass<string> ProcessNytrilWorkoutFiles() {
@@ -29,9 +63,9 @@ class AppleHealthFilesClass {
   }
 
   private void ProcessIncomingFiles() {
-    var length = AppleFiles.Length;
+    var length = AppleWorkoutFiles.Length;
     for (var i = 0; i < length; i++) {
-      var file     = AppleFiles[i];
+      var file     = AppleWorkoutFiles[i].File;
       var fileName = file.FileName;
 
       if (ExistingFileNames.FindFirstIndex(d => d == fileName) > -1)
@@ -39,7 +73,7 @@ class AppleHealthFilesClass {
 
       var fileDate = GetDateStrFromFile(file);
       if (i + 1 < length) {
-        var nextfile     = AppleFiles[i + 1];
+        var nextfile     = AppleWorkoutFiles[i + 1].File;
         var nextfileDate = GetDateStrFromFile(nextfile);
         if (fileDate != nextfileDate) {
           var readings = Accumulator.ReadFile(AppleFilesPath, fileName);
@@ -73,7 +107,7 @@ class AppleHealthFilesClass {
               if (i + 1 >= length)
                 break;
 
-              nextfile     = AppleFiles[i + 1];
+              nextfile     = AppleWorkoutFiles[i + 1].File;
               nextfileDate = GetDateStrFromFile(nextfile);
             }
             else
