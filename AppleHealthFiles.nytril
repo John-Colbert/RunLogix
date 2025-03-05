@@ -1,4 +1,4 @@
-using IO, Format;
+using IO, Units, Format;
 
 class AppleFileItemClass {
   var datetime FileNameDate;
@@ -97,6 +97,14 @@ class AppleHealthFilesClass {
             var timeDifference = firstDateOfNext - lastDateOfFirst;
             if (Math.Round(timeDifference.Hours) == 0 && Math.Round(timeDifference.Minutes) <= 1 && timeDifference.Seconds <= 2) {
               workoutFileNames.Add(nextFileName);
+
+              //if nextReadings is missing the first reading, then insert one.  We need a complete list accounting for every second.
+              if (timeDifference.Seconds > 1 && timeDifference.Seconds <= 3) {
+                var firstOfNextReadings = nextReadings[0];
+                ReadingItemClass insertReading = new((firstDateOfNext + 1 second), firstOfNextReadings.Elevation, firstOfNextReadings.Meters, firstOfNextReadings.Course, firstOfNextReadings.HAcc, firstOfNextReadings.VAcc);
+                readings.Add(insertReading);
+              }
+
               readings.AddEach(nextReadings.ToArray());
 
               //Get the new last date of readings

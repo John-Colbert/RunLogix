@@ -1,7 +1,7 @@
 using IO, System;
 
 include "Global";
-include "BuildWorkoutSessions";
+include "AppleHealthFiles";
 include "Accumulator";
 include "Home";
 include "WorkoutClasses";
@@ -14,20 +14,21 @@ include "WorkoutDocuments";
 include "RawWorkouts";
 include "Lang";
 
-readonly DataPath         = Folders.Source Folder("apple_health_export") Folder("workout-routes");
-readonly DataReadingsPath = Folders.Source IO.FileName("DataReadings") Extensions.Nytril;
-readonly DataStoragePath  = Folders.Source Folder("DataFiles");
+readonly AppleFilesPath    = Folders.Source Folder("apple_health_export") Folder("workout-routes");
+readonly DataReadingsPath  = Folders.Source IO.FileName("DataReadings") Extensions.Nytril;
+readonly DataSessionsPath  = Folders.Source Folder("DataFiles") Folder("Sessions");
 
-readonly TimeBasedWorkoutsClass    TimeBasedWorkouts = new;
-readonly BuildWorkoutSessionsClass RawWorkouts       = new;
-readonly UnitSystems               UnitSystem        = Configuration.UnitSystem;
-readonly FileEntryClass[]          Files             = EnumerateFiles(DataPath);
+readonly TimeBasedWorkoutsClass     TimeBasedWorkouts   = new;
+readonly AppleHealthFilesClass      RawWorkoutSessions  = new;
+readonly UnitSystems                UnitSystem          = Configuration.UnitSystem;
+readonly FileEntryClass[]           NytrilDataFiles     = EnumerateFiles(DataSessionsPath);
+readonly FileEntryClass[]           AppleFiles          = EnumerateFiles(AppleFilesPath);
 
 readonly SummaryClass SummaryDocument = new;
 
 readonly DocumentClass[] Main.Documents = [
   new HomeClass,
-  //new SummaryClass,
+  new SummaryClass,
   new PerformanceToTargetClass,
   new RawRunningDocumentClass
 ];
