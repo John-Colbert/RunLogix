@@ -129,7 +129,7 @@ namespace Utilities {
           var e = elevationReadings[i];
 
           if (diff == 0)
-            LineTo((i / elevationReadings.Length) * width, h - (e - min) / diff * h);
+            LineTo((i / elevationReadings.Length) * width, h - (e - min) / 1); //changed 3/10/25
           else
             LineTo((i / elevationReadings.Length) * width, h - (e - min) / diff * h);
         }
