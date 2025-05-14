@@ -53,7 +53,7 @@ class SummaryClass: RunningDocumentClass {
   }
 
   override GetDocument = Document(MarginLayout) {
-    AllRawWorkouts        = RawWorkoutSessions.RawWorkouts;
+    AllRawWorkouts        = AppleWorkoutSessions.RawWorkouts;
     TimeBasedWorkouts.Build;
     AllTimeBasedWorkouts  = TimeBasedWorkouts.Workouts;
     GetMonthyActuals();
@@ -356,7 +356,7 @@ class RawRunningDocumentClass: RunningDocumentClass {
   override GetDocument = Document(MarginLayout) {
     ShowTitle;
 
-    foreach (var workout in RawWorkoutSessions.RawWorkouts) {
+    foreach (var workout in AppleWorkoutSessions.RawWorkouts) {
       var distance = workout.TotalDistance * Measures.PerMeterFactor;
 
       Canvas(100%) {
