@@ -53,11 +53,13 @@ class AppleHealthFilesClass {
 
   private ListClass<string> ProcessNytrilWorkoutFiles() {
     var count = NytrilDataFiles.Length;
+    if (count == 0)
+      return [];
 
     var progress    = 5.0;
     var progressMax = 50;
     var progressPer = progressMax / count;
-    
+
     ListClass<string> retlist = new(count);
     foreach (FileEntryClass file in NytrilDataFiles) {
       progress += progressPer;
@@ -80,8 +82,9 @@ class AppleHealthFilesClass {
     var progressPer = progressMax / count;
 
     for (var i = 0; i < count; i++) {
-      var file     = AppleWorkoutFiles[i].File;
-      var fileName = file.FileName;
+      var file       = AppleWorkoutFiles[i].File;
+      var fileName   = file.FileName;
+      var errorCount = 0;
 
       progress += progressPer;
       Progress("Adding Nytril Workout File {0}"fileName, progress);
@@ -98,35 +101,45 @@ class AppleHealthFilesClass {
 
           ListClass<string> workoutFileNames = new(1);
           workoutFileNames.Add(fileName);
-          AddSessionAndWriteOut(fileName, workoutFileNames, readings);
+          AddSessionAndWriteOut(fileName, workoutFileNames, readings, errorCount);
         }
         else {
           ListClass<string> workoutFileNames = new(1);
           workoutFileNames.Add(fileName);
 
-          var readings        = Accumulator.ReadFile(AppleFilesPath, fileName);
-          var lastDateOfFirst = readings[readings.Length - 1].Time;
+          var readings            = Accumulator.ReadFile(AppleFilesPath, fileName);
+          var lastOfFirstReadings = readings[readings.Length - 1];
+          var lastDateOfFirst     = lastOfFirstReadings.Time;
 
           while (fileDate == nextfileDate) {
             var nextFileName    = nextfile.FileName;
             var nextReadings    = Accumulator.ReadFile(AppleFilesPath, nextFileName);
-            var firstDateOfNext = nextReadings[0].Time;
+            var firstOfNext     = nextReadings[0];
+            var lastOfNext      = nextReadings[nextReadings.Length - 1];
+            var firstDateOfNext = firstOfNext.Time;
 
             var timeDifference = firstDateOfNext - lastDateOfFirst;
-            if (Math.Round(timeDifference.Hours) == 0 && Math.Round(timeDifference.Minutes) <= 1 && timeDifference.Seconds <= 2) {
+            if (Math.Round(timeDifference.Hours) == 0 && Math.Round(timeDifference.Minutes) <= 1) { //&& timeDifference.Seconds <= 2
               workoutFileNames.Add(nextFileName);
 
-              //if nextReadings is missing the first reading, then insert one.  We need a complete list accounting for every second.
-              if (timeDifference.Seconds > 1 && timeDifference.Seconds <= 3) {
-                var firstOfNextReadings = nextReadings[0];
-                ReadingItemClass insertReading = new((firstDateOfNext + 1 second), firstOfNextReadings.Elevation, firstOfNextReadings.Meters, firstOfNextReadings.Course, firstOfNextReadings.HAcc, firstOfNextReadings.VAcc);
-                readings.Add(insertReading);
+              //if readings are missing, then insert missing readings using last value.  We need a complete list accounting for every second.
+              int seconds = timeDifference.Seconds as int;
+              if (seconds >= 1) {
+                errorCount += seconds;
+                for (int t = 0; t < seconds; t++) {
+                  var tadd = lastDateOfFirst + (t + 1) second;
+                  if (tadd < firstDateOfNext) {
+                    ReadingItemClass insertReading = new(tadd, lastOfFirstReadings.Elevation, lastOfFirstReadings.Meters, lastOfFirstReadings.Course, lastOfFirstReadings.HAcc, lastOfFirstReadings.VAcc);
+                    readings.Add(insertReading);
+                  }
+                }
               }
 
               readings.AddEach(nextReadings.ToArray());
 
               //Get the new last date of readings
-              lastDateOfFirst  = nextReadings[nextReadings.Length - 1].Time;
+              lastOfFirstReadings = lastOfNext;
+              lastDateOfFirst     = lastOfFirstReadings.Time;
 
               //  update next file with next next file
               i++;
@@ -139,14 +152,14 @@ class AppleHealthFilesClass {
             else
               break;
           }
-          AddSessionAndWriteOut(fileName, workoutFileNames, readings);
+          AddSessionAndWriteOut(fileName, workoutFileNames, readings, errorCount);
         }
       }
     }
   }
 
-  private void AddSessionAndWriteOut(string fileName, ListClass<string> workoutFileNames, ListClass<ReadingItemClass> readings) {
-    RunSessionClass session = new(fileName, workoutFileNames, readings.ToArray);
+  private void AddSessionAndWriteOut(string fileName, ListClass<string> workoutFileNames, ListClass<ReadingItemClass> readings, int errorCount) {
+    RunSessionClass session = new(fileName, workoutFileNames, readings.ToArray, errorCount);
     WriteStorageFile(session);
     WorkoutSessions.Add(session);
     AddToRawWorkouts(session);
@@ -186,7 +199,7 @@ class AppleHealthFilesClass {
       foreach (var reading in workoutSession.Readings)
         "new(#{0}#, {1}, {2}, {3}, {4}, {5}),"(reading.Time, reading.Elevation, reading.Meters, reading.Course, reading.HAcc, reading.VAcc);
     };
-    "]);";
+    "], {0});"(workoutSession.ErrorCount);
   };
 
   private void WriteStorageFile(RunSessionClass workoutSession) {

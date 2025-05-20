@@ -53,6 +53,9 @@ class TimeBasedWorkoutClass: ScheduledWorkoutsBase {
 
     var readings = WorkoutSession?.Readings;
 
+    if (WorkoutSession != null && WorkoutSession.ErrorCount > 0)
+      Errors = WorkoutSession.ErrorCount;
+
     foreach (var segment in SegmentList) {
       if (readings is not null && readings.Length > 0) {
         StartTime = readings.FirstElement.Time;

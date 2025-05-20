@@ -32,7 +32,8 @@ class WorkoutBase {
 
 abstract class ScheduledWorkoutsBase: WorkoutBase {
   var string                       WorkoutName,
-                                   Notes;
+                                   Notes,
+                                   Errors;
   var datetime                     WorkoutDate;
   var double                       TotalTargetTime,
                                    TotalActualTime,
@@ -48,6 +49,7 @@ abstract class ScheduledWorkoutsBase: WorkoutBase {
     WorkoutName          = null;
     WorkoutDate          = date;
     Notes                = null;
+    Errors               = null;
     TotalTargetTime      = 0;
     TotalActualTime      = 0;
     TotalTargetDistance  = 0;
