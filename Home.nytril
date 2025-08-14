@@ -27,7 +27,7 @@ class LoadDataActionClass: ActionClass {
 //=======================================================
 
 class HomeClass: DocumentClass {
-  var DataClass                   Data;
+  var DataClass                           Data;
   private var ListClass<RawWorkoutClass>  AllRawWorkouts;
 
   Constructor {
@@ -39,7 +39,7 @@ class HomeClass: DocumentClass {
   }
 
   void LoadRecords {
-    AllRawWorkouts  = RawWorkoutSessions.RawWorkouts;
+    AllRawWorkouts   = AppleWorkoutSessions.RawWorkouts;
     Data.LoadRecords = false;
     Data.WriteToStorage;
   }

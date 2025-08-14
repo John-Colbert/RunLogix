@@ -140,6 +140,12 @@ namespace Utilities {
 }
 //======================================================================================
 
+void Progress(string comment, double val) {
+  var total = 100;
+  ProgressComment(comment);
+  ProgressPercent(val, total);
+}
+
 enum PaceTypes {
   MinPerKm ("min/km"),
   MinPerMi ("min/mi")

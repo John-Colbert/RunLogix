@@ -22,11 +22,13 @@ class RunSessionClass {
   readonly var string             Filename;
   readonly var ListClass<string>  WorkoutFileNames;
   readonly var ReadingItemClass[] Readings;
+  readonly var int                ErrorCount;
 
-  Constructor(string name, ListClass<string>  workoutFileNames, ReadingItemClass[] readings) {
-    Filename = name;
+  Constructor(string name, ListClass<string>  workoutFileNames, ReadingItemClass[] readings, int errorCount) {
+    Filename         = name;
     WorkoutFileNames = workoutFileNames;
-    Readings = readings;
+    Readings         = readings;
+    ErrorCount       = errorCount;
   }
 }
 
@@ -44,7 +46,7 @@ class AccumulatorClass {
     Filename   = filename;
     var dir    = useSourceRoot ? Folders.Source : Folder(path);
 
-    var fullpath = dir IO.FileName(filename); // "/" filename;
+    var fullpath = dir FileName(filename); // "/" filename;
     var file = XMLElementClass.Read(fullpath);
     if (file is valid) {
       var gpxEl    = file.FindFirstElement("gpx");

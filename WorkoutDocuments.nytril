@@ -53,7 +53,7 @@ class SummaryClass: RunningDocumentClass {
   }
 
   override GetDocument = Document(MarginLayout) {
-    AllRawWorkouts        = RawWorkoutSessions.RawWorkouts;
+    AllRawWorkouts        = AppleWorkoutSessions.RawWorkouts;
     TimeBasedWorkouts.Build;
     AllTimeBasedWorkouts  = TimeBasedWorkouts.Workouts;
     GetMonthyActuals();
@@ -250,6 +250,14 @@ class PerformanceToTargetClass: RunningDocumentClass {
         };
       }
 
+      if (workout.Errors != null) {
+        Paragraph {
+          TextHeight: 7 pts;
+          TextColor: Colors.Red;
+          "Missing Readings : {0}"(workout.Errors);
+        };
+      }
+
       Table(null, null) {
         TextHeight: 7 pts;
         Row(PadAll(2 pts)) {
@@ -356,7 +364,7 @@ class RawRunningDocumentClass: RunningDocumentClass {
   override GetDocument = Document(MarginLayout) {
     ShowTitle;
 
-    foreach (var workout in RawWorkoutSessions.RawWorkouts) {
+    foreach (var workout in AppleWorkoutSessions.RawWorkouts) {
       var distance = workout.TotalDistance * Measures.PerMeterFactor;
 
       Canvas(100%) {
