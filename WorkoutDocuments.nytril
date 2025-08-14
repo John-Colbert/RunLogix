@@ -9,7 +9,7 @@ class TimeDistanceClass : DataPointClass {
   }
 
   DataPointClass BasePoint() {
-    return new DataPointClass(Variable, Value);
+    return new DataPointClass(X, Value);
   }
 }
 //=======================================================================
