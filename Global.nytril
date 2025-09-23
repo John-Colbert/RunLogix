@@ -1,10 +1,10 @@
 using Format, Units, IO, System;
 
 //======================================================================================
-typedef DoubleList ListClass<double>;
+typedef DoubleList List<double>;
 typedef RunArray RunSessionClass[];
 
-readonly ThicknessClass MarginLayout = new(1 inch, 0.5 inches, 1 inch, 1 inch);
+readonly Thickness MarginLayout = new(1 inch, 0.5 inches, 1 inch, 1 inch);
 
 //======================================================================================
 

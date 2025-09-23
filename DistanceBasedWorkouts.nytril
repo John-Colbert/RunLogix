@@ -1,10 +1,10 @@
 
 class DistanceBasedWorkoutClass: ScheduledWorkoutsBase {
-  var ListClass<DistanceSegmentClass>  Segments,
+  var List<DistanceSegmentClass>  Segments,
                                        SegmentList;
-  var ListClass<DistanceIntervalClass> Intervals;
+  var List<DistanceIntervalClass> Intervals;
 
-  Constructor(datetime date) {
+  Constructor(DateTime date) {
     super.Constructor(date);
     Segments             = new(8);
     SegmentList          = new(10);
@@ -106,7 +106,7 @@ class DistanceBasedWorkoutClass: ScheduledWorkoutsBase {
 //===========================================================================
 
 class DistanceBasedWorkoutsClass {
-  var ListClass<DistanceBasedWorkoutClass> Workouts;
+  var List<DistanceBasedWorkoutClass> Workouts;
 
   Constructor {
     Workouts = new(8);

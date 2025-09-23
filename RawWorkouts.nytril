@@ -1,11 +1,11 @@
 using Units;
 
 class RawWorkoutClass: WorkoutBase {
-  var ListClass<DistancePerformance> Splits;
+  var List<DistancePerformance> Splits;
   var DistancePerformance            RemainingDistance;
   var double                         TotalDistance,
                                      TotalTime;
-  var ListClass<double>              ElevationReadings;
+  var List<double>              ElevationReadings;
 
   Constructor() {
     super.Constructor;

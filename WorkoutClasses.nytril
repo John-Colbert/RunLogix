@@ -3,7 +3,7 @@ using Format, Units, IO, System;
 class WorkoutBase {
   var RunSessionClass  WorkoutSession;
   var string           Filename;
-  var datetime         StartTime,
+  var DateTime         StartTime,
                        EndTime;
   var bool             UseSourceRoot;
 
@@ -14,7 +14,7 @@ class WorkoutBase {
     UseSourceRoot  = false;
   }
 
-  public string GetWorkoutDateName(datetime workoutDate) {
+  public string GetWorkoutDateName(DateTime workoutDate) {
     string year  = workoutDate.Year;
     string month = workoutDate.Month;
     string day   = workoutDate.Day;
@@ -34,7 +34,7 @@ abstract class ScheduledWorkoutsBase: WorkoutBase {
   var string                       WorkoutName,
                                    Notes,
                                    Errors;
-  var datetime                     WorkoutDate;
+  var DateTime                     WorkoutDate;
   var double                       TotalTargetTime,
                                    TotalActualTime,
                                    TotalTargetDistance,
@@ -44,7 +44,7 @@ abstract class ScheduledWorkoutsBase: WorkoutBase {
                                    TotalPerformance;
   var int                          AddOrder;
 
-  Constructor(datetime date) {
+  Constructor(DateTime date) {
     super.Constructor;
     WorkoutName          = null;
     WorkoutDate          = date;

@@ -28,7 +28,7 @@ class LoadDataActionClass: ActionClass {
 
 class HomeClass: DocumentClass {
   var DataClass                           Data;
-  private var ListClass<RawWorkoutClass>  AllRawWorkouts;
+  private var List<RawWorkoutClass>  AllRawWorkouts;
 
   Constructor {
     super.Constructor(#faf514cc-cfcf-42f6-8ae5-91d74b13234e#, Lang.Home);

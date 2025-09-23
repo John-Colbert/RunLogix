@@ -1,21 +1,21 @@
 using IO, Units, Format;
 
 class AppleFileItemClass {
-  var datetime FileNameDate;
+  var DateTime FileNameDate;
   var FileEntryClass File;
 
-  Constructor(datetime fileNameDate, FileEntryClass file) {
+  Constructor(DateTime fileNameDate, FileEntryClass file) {
     FileNameDate = fileNameDate;
     File         = file;
   }
 }
 
 class AppleHealthFilesClass {
-  private readonly var ListClass<AppleFileItemClass> AppleWorkoutFiles;
+  private readonly var List<AppleFileItemClass> AppleWorkoutFiles;
   private readonly var AccumulatorClass  Accumulator;
-  private readonly var ListClass<string> ExistingFileNames;
-  readonly var ListClass<RunSessionClass> WorkoutSessions;
-  readonly var ListClass<RawWorkoutClass> RawWorkouts;
+  private readonly var List<string> ExistingFileNames;
+  readonly var List<RunSessionClass> WorkoutSessions;
+  readonly var List<RawWorkoutClass> RawWorkouts;
 
   Constructor() {
     Progress("Initializing Files", 5);
@@ -45,13 +45,13 @@ class AppleHealthFilesClass {
       var day                 = dateParts[2] as int;
       hour                    = tIndicator == "pm" ? hour + 12 : hour;
       var minutes             = timeWithIndicator.Replace(tIndicator, "") as int;
-      datetime date = new(year, month, day, hour, minutes); //dateParts[0], dateParts[1], dateParts[2], hour, minutes
+      DateTime date = new(year, month, day, hour, minutes); //dateParts[0], dateParts[1], dateParts[2], hour, minutes
       var appleFile = new AppleFileItemClass(date, file);
       AppleWorkoutFiles.Add(appleFile);
     }
   }
 
-  private ListClass<string> ProcessNytrilWorkoutFiles() {
+  private List<string> ProcessNytrilWorkoutFiles() {
     var count = NytrilDataFiles.Length;
     if (count == 0)
       return [];
@@ -60,7 +60,7 @@ class AppleHealthFilesClass {
     var progressMax = 50;
     var progressPer = progressMax / count;
 
-    ListClass<string> retlist = new(count);
+    List<string> retlist = new(count);
     foreach (FileEntryClass file in NytrilDataFiles) {
       progress += progressPer;
       Progress("Adding Nytril Workout File {0}"file.FileName, progress);
@@ -99,12 +99,12 @@ class AppleHealthFilesClass {
         if (fileDate != nextfileDate) {
           var readings = Accumulator.ReadFile(AppleFilesPath, fileName);
 
-          ListClass<string> workoutFileNames = new(1);
+          List<string> workoutFileNames = new(1);
           workoutFileNames.Add(fileName);
           AddSessionAndWriteOut(fileName, workoutFileNames, readings, errorCount);
         }
         else {
-          ListClass<string> workoutFileNames = new(1);
+          List<string> workoutFileNames = new(1);
           workoutFileNames.Add(fileName);
 
           var readings            = Accumulator.ReadFile(AppleFilesPath, fileName);
@@ -158,7 +158,7 @@ class AppleHealthFilesClass {
     }
   }
 
-  private void AddSessionAndWriteOut(string fileName, ListClass<string> workoutFileNames, ListClass<ReadingItemClass> readings, int errorCount) {
+  private void AddSessionAndWriteOut(string fileName, List<string> workoutFileNames, List<ReadingItemClass> readings, int errorCount) {
     RunSessionClass session = new(fileName, workoutFileNames, readings.ToArray, errorCount);
     WriteStorageFile(session);
     WorkoutSessions.Add(session);

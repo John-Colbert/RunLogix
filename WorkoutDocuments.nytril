@@ -15,7 +15,7 @@ class TimeDistanceClass : DataPointClass {
 //=======================================================================
 
 class RunningDocumentClass: DocumentClass {
-  Constructor(guid factid, string tabName, string docTitle) {
+  Constructor(Guid factid, string tabName, string docTitle) {
     super.Constructor(factid, tabName);
     Title = docTitle;
   }
@@ -43,9 +43,9 @@ class RunningDocumentClass: DocumentClass {
 //=======================================================================
 
 class SummaryClass: RunningDocumentClass {
-  var ListClass<RawWorkoutClass>       AllRawWorkouts;
-  var ListClass<TimeBasedWorkoutClass> AllTimeBasedWorkouts;
-  var ListClass<TimeDistanceClass>     MonthlyActualDistance;
+  var List<RawWorkoutClass>       AllRawWorkouts;
+  var List<TimeBasedWorkoutClass> AllTimeBasedWorkouts;
+  var List<TimeDistanceClass>     MonthlyActualDistance;
 
   Constructor {
     super.Constructor(#ad080fa6-1765-48f7-862e-dc043ac95a16#, Lang.Summary, Lang.WorkoutsSummary);
@@ -78,7 +78,7 @@ class SummaryClass: RunningDocumentClass {
       };
       ValueAxis: ChartAxis;
       ValueLabel: HBox {
-        Transform: TransformClass.Rotate(270 degrees);
+        Transform: Transform.Rotate(270 degrees);
         TransformFit: true;
         Measures.DistanceUnitPlural;
       };
@@ -98,7 +98,7 @@ class SummaryClass: RunningDocumentClass {
 
     Table (null, null, [1 inches, 0.25 inches, ColumnClass.Expand]) {
       foreach (var rawWorkout in AllRawWorkouts) {
-        datetime workoutDate;
+        DateTime workoutDate;
         var timeBasedWorkout   = AllTimeBasedWorkouts?.FindFirst(d => d.Filename == rawWorkout.Filename);
         string notes           = "";
         string workoutName     = Lang.StandardRun;
@@ -146,7 +146,7 @@ class SummaryClass: RunningDocumentClass {
     };
   };
 
-  ShowDiaryDate(datetime date) = Span {
+  ShowDiaryDate(DateTime date) = Span {
     TextHeight: 12 pts;
     TextFormat: "MMM d, yyyy";
     TextColor: Colors.DimGray;
@@ -176,11 +176,11 @@ class SummaryClass: RunningDocumentClass {
     for (int i = 0; i < 12; i++)
       MonthlyActualDistance.Add(new TimeDistanceClass(i, 0));
 
-    var chartYear = datetime.Now.Year;
+    var chartYear = DateTime.Now.Year;
     foreach (var rawWorkout in AllRawWorkouts) {
       var timeBasedWorkout = AllTimeBasedWorkouts?.FindFirst(d => d.Filename == rawWorkout.Filename);
 
-      datetime dt;
+      DateTime dt;
       double mDist = 0;
 
       if (timeBasedWorkout is not null)  {
@@ -209,7 +209,7 @@ class SummaryClass: RunningDocumentClass {
 //======================================================================================
 
 class PerformanceToTargetClass: RunningDocumentClass {
-  var ListClass<TimeBasedWorkoutClass> RunWorkouts;
+  var List<TimeBasedWorkoutClass> RunWorkouts;
 
   Constructor {
     super.Constructor(#029a3f5d-ebfd-4011-8d57-7f87c7b6b324#, Lang.WorkoutPerformance, Lang.WorkoutPerformanceTo);
@@ -316,7 +316,7 @@ class PerformanceToTargetClass: RunningDocumentClass {
   ShowTime(double targetTime, double actualTime) = {
     targetTime;
     if (actualTime > 0 && actualTime != targetTime) {
-      "(" + { TextDigits: 2; TextColor: new ColorClass(204, 0, 0); } actualTime + ")";
+      "(" + { TextDigits: 2; TextColor: new Color(204, 0, 0); } actualTime + ")";
     }
   };
 
@@ -346,11 +346,11 @@ class PerformanceToTargetClass: RunningDocumentClass {
     }
 
     if (inRange)
-      TextColor: new ColorClass(153, 153, 0);
+      TextColor: new Color(153, 153, 0);
     else if (negative)
-      TextColor: new ColorClass(0, 153, 51);
+      TextColor: new Color(0, 153, 51);
     else
-      TextColor: new ColorClass(204, 0, 0);
+      TextColor: new Color(204, 0, 0);
   };
 }
 //====================================================================

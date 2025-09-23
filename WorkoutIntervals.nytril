@@ -12,7 +12,7 @@ class IntervalBase {
 //===========================================================================
 
 class TimeIntervalClass: IntervalBase {
-  var ListClass<TimeSegmentClass> Segments;
+  var List<TimeSegmentClass> Segments;
 
   Constructor(int repeats = 1, int addOrder) {
     super.Constructor(repeats, addOrder);
@@ -28,7 +28,7 @@ class TimeIntervalClass: IntervalBase {
 //===========================================================================
 
 class DistanceIntervalClass: IntervalBase {
-  var ListClass<DistanceSegmentClass> Segments;
+  var List<DistanceSegmentClass> Segments;
 
   Constructor(int repeats = 1, int addOrder) {
     super.Constructor(repeats, addOrder);

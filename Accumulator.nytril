@@ -1,14 +1,14 @@
 using IO, Format;
 
 class ReadingItemClass {
-  readonly var datetime Time;
+  readonly var DateTime Time;
   readonly var double   Elevation,
                         Meters,
                         Course,
                         HAcc,
                         VAcc;
 
-  Constructor(datetime time, double elevation, double meters, double course, double hAcc, double vAcc) {
+  Constructor(DateTime time, double elevation, double meters, double course, double hAcc, double vAcc) {
     Time       = time;
     Elevation  = elevation;
     Meters     = meters;
@@ -20,11 +20,11 @@ class ReadingItemClass {
 
 class RunSessionClass {
   readonly var string             Filename;
-  readonly var ListClass<string>  WorkoutFileNames;
+  readonly var List<string>  WorkoutFileNames;
   readonly var ReadingItemClass[] Readings;
   readonly var int                ErrorCount;
 
-  Constructor(string name, ListClass<string>  workoutFileNames, ReadingItemClass[] readings, int errorCount) {
+  Constructor(string name, List<string>  workoutFileNames, ReadingItemClass[] readings, int errorCount) {
     Filename         = name;
     WorkoutFileNames = workoutFileNames;
     Readings         = readings;
@@ -41,8 +41,8 @@ class AccumulatorClass {
     StorageString  = [];
   }
 
-  ListClass<ReadingItemClass> ReadFile(string path, string filename, bool useSourceRoot = false) {
-    ListClass<ReadingItemClass> readings = new(100);
+  List<ReadingItemClass> ReadFile(string path, string filename, bool useSourceRoot = false) {
+    List<ReadingItemClass> readings = new(100);
     Filename   = filename;
     var dir    = useSourceRoot ? Folders.Source : Folder(path);
 
@@ -56,7 +56,7 @@ class AccumulatorClass {
       if (trkpts is valid) {
         foreach (var trkptEl in trkpts) {
           var timeEl       = trkptEl.FindFirstElement("time");
-          var time         = datetime.Parse8601(timeEl.Value);
+          var time         = DateTime.Parse8601(timeEl.Value);
 
           var eleEl        = trkptEl.FindFirstElement("ele");
           var elevation    = eleEl.Value as double;
@@ -70,7 +70,7 @@ class AccumulatorClass {
           if (v is valid)
             readings.Add(new(time, elevation, v as double, course.Value as double, hAcc.Value as double, vAcc.Value as double));
         }
-        //ListClass<string> workoutFileNames = new(1);
+        //List<string> workoutFileNames = new(1);
         //workoutFileNames.Add(filename);
         //RunSessionClass runsession = new(Filename, workoutFileNames, Readings.ToArray);
         //Readings.Clear;

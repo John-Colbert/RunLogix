@@ -36,7 +36,7 @@ namespace SegmentNames {
 */
 //===========================================================================
 class IntervalsShort_5x: DistanceBasedWorkoutClass {
-  Constructor(datetime date, string notes = null) {
+  Constructor(DateTime date, string notes = null) {
     super.Constructor(date);
 
     WorkoutName = "Interval Short 5X";
@@ -61,7 +61,7 @@ class IntervalsShort_5x: DistanceBasedWorkoutClass {
 
 
 class Interval1HR_5x: TimeBasedWorkoutClass {
-  Constructor(datetime date, string notes = null) {
+  Constructor(DateTime date, string notes = null) {
     super.Constructor(date);
 
     WorkoutName = "Interval 1 HR 5x";
@@ -86,7 +86,7 @@ class Interval1HR_5x: TimeBasedWorkoutClass {
 //--------------------------------------------------------------------------
 
 class Tempo1hr1x1x: TimeBasedWorkoutClass {
-  Constructor(datetime date, string notes = null) {
+  Constructor(DateTime date, string notes = null) {
     super.Constructor(date);
 
     WorkoutName = "Tempo1hr 1x 1x";
@@ -110,7 +110,7 @@ class Tempo1hr1x1x: TimeBasedWorkoutClass {
 //--------------------------------------------------------------------------
 
 class LongRun1hr50m5x10x: TimeBasedWorkoutClass {
-  Constructor(datetime date, string notes = null) {
+  Constructor(DateTime date, string notes = null) {
     super.Constructor(date);
 
     WorkoutName = "Long Run 1hr 50m 5x 10x";
@@ -137,7 +137,7 @@ class LongRun1hr50m5x10x: TimeBasedWorkoutClass {
 //--------------------------------------------------------------------------
 
 class Interval1HR_3x4x5x2: TimeBasedWorkoutClass {
-  Constructor(datetime date, string notes = null) {
+  Constructor(DateTime date, string notes = null) {
     super.Constructor(date);
 
     WorkoutName = "Interval 1 HR 3x 4x 5x";
@@ -172,7 +172,7 @@ class Interval1HR_3x4x5x2: TimeBasedWorkoutClass {
 //--------------------------------------------------------------------------
 
 class Tempo1hr1x3x: TimeBasedWorkoutClass {
-  Constructor(datetime date, string notes = null) {
+  Constructor(DateTime date, string notes = null) {
     super.Constructor(date);
 
     WorkoutName = "Tempo1hr 1x 3x";
@@ -197,7 +197,7 @@ class Tempo1hr1x3x: TimeBasedWorkoutClass {
 //--------------------------------------------------------------------------
 
 class LongEasy1hr40Min: TimeBasedWorkoutClass {
-  Constructor(datetime date, string notes = null) {
+  Constructor(DateTime date, string notes = null) {
     super.Constructor(date);
 
     WorkoutName = "LongEasy 1hr 40Min";
@@ -217,7 +217,7 @@ class LongEasy1hr40Min: TimeBasedWorkoutClass {
 //--------------------------------------------------------------------------
 
 class Interval1hr1x4x: TimeBasedWorkoutClass {
-  Constructor(datetime date, string notes = null) {
+  Constructor(DateTime date, string notes = null) {
     super.Constructor(date);
 
     WorkoutName = "Interval 1hr 1x 4x Fast";
