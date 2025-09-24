@@ -1,6 +1,6 @@
 using Format, Units;
 
-class DataClass: FactClass {
+class DataClass: Fact {
   field bool LoadRecords;
 
   Constructor {
@@ -10,7 +10,7 @@ class DataClass: FactClass {
 }
 //=======================================================
 
-class LoadDataActionClass: ActionClass {
+class LoadDataActionClass: Action {
   var DataClass Data;
 
   Constructor(DataClass data) {
@@ -18,7 +18,7 @@ class LoadDataActionClass: ActionClass {
     Data = data;
   }
 
-  override EventResponseClass Execute {
+  override EventResponse Execute {
     Data.LoadRecords = true;
     Data.WriteToStorage;
     return EventResponses.Rebuild;
@@ -60,7 +60,7 @@ class HomeClass: DocumentClass {
     Paragraph;
     Paragraph {
       Span {
-        Action: new ActionClass(Actions.ToDocument, SummaryDocument);
+        Action: new Action(Actions.ToDocument, SummaryDocument);
         Bold;
         "Summary Document";
       };
@@ -74,7 +74,7 @@ class HomeClass: DocumentClass {
 
     Paragraph {
       Span {
-        Action: new ActionClass(Actions.ToDocument, #029a3f5d-ebfd-4011-8d57-7f87c7b6b324#);
+        Action: new Action(Actions.ToDocument, #029a3f5d-ebfd-4011-8d57-7f87c7b6b324#);
         Bold;
         "Workout Performance to Target Document";
       };
@@ -87,7 +87,7 @@ class HomeClass: DocumentClass {
     Paragraph;
     Paragraph {
       Span {
-        Action: new ActionClass(Actions.ToDocument, #82bd5cf5-0150-4e79-95c6-3cb36f7824e9#);
+        Action: new Action(Actions.ToDocument, #82bd5cf5-0150-4e79-95c6-3cb36f7824e9#);
         Bold;
         "Raw Workouts Document";
       };

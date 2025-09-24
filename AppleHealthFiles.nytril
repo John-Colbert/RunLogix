@@ -2,9 +2,9 @@ using IO, Units, Format;
 
 class AppleFileItemClass {
   var DateTime FileNameDate;
-  var FileEntryClass File;
+  var FileEntry File;
 
-  Constructor(DateTime fileNameDate, FileEntryClass file) {
+  Constructor(DateTime fileNameDate, FileEntry file) {
     FileNameDate = fileNameDate;
     File         = file;
   }
@@ -61,7 +61,7 @@ class AppleHealthFilesClass {
     var progressPer = progressMax / count;
 
     List<string> retlist = new(count);
-    foreach (FileEntryClass file in NytrilDataFiles) {
+    foreach (FileEntry file in NytrilDataFiles) {
       progress += progressPer;
       Progress("Adding Nytril Workout File {0}"file.FileName, progress);
       var path     = file.Path;
@@ -175,7 +175,7 @@ class AppleHealthFilesClass {
     return [];
   }
 
-  private string GetDateStrFromFile(FileEntryClass file) {
+  private string GetDateStrFromFile(FileEntry file) {
     var filename = file.FileName;
     var fileNameParts = filename.Split("_");
     return fileNameParts[1];

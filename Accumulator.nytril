@@ -47,7 +47,7 @@ class AccumulatorClass {
     var dir    = useSourceRoot ? Folders.Source : Folder(path);
 
     var fullpath = dir FileName(filename); // "/" filename;
-    var file = XMLElementClass.Read(fullpath);
+    var file = XMLElement.Read(fullpath);
     if (file is valid) {
       var gpxEl    = file.FindFirstElement("gpx");
       var trkEl    = gpxEl.FindFirstElement("trk");

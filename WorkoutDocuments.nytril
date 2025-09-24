@@ -1,6 +1,6 @@
 using Format, Units;
 
-class TimeDistanceClass : DataPointClass {
+class TimeDistanceClass : DataPoint {
   var int Month;
 
   Constructor(int month, double distance) {
@@ -8,8 +8,8 @@ class TimeDistanceClass : DataPointClass {
     Month    = month;
   }
 
-  DataPointClass BasePoint() {
-    return new DataPointClass(X, Value);
+  DataPoint BasePoint() {
+    return new DataPoint(X, Value);
   }
 }
 //=======================================================================
@@ -64,7 +64,7 @@ class SummaryClass: RunningDocumentClass {
   };
 
   ShowDistanceChart = VBox(100%) {
-    var months = MonthClass.MonthsOfTheYear;
+    var months = CalendarMonth.MonthsOfTheYear;
 
     HAlign: HAligns.Center;
     Background: Colors.WhiteSmoke;
@@ -96,7 +96,7 @@ class SummaryClass: RunningDocumentClass {
       Lang.Diary
     };
 
-    Table (null, null, [1 inches, 0.25 inches, ColumnClass.Expand]) {
+    Table (null, null, [1 inches, 0.25 inches, Column.Expand]) {
       foreach (var rawWorkout in AllRawWorkouts) {
         DateTime workoutDate;
         var timeBasedWorkout   = AllTimeBasedWorkouts?.FindFirst(d => d.Filename == rawWorkout.Filename);
@@ -321,7 +321,7 @@ class PerformanceToTargetClass: RunningDocumentClass {
   };
 
   ShowPace(double pace) = Span {
-    var t = new TimeSpanClass(0, 0, 0, pace * 60);
+    var t = new TimeSpan(0, 0, 0, pace * 60);
     TextFormat: "00";
     "{0}:{1}"(t.Minute, t.Second);
   };
@@ -368,7 +368,7 @@ class RawRunningDocumentClass: RunningDocumentClass {
       var distance = workout.TotalDistance * Measures.PerMeterFactor;
 
       Canvas(100%) {
-        Table (null, null, [1.25 inches, 0.35 inches, 1.5 inch, ColumnClass.Expand, 0.875 inches, 0.875 inches]) {
+        Table (null, null, [1.25 inches, 0.35 inches, 1.5 inch, Column.Expand, 0.875 inches, 0.875 inches]) {
           Row {
             TextHeight: 14 pts;
             SpaceBefore: 10 pts;
@@ -431,7 +431,7 @@ class RawRunningDocumentClass: RunningDocumentClass {
   };
 
   ShowPace(double pace, string symbol) = Span {
-    var t = new TimeSpanClass(0, 0, 0, pace * 60);
+    var t = new TimeSpan(0, 0, 0, pace * 60);
     Span {
       TextFormat: "00";
       "{0}:{1}"(t.Minute, t.Second);
