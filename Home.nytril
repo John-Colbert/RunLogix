@@ -1,4 +1,4 @@
-using Format, Units;
+using Format;
 
 class DataClass: Fact {
   field bool LoadRecords;
@@ -47,11 +47,11 @@ class HomeClass: DocumentClass {
   override GetDocument = Document(MarginLayout) {
     Paragraph {
       ParAlignment: ParAlignments.Right;
-      TextHeight: 30 pts;
+      TextHeight: 30pt;
       "Run Logix";
     };
     HBox(null, null, BorderAll(1) + PadAll(4)) {
-      BorderRadius: 2 pts;
+      BorderRadius: 2pt;
       Span {
         Action: new LoadDataActionClass(Data);
         "Read In New Workouts";
@@ -66,7 +66,7 @@ class HomeClass: DocumentClass {
       };
     };
     Paragraph {
-      LeftIndent: 10 pts;
+      LeftIndent: 10pt;
       Italic;
       "This document shows a very basic listing of all workouts completed, any comments, and includes a monthly total distance chart.";
     };
@@ -80,7 +80,7 @@ class HomeClass: DocumentClass {
       };
     };
     Paragraph {
-      LeftIndent: 10 pts;
+      LeftIndent: 10pt;
       Italic;
       "This document matches up workouts in storage to scheduled workouts and shows actual performance to expectations";
     };
@@ -94,7 +94,7 @@ class HomeClass: DocumentClass {
 
     };
     Paragraph {
-      LeftIndent: 10 pts;
+      LeftIndent: 10pt;
       Italic;
       "This document shows every run in storage including splits based on the selected measurement system (either miles or kilometers) and elevation gain/loss per split.";
     };

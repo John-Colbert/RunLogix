@@ -1,4 +1,4 @@
-using Format, Units, IO, System;
+using Format, IO, System;
 
 class WorkoutBase {
   var RunSessionClass  WorkoutSession;

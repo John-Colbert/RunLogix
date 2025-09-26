@@ -1,4 +1,4 @@
-using Format, Units;
+using Format;
 
 class TimeDistanceClass : DataPoint {
   var int Month;
@@ -23,21 +23,21 @@ class RunningDocumentClass: DocumentClass {
   ShowTitle = Block {
     Paragraph {
       ParAlignment: ParAlignments.Right;
-      TextHeight: 30 pts;
+      TextHeight: 30pt;
       "Run Logix";
     };
 
     if (Title is valid) {
       Paragraph {
         ParAlignment: ParAlignments.Center;
-        TextHeight: 20 pts;
-        SpaceAfter: 10 pts;
+        TextHeight: 20pt;
+        SpaceAfter: 10pt;
         Bold;
         Title;
       };
     }
     else
-      Paragraph { SpaceAfter: 20 pts; };
+      Paragraph { SpaceAfter: 20pt; };
   };
 }
 //=======================================================================
@@ -69,7 +69,7 @@ class SummaryClass: RunningDocumentClass {
     HAlign: HAligns.Center;
     Background: Colors.WhiteSmoke;
     "{0} Workouts"(AllTimeBasedWorkouts.Length);
-    Chart(90%, 3 inches) {
+    Chart(90%, 3") {
       Marker: Markers.Circle(Colors.White, 0.5);
       ChartType: ChartTypes.Column;
       XAxis: ChartAxis {
@@ -89,14 +89,14 @@ class SummaryClass: RunningDocumentClass {
   };
 
   ShowDiary = Block {
-    SpaceBefore: 5 pts;
+    SpaceBefore: 5pt;
 
     Paragraph {
-      TextHeight: 16 pts;
+      TextHeight: 16pt;
       Lang.Diary
     };
 
-    Table (null, null, [1 inches, 0.25 inches, Column.Expand]) {
+    Table (null, null, [1", 0.25", Column.Expand]) {
       foreach (var rawWorkout in AllRawWorkouts) {
         DateTime workoutDate;
         var timeBasedWorkout   = AllTimeBasedWorkouts?.FindFirst(d => d.Filename == rawWorkout.Filename);
@@ -120,11 +120,11 @@ class SummaryClass: RunningDocumentClass {
         }
 
         if (notes is valid && notes.Length > 0) {
-          Row (PadT(5 pts)) {
+          Row (PadT(5pt)) {
             ShowDiaryDate(workoutDate);
             Tex.EmDash;
             Span {
-              TextHeight: 11 pts;
+              TextHeight: 11pt;
               TextFamily: TextFamilies.TrebuchetMS;
               notes;
             };
@@ -136,7 +136,7 @@ class SummaryClass: RunningDocumentClass {
           };
         }
         else {
-          Row (PadT(5 pts)) {
+          Row (PadT(5pt)) {
             ShowDiaryDate(workoutDate);
             Tex.EmDash;
             ShowDetails(workoutName, actualDistance, actualTime);
@@ -147,7 +147,7 @@ class SummaryClass: RunningDocumentClass {
   };
 
   ShowDiaryDate(DateTime date) = Span {
-    TextHeight: 12 pts;
+    TextHeight: 12pt;
     TextFormat: "MMM d, yyyy";
     TextColor: Colors.DimGray;
     date;
@@ -160,11 +160,11 @@ class SummaryClass: RunningDocumentClass {
 
   ShowTime(double time) = Span {
     TextDigits: 2;
-    time Space minutes;
+    time Space Units.minutes;
   };
 
   ShowDetails(string name, double actualDistance, double actualTime) = Span {
-    TextHeight: 9 pts;
+    TextHeight: 9pt;
     TextColor: Colors.Gray;
     Separator: Space Tex.EmDash Space;
     name;
@@ -245,22 +245,22 @@ class PerformanceToTargetClass: RunningDocumentClass {
 
       if (workout.Notes != null && workout.Notes.Length > 0) {
         Paragraph {
-          TextHeight: 7 pts;
+          TextHeight: 7pt;
           workout.Notes;
         };
       }
 
       if (workout.Errors != null) {
         Paragraph {
-          TextHeight: 7 pts;
+          TextHeight: 7pt;
           TextColor: Colors.Red;
           "Missing Readings : {0}"(workout.Errors);
         };
       }
 
       Table(null, null) {
-        TextHeight: 7 pts;
-        Row(PadAll(2 pts)) {
+        TextHeight: 7pt;
+        Row(PadAll(2pt)) {
           Lang.Segment;
           Lang.Timeactual;
           Lang.Target;
@@ -274,7 +274,7 @@ class PerformanceToTargetClass: RunningDocumentClass {
           if (segment.Name == "Open" && segment.ActualTime == 0)
             continue;
 
-          Row(PadAll(2 pts)) {
+          Row(PadAll(2pt)) {
             segment.Name;
 
             Span {
@@ -295,7 +295,7 @@ class PerformanceToTargetClass: RunningDocumentClass {
         Row(BorderTB(1)) {
         };
 
-        Row(PadAll(2 pts)) {
+        Row(PadAll(2pt)) {
           Lang.Summary;
           Span {
             ShowTime(workout.TotalTargetTime, workout.TotalActualTime);
@@ -368,10 +368,10 @@ class RawRunningDocumentClass: RunningDocumentClass {
       var distance = workout.TotalDistance * Measures.PerMeterFactor;
 
       Canvas(100%) {
-        Table (null, null, [1.25 inches, 0.35 inches, 1.5 inch, Column.Expand, 0.875 inches, 0.875 inches]) {
+        Table (null, null, [1.25", 0.35", 1.5", Column.Expand, 0.875", 0.875"]) {
           Row {
-            TextHeight: 14 pts;
-            SpaceBefore: 10 pts;
+            TextHeight: 14pt;
+            SpaceBefore: 10pt;
             Span {
               TextFormat: "MMM d, yyyy";
               workout.StartTime;
@@ -436,7 +436,7 @@ class RawRunningDocumentClass: RunningDocumentClass {
       TextFormat: "00";
       "{0}:{1}"(t.Minute, t.Second);
       Span {
-        TextHeight: 10 pts;
+        TextHeight: 10pt;
         symbol;
       }
     };
@@ -446,13 +446,13 @@ class RawRunningDocumentClass: RunningDocumentClass {
     TextDigits: 3;
     distance;
     Span {
-      TextHeight: 10 pts;
+      TextHeight: 10pt;
       Measures.DistanceAbbr;
     };
   };
 
   ShowElevation (ElevationClass ele) = Span {
-    TextHeight: 8 pts;
+    TextHeight: 8pt;
     Span {
       TextDigits: 1;
       Shape (Colors.Green) {
