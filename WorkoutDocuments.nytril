@@ -14,7 +14,7 @@ class TimeDistanceClass : DataPoint {
 }
 //=======================================================================
 
-class RunningDocumentClass: DocumentClass {
+class RunningDocumentClass: DocumentEntry {
   Constructor(Guid factid, string tabName, string docTitle) {
     super.Constructor(factid, tabName);
     Title = docTitle;
